@@ -27,9 +27,9 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   height: 52px; background: var(--dark); color: var(--white);
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
-.nav-title { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; }
+.nav-title { font-size: 0.88rem; font-weight: 500; letter-spacing: 0.05em; }
 .nav-brand { color: var(--mocha-l); font-weight: 300; margin-right: 0.5rem; }
 .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
 .btn { cursor: pointer; border: none; font-family: inherit; font-size: 0.8rem; border-radius: 3px; transition: all 0.2s; padding: 0.45rem 1rem; letter-spacing: 0.04em; }
@@ -54,7 +54,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--border);
+  border-right: 2px solid var(--border);
   background: var(--white);
   overflow: hidden;
 }
@@ -98,13 +98,14 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
 #form-area {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem 1.25rem 2rem;
+  padding: 1rem 1.25rem 3rem;
+  scroll-behavior: smooth;
 }
 .form-status {
-  padding: 0.6rem 0.75rem;
+  padding: 0.7rem 0.9rem;
   margin-bottom: 0.75rem;
-  border-radius: 3px;
-  font-size: 0.78rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
   display: none;
 }
 .form-status.loading { display: block; background: #FFF8F0; color: var(--mid); border: 1px solid var(--mocha-l); }
@@ -112,18 +113,22 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
 .form-status.success { display: block; background: #F0FFF4; color: #2E7D32; border: 1px solid #C8E6C9; }
 
 .section-label {
-  font-size: 0.65rem;
-  letter-spacing: 0.2em;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
   color: var(--mocha);
   font-weight: 500;
   text-transform: uppercase;
-  padding: 1.2rem 0 0.5rem;
+  padding: 1.3rem 0 0.5rem;
   border-bottom: 1px solid var(--soft);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
-.section-label:first-child { padding-top: 0.25rem; }
+.section-label::before { content: ''; display: block; width: 16px; height: 1px; background: var(--mocha); }
+.section-label:first-child { padding-top: 0.2rem; }
 
-.field-group { margin-bottom: 0.9rem; }
+.field-group { margin-bottom: 1rem; }
 .field-label {
   display: block;
   font-size: 0.72rem;
@@ -131,6 +136,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   margin-bottom: 0.3rem;
   font-weight: 400;
 }
+.field-label.not-found { opacity: 0.45; }
 .field-input, .field-textarea, .field-url {
   width: 100%;
   font-family: inherit;
@@ -139,56 +145,61 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 3px;
-  padding: 0.45rem 0.6rem;
-  transition: border-color 0.2s;
-  line-height: 1.5;
+  padding: 0.48rem 0.65rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  line-height: 1.55;
 }
 .field-input:focus, .field-textarea:focus, .field-url:focus {
   outline: none;
   border-color: var(--mocha);
   background: var(--white);
+  box-shadow: 0 0 0 2px rgba(184,151,126,0.15);
 }
-.field-textarea { resize: vertical; min-height: 72px; }
-.field-url { font-size: 0.76rem; color: var(--mid); }
+.field-textarea { resize: vertical; min-height: 68px; }
+.field-url { font-size: 0.75rem; color: var(--mid); font-family: monospace; }
 .field-not-found {
   font-size: 0.72rem;
-  color: #aaa;
+  color: #bbb;
   font-style: italic;
-  padding: 0.3rem 0;
+  padding: 0.3rem 0.1rem;
+  letter-spacing: 0.02em;
 }
 
 .card-group {
   border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.75rem;
-  margin-bottom: 0.75rem;
-  background: var(--bg);
+  border-radius: 5px;
+  padding: 0.8rem 0.9rem 0.4rem;
+  margin-bottom: 0.8rem;
+  background: #FDFBF9;
 }
 .card-group-title {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 500;
   color: var(--mocha-d);
-  margin-bottom: 0.6rem;
-  letter-spacing: 0.06em;
+  margin-bottom: 0.65rem;
+  letter-spacing: 0.08em;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--soft);
 }
 
-/* ── PREVIEW ── */
+/* ── PREVIEW PANEL ── */
 #preview-toolbar {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.6rem 1rem;
-  background: rgba(42,37,32,0.06);
+  padding: 0.55rem 1rem;
+  background: rgba(42,37,32,0.07);
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 #preview-label {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--mid);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   flex: 1;
+  text-transform: uppercase;
 }
-.btn-preview { background: var(--mocha); color: var(--white); font-size: 0.75rem; padding: 0.35rem 0.9rem; }
+.btn-preview { background: var(--mocha); color: var(--white); font-size: 0.75rem; padding: 0.35rem 1rem; border-radius: 3px; }
 .btn-preview:hover { background: var(--mocha-d); }
 #preview-frame {
   flex: 1;
@@ -202,21 +213,29 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.3rem;
   background: var(--dark);
   color: var(--white);
-  border-radius: 4px;
+  border-radius: 5px;
   font-size: 0.82rem;
   opacity: 0;
   transform: translateY(8px);
-  transition: all 0.3s;
+  transition: all 0.28s;
   pointer-events: none;
   z-index: 999;
-  max-width: 300px;
+  max-width: 320px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
 }
 #toast.show { opacity: 1; transform: translateY(0); }
 #toast.success { background: #2E7D32; }
 #toast.error { background: var(--error); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  #app-body { flex-direction: column; }
+  #left-panel { width: 100%; max-width: 100%; height: 50vh; border-right: none; border-bottom: 2px solid var(--border); }
+  #right-panel { height: 50vh; }
+}
 </style>
 </head>
 <body>
@@ -225,7 +244,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   <div class="nav-title"><span class="nav-brand">株式会社ma</span>HP 編集アプリ</div>
   <div class="nav-actions">
     <button class="btn btn-ghost" onclick="downloadFile()">ダウンロード</button>
-    <button class="btn btn-secondary" onclick="updatePreview()">プレビュー更新</button>
+    <button class="btn btn-secondary" onclick="updatePreview()">▶ プレビュー更新</button>
     <button class="btn btn-primary" onclick="saveFile()">保存</button>
   </div>
 </nav>
@@ -244,7 +263,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   </div>
   <div id="right-panel">
     <div id="preview-toolbar">
-      <span id="preview-label">プレビュー</span>
+      <span id="preview-label">Preview</span>
       <button class="btn btn-preview" onclick="updatePreview()">▶ プレビューを更新</button>
     </div>
     <iframe id="preview-frame" title="プレビュー"></iframe>
@@ -254,305 +273,383 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
 <div id="toast"></div>
 
 <script>
-// ────────────────────────────────────────────────────────────
-// State
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// STATE
+// ================================================================
 let currentPage = 'index';
-let currentDoc = null;   // parsed DOM
-let blobUrl = null;
+let currentDoc  = null;   // DOMParser result
+let blobUrl     = null;   // current blob URL for iframe
 
-// ────────────────────────────────────────────────────────────
-// Field definitions per page
-// Each field: { id, label, selector, prop, type, multi, index }
-//   prop: 'textContent' | 'innerHTML' | 'src' | 'style.backgroundImage' | 'href'
-//   type: 'text' | 'textarea' | 'url'
-//   multi: true → pick nth element (use index)
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// FIELD MAPS
+// Each field:
+//   id       — unique field id
+//   label    — Japanese label shown in UI
+//   selector — CSS selector(s), comma-separated fallbacks
+//   prop     — 'textContent' | 'src' | 'style.backgroundImage' | 'style.backgroundImageUrl'
+//   type     — 'text' | 'textarea' | 'url'
+//   nth      — (optional) pick nth element matching selector
+//   group    — (optional) group label (card box title)
+// ================================================================
 const PAGES = {
+
+  // ──────────────────────────────────────────────────────────────
+  // index.html — top page
+  // ──────────────────────────────────────────────────────────────
   index: {
     label: 'トップページ (index.html)',
     sections: [
       {
         title: 'HERO',
         fields: [
-          { id: 'hero_bg', label: 'ヒーロー背景画像URL', selector: '.hero-bg, .hero-slide, #hero', prop: 'style.backgroundImage', type: 'url' },
-          { id: 'hero_copy', label: 'ヒーローメインコピー', selector: '.hero-copy, .hero-main-copy, .hero-catch, #hero h1, #hero h2', prop: 'textContent', type: 'textarea' },
-          { id: 'hero_sub', label: 'ヒーローサブコピー', selector: '.hero-sub, .hero-lead, .hero-desc', prop: 'textContent', type: 'textarea' },
+          {
+            id: 'hero_bg',
+            label: 'ヒーロー背景画像URL',
+            // The hero uses .hero-bg div with inline background-image style
+            selector: '.hero-bg',
+            prop: 'style.backgroundImageUrl',
+            type: 'url',
+          },
+          {
+            id: 'hero_copy',
+            label: 'ヒーローコピー（メインキャッチ）',
+            selector: '.hero-copy',
+            prop: 'textContent',
+            type: 'textarea',
+          },
         ]
       },
+
       {
-        title: 'NEWS',
-        fields: [
-          { id: 'news_0_date', label: 'ニュース1 日付', selector: '.news-card .news-date, .news-item .date, .news-card:nth-child(1) .date, .news-date', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'news_0_tag', label: 'ニュース1 タグ', selector: '.news-card .news-tag, .news-tag, .news-card .tag', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'news_0_title', label: 'ニュース1 タイトル', selector: '.news-card .news-title, .news-card h3, .news-title', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'news_1_date', label: 'ニュース2 日付', selector: '.news-card .news-date, .news-date', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'news_1_tag', label: 'ニュース2 タグ', selector: '.news-card .news-tag, .news-tag', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'news_1_title', label: 'ニュース2 タイトル', selector: '.news-card .news-title, .news-card h3, .news-title', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'news_2_date', label: 'ニュース3 日付', selector: '.news-card .news-date, .news-date', prop: 'textContent', type: 'text', nth: 2 },
-          { id: 'news_2_tag', label: 'ニュース3 タグ', selector: '.news-card .news-tag, .news-tag', prop: 'textContent', type: 'text', nth: 2 },
-          { id: 'news_2_title', label: 'ニュース3 タイトル', selector: '.news-card .news-title, .news-card h3, .news-title', prop: 'textContent', type: 'text', nth: 2 },
+        title: 'NEWS カード',
+        cardGroups: [
+          {
+            title: 'ニュース 1',
+            fields: [
+              { id: 'news_0_date',  label: '日付',  selector: '.news-card-date',  prop: 'textContent', type: 'text',     nth: 0 },
+              { id: 'news_0_tag',   label: 'タグ',  selector: '.news-card-tag',   prop: 'textContent', type: 'text',     nth: 0 },
+              { id: 'news_0_title', label: 'タイトル', selector: '.news-card-ttl', prop: 'textContent', type: 'text',   nth: 0 },
+              { id: 'news_0_thumb', label: 'サムネURL（背景色/画像）', selector: '.news-card-thumb-bg', prop: 'style.backgroundImageUrl', type: 'url', nth: 0 },
+            ]
+          },
+          {
+            title: 'ニュース 2',
+            fields: [
+              { id: 'news_1_date',  label: '日付',  selector: '.news-card-date',  prop: 'textContent', type: 'text',     nth: 1 },
+              { id: 'news_1_tag',   label: 'タグ',  selector: '.news-card-tag',   prop: 'textContent', type: 'text',     nth: 1 },
+              { id: 'news_1_title', label: 'タイトル', selector: '.news-card-ttl', prop: 'textContent', type: 'text',   nth: 1 },
+              { id: 'news_1_thumb', label: 'サムネURL', selector: '.news-card-thumb-bg', prop: 'style.backgroundImageUrl', type: 'url', nth: 1 },
+            ]
+          },
+          {
+            title: 'ニュース 3',
+            fields: [
+              { id: 'news_2_date',  label: '日付',  selector: '.news-card-date',  prop: 'textContent', type: 'text',     nth: 2 },
+              { id: 'news_2_tag',   label: 'タグ',  selector: '.news-card-tag',   prop: 'textContent', type: 'text',     nth: 2 },
+              { id: 'news_2_title', label: 'タイトル', selector: '.news-card-ttl', prop: 'textContent', type: 'text',   nth: 2 },
+              { id: 'news_2_thumb', label: 'サムネURL', selector: '.news-card-thumb-bg', prop: 'style.backgroundImageUrl', type: 'url', nth: 2 },
+            ]
+          },
         ]
       },
+
       {
-        title: 'EVENT',
-        fields: [
-          { id: 'ev_0_date', label: 'イベント1 日付', selector: '.event-card .event-date, .event-date, .ev-date', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'ev_0_title', label: 'イベント1 タイトル', selector: '.event-card .event-title, .event-card h3, .event-title, .ev-title', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'ev_0_sub', label: 'イベント1 サブテキスト', selector: '.event-card .event-sub, .event-sub, .ev-sub', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'ev_0_status', label: 'イベント1 ステータス', selector: '.event-card .event-status, .event-status, .ev-status', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'ev_1_date', label: 'イベント2 日付', selector: '.event-card .event-date, .event-date, .ev-date', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'ev_1_title', label: 'イベント2 タイトル', selector: '.event-card .event-title, .event-card h3, .event-title, .ev-title', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'ev_1_sub', label: 'イベント2 サブテキスト', selector: '.event-card .event-sub, .event-sub, .ev-sub', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'ev_1_status', label: 'イベント2 ステータス', selector: '.event-card .event-status, .event-status, .ev-status', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'ev_2_date', label: 'イベント3 日付', selector: '.event-card .event-date, .event-date, .ev-date', prop: 'textContent', type: 'text', nth: 2 },
-          { id: 'ev_2_title', label: 'イベント3 タイトル', selector: '.event-card .event-title, .event-card h3, .event-title, .ev-title', prop: 'textContent', type: 'text', nth: 2 },
-          { id: 'ev_2_sub', label: 'イベント3 サブテキスト', selector: '.event-card .event-sub, .event-sub, .ev-sub', prop: 'textContent', type: 'text', nth: 2 },
-          { id: 'ev_2_status', label: 'イベント3 ステータス', selector: '.event-card .event-status, .event-status, .ev-status', prop: 'textContent', type: 'text', nth: 2 },
+        title: 'EVENT カード',
+        cardGroups: [
+          {
+            title: 'イベント 1',
+            fields: [
+              { id: 'ev_0_date',   label: '日付',       selector: '.ev-card-date',  prop: 'textContent', type: 'text', nth: 0 },
+              { id: 'ev_0_title',  label: 'タイトル',   selector: '.ev-card-ttl',   prop: 'textContent', type: 'text', nth: 0 },
+              { id: 'ev_0_sub',    label: 'サブテキスト', selector: '.ev-card-sub', prop: 'textContent', type: 'text', nth: 0 },
+              { id: 'ev_0_badge',  label: 'バッジ（無料など）', selector: '.ev-card-badge', prop: 'textContent', type: 'text', nth: 0 },
+              { id: 'ev_0_status', label: 'ステータス（終了など）', selector: '.ev-status', prop: 'textContent', type: 'text', nth: 0 },
+              { id: 'ev_0_thumb',  label: 'サムネURL', selector: '.ev-thumb-bg', prop: 'style.backgroundImageUrl', type: 'url', nth: 0 },
+            ]
+          },
+          {
+            title: 'イベント 2',
+            fields: [
+              { id: 'ev_1_date',   label: '日付',       selector: '.ev-card-date',  prop: 'textContent', type: 'text', nth: 1 },
+              { id: 'ev_1_title',  label: 'タイトル',   selector: '.ev-card-ttl',   prop: 'textContent', type: 'text', nth: 1 },
+              { id: 'ev_1_sub',    label: 'サブテキスト', selector: '.ev-card-sub', prop: 'textContent', type: 'text', nth: 1 },
+              { id: 'ev_1_badge',  label: 'バッジ', selector: '.ev-card-badge', prop: 'textContent', type: 'text', nth: 1 },
+              { id: 'ev_1_status', label: 'ステータス', selector: '.ev-status', prop: 'textContent', type: 'text', nth: 1 },
+              { id: 'ev_1_thumb',  label: 'サムネURL', selector: '.ev-thumb-bg', prop: 'style.backgroundImageUrl', type: 'url', nth: 1 },
+            ]
+          },
+          {
+            title: 'イベント 3',
+            fields: [
+              { id: 'ev_2_date',   label: '日付',       selector: '.ev-card-date',  prop: 'textContent', type: 'text', nth: 2 },
+              { id: 'ev_2_title',  label: 'タイトル',   selector: '.ev-card-ttl',   prop: 'textContent', type: 'text', nth: 2 },
+              { id: 'ev_2_sub',    label: 'サブテキスト', selector: '.ev-card-sub', prop: 'textContent', type: 'text', nth: 2 },
+              { id: 'ev_2_badge',  label: 'バッジ', selector: '.ev-card-badge', prop: 'textContent', type: 'text', nth: 2 },
+              { id: 'ev_2_status', label: 'ステータス', selector: '.ev-status', prop: 'textContent', type: 'text', nth: 2 },
+              { id: 'ev_2_thumb',  label: 'サムネURL', selector: '.ev-thumb-bg', prop: 'style.backgroundImageUrl', type: 'url', nth: 2 },
+            ]
+          },
         ]
       },
-      {
-        title: 'WORKS（施工例）',
-        fields: [
-          { id: 'w_0_title', label: '施工例1 タイトル', selector: '.works-card .works-title, .works-title, .work-title', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'w_0_sub', label: '施工例1 サブ', selector: '.works-card .works-sub, .works-sub, .work-sub', prop: 'textContent', type: 'text', nth: 0 },
-          { id: 'w_1_title', label: '施工例2 タイトル', selector: '.works-card .works-title, .works-title, .work-title', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'w_1_sub', label: '施工例2 サブ', selector: '.works-card .works-sub, .works-sub, .work-sub', prop: 'textContent', type: 'text', nth: 1 },
-          { id: 'w_2_title', label: '施工例3 タイトル', selector: '.works-card .works-title, .works-title, .work-title', prop: 'textContent', type: 'text', nth: 2 },
-          { id: 'w_2_sub', label: '施工例3 サブ', selector: '.works-card .works-sub, .works-sub, .work-sub', prop: 'textContent', type: 'text', nth: 2 },
-        ]
-      },
+
       {
         title: 'SERVICE',
         fields: [
-          { id: 'svc_0', label: 'サービス1 説明文', selector: '.service-card .service-desc, .service-desc, .svc-desc', prop: 'textContent', type: 'textarea', nth: 0 },
-          { id: 'svc_1', label: 'サービス2 説明文', selector: '.service-card .service-desc, .service-desc, .svc-desc', prop: 'textContent', type: 'textarea', nth: 1 },
-          { id: 'svc_2', label: 'サービス3 説明文', selector: '.service-card .service-desc, .service-desc, .svc-desc', prop: 'textContent', type: 'textarea', nth: 2 },
+          { id: 'svc_0', label: 'サービス1 説明文', selector: '.svc-desc', prop: 'textContent', type: 'textarea', nth: 0 },
+          { id: 'svc_1', label: 'サービス2 説明文', selector: '.svc-desc', prop: 'textContent', type: 'textarea', nth: 1 },
+          { id: 'svc_2', label: 'サービス3 説明文', selector: '.svc-desc', prop: 'textContent', type: 'textarea', nth: 2 },
         ]
       },
     ]
   },
 
+  // ──────────────────────────────────────────────────────────────
+  // nini.html
+  // ──────────────────────────────────────────────────────────────
   nini: {
     label: 'ni-ni 規格住宅 (nini.html)',
     sections: [
       {
         title: 'HERO',
         fields: [
-          { id: 'nini_hero_catch', label: 'ヒーローキャッチコピー', selector: '.hero-catch', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_hero_copy', label: 'ヒーローコピー', selector: '.hero-copy', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_hero_copy2', label: 'ヒーローコピー2', selector: '.hero-copy2', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_spec_main', label: 'スペック（坪数・価格）', selector: '.hero-spec-main', prop: 'textContent', type: 'text' },
-          { id: 'nini_spec_note', label: 'スペック注記', selector: '.hero-spec-note', prop: 'textContent', type: 'text' },
+          { id: 'nini_catch',      label: 'キャッチコピー（上段）',  selector: '.hero-catch',    prop: 'textContent', type: 'textarea' },
+          { id: 'nini_copy',       label: 'コピー（メイン）',        selector: '.hero-copy',     prop: 'textContent', type: 'textarea' },
+          { id: 'nini_copy2',      label: 'コピー（サブ）',          selector: '.hero-copy2',    prop: 'textContent', type: 'textarea' },
+          { id: 'nini_spec_main',  label: 'スペック（坪・価格など）',selector: '.hero-spec-main',prop: 'textContent', type: 'text' },
+          { id: 'nini_spec_note',  label: 'スペック注記',            selector: '.hero-spec-note',prop: 'textContent', type: 'text' },
         ]
       },
       {
         title: 'CONCEPT',
         fields: [
-          { id: 'nini_concept_ttl', label: 'コンセプトタイトル', selector: '.concept-ttl', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_concept_body', label: 'コンセプト本文', selector: '.concept-body', prop: 'textContent', type: 'textarea' },
+          { id: 'nini_c_ttl',  label: 'コンセプトタイトル', selector: '.concept-ttl',  prop: 'textContent', type: 'textarea' },
+          { id: 'nini_c_body', label: 'コンセプト本文',     selector: '.concept-body', prop: 'textContent', type: 'textarea' },
         ]
       },
       {
         title: 'PLANS — MOCHA',
         fields: [
-          { id: 'nini_mocha_concept', label: 'MOCHAコンセプト', selector: '.plan-block.mocha .plan-concept-ja', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_mocha_desc', label: 'MOCHA説明文', selector: '.plan-block.mocha .plan-desc', prop: 'textContent', type: 'textarea' },
+          { id: 'mocha_concept', label: 'MOCHAコンセプト（和名）',  selector: '.plan-block.mocha .plan-concept-ja', prop: 'textContent', type: 'textarea' },
+          { id: 'mocha_desc',    label: 'MOCHA説明文',              selector: '.plan-block.mocha .plan-desc',       prop: 'textContent', type: 'textarea' },
         ]
       },
       {
         title: 'PLANS — GRAY',
         fields: [
-          { id: 'nini_gray_concept', label: 'GRAYコンセプト', selector: '.plan-block.gray .plan-concept-ja', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_gray_desc', label: 'GRAY説明文', selector: '.plan-block.gray .plan-desc', prop: 'textContent', type: 'textarea' },
+          { id: 'gray_concept', label: 'GRAYコンセプト（和名）',   selector: '.plan-block.gray .plan-concept-ja', prop: 'textContent', type: 'textarea' },
+          { id: 'gray_desc',    label: 'GRAY説明文',               selector: '.plan-block.gray .plan-desc',       prop: 'textContent', type: 'textarea' },
         ]
       },
       {
         title: 'PLANS — POP',
         fields: [
-          { id: 'nini_pop_concept', label: 'POPコンセプト', selector: '.plan-block.pop .plan-concept-ja', prop: 'textContent', type: 'textarea' },
-          { id: 'nini_pop_desc', label: 'POP説明文', selector: '.plan-block.pop .plan-desc', prop: 'textContent', type: 'textarea' },
+          { id: 'pop_concept', label: 'POPコンセプト（和名）',    selector: '.plan-block.pop .plan-concept-ja', prop: 'textContent', type: 'textarea' },
+          { id: 'pop_desc',    label: 'POP説明文',                selector: '.plan-block.pop .plan-desc',       prop: 'textContent', type: 'textarea' },
         ]
       },
       {
-        title: 'SPEC',
+        title: 'SPEC（仕様）',
         fields: [
-          { id: 'nini_price', label: '価格（例: 1,850）', selector: '.spec-hl .s-val', prop: 'textContent', type: 'text' },
-          { id: 'nini_price_note', label: '価格注記', selector: '.spec-hl .s-note', prop: 'textContent', type: 'text' },
+          { id: 'price_val',  label: '価格（万円〜）',  selector: '.spec-hl .s-val',  prop: 'textContent', type: 'text' },
+          { id: 'price_note', label: '価格注記',        selector: '.spec-hl .s-note', prop: 'textContent', type: 'text' },
         ]
       },
       {
-        title: 'CTA',
+        title: 'CTA（お問い合わせ）',
         fields: [
-          { id: 'nini_cta_ttl', label: 'CTAタイトル', selector: '.cta-ttl', prop: 'textContent', type: 'text' },
-          { id: 'nini_cta_copy', label: 'CTAコピー', selector: '.cta-copy', prop: 'textContent', type: 'textarea' },
+          { id: 'cta_ttl',  label: 'CTAタイトル',   selector: '.cta-ttl',  prop: 'textContent', type: 'text' },
+          { id: 'cta_copy', label: 'CTAコピー文',   selector: '.cta-copy', prop: 'textContent', type: 'textarea' },
         ]
       },
     ]
   },
 
+  // ──────────────────────────────────────────────────────────────
+  // event-modelhouse.html
+  // ──────────────────────────────────────────────────────────────
   event: {
     label: 'モデルハウスイベント (event-modelhouse.html)',
     sections: [
       {
         title: 'HERO',
         fields: [
-          { id: 'ev_hero_bg', label: 'ヒーロー背景画像URL', selector: '#hero, .hero, .event-hero', prop: 'style.backgroundImage', type: 'url' },
-          { id: 'ev_hero_title', label: 'イベントタイトル', selector: '#hero h1, .hero-title, .event-title, h1', prop: 'textContent', type: 'text' },
-          { id: 'ev_hero_sub', label: 'イベントサブタイトル', selector: '#hero p, .hero-sub, .event-sub-title', prop: 'textContent', type: 'text' },
+          { id: 'ev_hero_bg',    label: 'ヒーロー背景画像URL',     selector: '.ev-hero-img', prop: 'style.backgroundImageUrl', type: 'url' },
+          { id: 'ev_hero_badge', label: 'バッジテキスト',          selector: '.ev-hero-badge', prop: 'textContent', type: 'text' },
+          { id: 'ev_hero_ttl',   label: 'イベントタイトル（h1）',  selector: '.ev-hero-ttl', prop: 'textContent', type: 'textarea' },
+          { id: 'ev_hero_date',  label: 'ヒーロー日程テキスト',    selector: '.ev-hero-date', prop: 'textContent', type: 'text' },
         ]
       },
       {
         title: 'イベント情報',
+        // These use .ev-info-row: nth-child targeting via custom logic
+        // The info rows: 日程, 時間, 場所, 参加費, 定員
         fields: [
-          { id: 'ev_date', label: '日程', selector: '.ev-date, .event-info-date, [class*="date"]', prop: 'textContent', type: 'text' },
-          { id: 'ev_time', label: '時間', selector: '.ev-time, .event-info-time, [class*="time"]', prop: 'textContent', type: 'text' },
-          { id: 'ev_place', label: '場所', selector: '.ev-place, .event-info-place, [class*="place"], [class*="venue"]', prop: 'textContent', type: 'text' },
-          { id: 'ev_fee', label: '参加費', selector: '.ev-fee, .event-fee, [class*="fee"]', prop: 'textContent', type: 'text' },
-          { id: 'ev_capacity', label: '定員', selector: '.ev-capacity, [class*="capacity"], [class*="limit"]', prop: 'textContent', type: 'text' },
+          { id: 'ev_info_0', label: '日程', selector: '.ev-info-value', prop: 'textContent', type: 'text', nth: 0 },
+          { id: 'ev_info_1', label: '時間', selector: '.ev-info-value', prop: 'textContent', type: 'text', nth: 1 },
+          { id: 'ev_info_2', label: '場所', selector: '.ev-info-value', prop: 'textContent', type: 'text', nth: 2 },
+          { id: 'ev_info_3', label: '参加費', selector: '.ev-info-value', prop: 'textContent', type: 'text', nth: 3 },
+          { id: 'ev_info_4', label: '定員',   selector: '.ev-info-value', prop: 'textContent', type: 'text', nth: 4 },
         ]
       },
       {
         title: 'イベント説明文',
         fields: [
-          { id: 'ev_desc_0', label: '説明文1段落目', selector: '.event-desc p, .ev-desc p, .event-body p, #event-desc p', prop: 'textContent', type: 'textarea', nth: 0 },
-          { id: 'ev_desc_1', label: '説明文2段落目', selector: '.event-desc p, .ev-desc p, .event-body p, #event-desc p', prop: 'textContent', type: 'textarea', nth: 1 },
+          { id: 'ev_desc_ttl',  label: '説明セクションタイトル',  selector: '.ev-desc-ttl',  prop: 'textContent', type: 'text' },
+          { id: 'ev_desc_body', label: '説明本文',                selector: '.ev-desc-body', prop: 'innerHTML',   type: 'textarea' },
         ]
       },
       {
-        title: 'ギャラリー画像',
+        title: 'ギャラリー画像（ev-photo内のimgタグ）',
         fields: [
-          { id: 'ev_gal_0', label: 'ギャラリー画像1 URL', selector: '.gallery img, .gallery-img, .gallery .photo, .gallery-grid img', prop: 'src', type: 'url', nth: 0 },
-          { id: 'ev_gal_1', label: 'ギャラリー画像2 URL', selector: '.gallery img, .gallery-img, .gallery .photo, .gallery-grid img', prop: 'src', type: 'url', nth: 1 },
-          { id: 'ev_gal_2', label: 'ギャラリー画像3 URL', selector: '.gallery img, .gallery-img, .gallery .photo, .gallery-grid img', prop: 'src', type: 'url', nth: 2 },
-          { id: 'ev_gal_3', label: 'ギャラリー画像4 URL', selector: '.gallery img, .gallery-img, .gallery .photo, .gallery-grid img', prop: 'src', type: 'url', nth: 3 },
-          { id: 'ev_gal_bg_0', label: 'ギャラリー背景1 URL（div使用時）', selector: '.gallery-item, .gallery-photo, .gallery .item', prop: 'style.backgroundImage', type: 'url', nth: 0 },
-          { id: 'ev_gal_bg_1', label: 'ギャラリー背景2 URL（div使用時）', selector: '.gallery-item, .gallery-photo, .gallery .item', prop: 'style.backgroundImage', type: 'url', nth: 1 },
-          { id: 'ev_gal_bg_2', label: 'ギャラリー背景3 URL（div使用時）', selector: '.gallery-item, .gallery-photo, .gallery .item', prop: 'style.backgroundImage', type: 'url', nth: 2 },
-          { id: 'ev_gal_bg_3', label: 'ギャラリー背景4 URL（div使用時）', selector: '.gallery-item, .gallery-photo, .gallery .item', prop: 'style.backgroundImage', type: 'url', nth: 3 },
+          { id: 'gal_0', label: 'ギャラリー画像1 URL', selector: '[data-gallery-index="0"]', prop: 'src', type: 'url' },
+          { id: 'gal_1', label: 'ギャラリー画像2 URL', selector: '[data-gallery-index="1"]', prop: 'src', type: 'url' },
+          { id: 'gal_2', label: 'ギャラリー画像3 URL', selector: '[data-gallery-index="2"]', prop: 'src', type: 'url' },
+          { id: 'gal_3', label: 'ギャラリー画像4 URL', selector: '[data-gallery-index="3"]', prop: 'src', type: 'url' },
         ]
       },
     ]
   }
 };
 
-// ────────────────────────────────────────────────────────────
-// DOM helpers
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// DOM HELPERS
+// ================================================================
+
+/** Find nth element matching any of the comma-separated selectors */
 function resolveElement(doc, selector, nth) {
-  const selectors = selector.split(',').map(s => s.trim());
-  for (const sel of selectors) {
+  const idx = nth !== undefined ? nth : 0;
+  // Try each comma-separated selector part first (to support nth correctly)
+  const parts = selector.split(',').map(s => s.trim());
+  for (const sel of parts) {
     try {
       const els = doc.querySelectorAll(sel);
-      if (els.length > 0) {
-        const idx = nth !== undefined ? nth : 0;
-        if (els[idx]) return els[idx];
-        if (nth === undefined && els[0]) return els[0];
-      }
-    } catch(e) { /* ignore bad selectors */ }
+      if (els.length > idx) return els[idx];
+    } catch(e) { /* skip bad selector */ }
   }
   return null;
 }
 
-function getElementValue(el, prop) {
+/** Read a value from a DOM element given a property name */
+function getVal(el, prop) {
   if (!el) return '';
   if (prop === 'style.backgroundImage') {
-    const v = el.style.backgroundImage || '';
-    return v.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+    return (el.style.backgroundImage || '')
+      .replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
   }
-  if (prop === 'src') return el.src || el.getAttribute('src') || '';
-  if (prop === 'href') return el.href || el.getAttribute('href') || '';
-  if (prop === 'textContent') return (el.textContent || '').trim();
-  if (prop === 'innerHTML') return el.innerHTML || '';
-  return '';
+  if (prop === 'style.backgroundImageUrl') {
+    // Same as backgroundImage but stored differently in our write logic
+    return (el.style.backgroundImage || '')
+      .replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+  }
+  if (prop === 'src') return el.getAttribute('src') || '';
+  if (prop === 'href') return el.getAttribute('href') || '';
+  if (prop === 'innerHTML') return (el.innerHTML || '').trim();
+  return (el.textContent || '').trim();
 }
 
-function setElementValue(el, prop, value) {
+/** Write a value back to a DOM element */
+function setVal(el, prop, value) {
   if (!el) return;
-  if (prop === 'style.backgroundImage') {
+  if (prop === 'style.backgroundImage' || prop === 'style.backgroundImageUrl') {
     el.style.backgroundImage = value ? `url('${value}')` : '';
     return;
   }
-  if (prop === 'src') { el.setAttribute('src', value); return; }
-  if (prop === 'href') { el.setAttribute('href', value); return; }
-  if (prop === 'textContent') { el.textContent = value; return; }
+  if (prop === 'src')       { el.setAttribute('src', value); return; }
+  if (prop === 'href')      { el.setAttribute('href', value); return; }
   if (prop === 'innerHTML') { el.innerHTML = value; return; }
+  el.textContent = value;
 }
 
-// ────────────────────────────────────────────────────────────
-// Build form
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// BUILD FORM
+// ================================================================
 function buildForm(pageName, doc) {
   const pageDef = PAGES[pageName];
   const container = document.getElementById('form-fields');
   container.innerHTML = '';
 
   pageDef.sections.forEach(section => {
-    const lbl = document.createElement('div');
-    lbl.className = 'section-label';
-    lbl.textContent = section.title;
-    container.appendChild(lbl);
+    // Section header
+    const sectionLbl = document.createElement('div');
+    sectionLbl.className = 'section-label';
+    sectionLbl.textContent = section.title;
+    container.appendChild(sectionLbl);
 
-    section.fields.forEach(field => {
-      const el = resolveElement(doc, field.selector, field.nth);
-      const value = getElementValue(el, field.prop);
-
-      const group = document.createElement('div');
-      group.className = 'field-group';
-
-      const label = document.createElement('label');
-      label.className = 'field-label';
-      label.htmlFor = 'f_' + field.id;
-      label.textContent = field.label;
-      if (!el) label.style.opacity = '0.5';
-      group.appendChild(label);
-
-      if (!el) {
-        const note = document.createElement('div');
-        note.className = 'field-not-found';
-        note.textContent = '（この要素はHTMLに見つかりませんでした）';
-        group.appendChild(note);
-      } else {
-        let input;
-        if (field.type === 'textarea') {
-          input = document.createElement('textarea');
-          input.className = 'field-textarea';
-          input.rows = 3;
-        } else {
-          input = document.createElement('input');
-          input.type = 'text';
-          input.className = field.type === 'url' ? 'field-url' : 'field-input';
-        }
-        input.id = 'f_' + field.id;
-        input.value = value;
-        input.dataset.selector = field.selector;
-        input.dataset.prop = field.prop;
-        if (field.nth !== undefined) input.dataset.nth = field.nth;
-        group.appendChild(input);
-      }
-
-      container.appendChild(group);
-    });
+    // If section has cardGroups (multi-card layout)
+    if (section.cardGroups) {
+      section.cardGroups.forEach(cg => {
+        const card = document.createElement('div');
+        card.className = 'card-group';
+        const cardTitle = document.createElement('div');
+        cardTitle.className = 'card-group-title';
+        cardTitle.textContent = cg.title;
+        card.appendChild(cardTitle);
+        cg.fields.forEach(field => renderField(doc, field, card));
+        container.appendChild(card);
+      });
+    } else if (section.fields) {
+      section.fields.forEach(field => renderField(doc, field, container));
+    }
   });
 }
 
-// ────────────────────────────────────────────────────────────
-// Apply form values to DOM
-// ────────────────────────────────────────────────────────────
+function renderField(doc, field, parent) {
+  const el = resolveElement(doc, field.selector, field.nth);
+  const value = getVal(el, field.prop);
+
+  const group = document.createElement('div');
+  group.className = 'field-group';
+
+  const label = document.createElement('label');
+  label.className = 'field-label' + (el ? '' : ' not-found');
+  label.htmlFor = 'f_' + field.id;
+  label.textContent = field.label;
+  group.appendChild(label);
+
+  if (!el) {
+    const note = document.createElement('div');
+    note.className = 'field-not-found';
+    note.textContent = '（この要素はHTMLに見つかりませんでした）';
+    group.appendChild(note);
+  } else {
+    let input;
+    if (field.type === 'textarea') {
+      input = document.createElement('textarea');
+      input.className = 'field-textarea';
+      input.rows = 3;
+      input.value = value;
+    } else {
+      input = document.createElement('input');
+      input.type = 'text';
+      input.className = field.type === 'url' ? 'field-url' : 'field-input';
+      input.value = value;
+    }
+    input.id = 'f_' + field.id;
+    input.dataset.selector = field.selector;
+    input.dataset.prop = field.prop;
+    if (field.nth !== undefined) input.dataset.nth = String(field.nth);
+    group.appendChild(input);
+  }
+
+  parent.appendChild(group);
+}
+
+// ================================================================
+// APPLY FORM → DOM
+// ================================================================
 function applyFormToDoc(doc) {
-  const inputs = document.querySelectorAll('#form-fields [data-selector]');
-  inputs.forEach(input => {
+  document.querySelectorAll('#form-fields [data-selector]').forEach(input => {
     const selector = input.dataset.selector;
-    const prop = input.dataset.prop;
-    const nth = input.dataset.nth !== undefined ? parseInt(input.dataset.nth) : undefined;
-    const el = resolveElement(doc, selector, nth);
-    if (el) setElementValue(el, prop, input.value);
+    const prop     = input.dataset.prop;
+    const nth      = input.dataset.nth !== undefined ? parseInt(input.dataset.nth, 10) : undefined;
+    const el       = resolveElement(doc, selector, nth);
+    if (el) setVal(el, prop, input.value);
   });
 }
 
-// ────────────────────────────────────────────────────────────
-// Preview
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// PREVIEW
+// ================================================================
 function updatePreview() {
   if (!currentDoc) return;
   applyFormToDoc(currentDoc);
@@ -560,11 +657,13 @@ function updatePreview() {
   if (blobUrl) URL.revokeObjectURL(blobUrl);
   blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
   document.getElementById('preview-frame').src = blobUrl;
+  document.getElementById('preview-label').textContent =
+    'Preview — ' + (PAGES[currentPage] ? PAGES[currentPage].label : currentPage);
 }
 
-// ────────────────────────────────────────────────────────────
-// Load page
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// LOAD PAGE FROM SERVER
+// ================================================================
 async function loadPage(pageName) {
   const statusEl = document.getElementById('form-status');
   statusEl.className = 'form-status loading';
@@ -572,12 +671,15 @@ async function loadPage(pageName) {
   document.getElementById('form-fields').innerHTML = '';
 
   try {
-    const res = await fetch(`/api/file?name=${pageName}`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const res = await fetch(`/api/file?name=${encodeURIComponent(pageName)}`);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
     const data = await res.json();
 
     const parser = new DOMParser();
-    currentDoc = parser.parseFromString(data.content, 'text/html');
+    currentDoc  = parser.parseFromString(data.content, 'text/html');
     currentPage = pageName;
 
     buildForm(pageName, currentDoc);
@@ -586,14 +688,15 @@ async function loadPage(pageName) {
   } catch (err) {
     statusEl.className = 'form-status error';
     statusEl.textContent = `読み込みエラー: ${err.message}`;
+    console.error('loadPage error:', err);
   }
 }
 
-// ────────────────────────────────────────────────────────────
-// Save
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// SAVE TO SERVER
+// ================================================================
 async function saveFile() {
-  if (!currentDoc) return;
+  if (!currentDoc) { showToast('ファイルが読み込まれていません', 'error'); return; }
   applyFormToDoc(currentDoc);
   const html = '<!DOCTYPE html>' + currentDoc.documentElement.outerHTML;
 
@@ -604,51 +707,56 @@ async function saveFile() {
       body: JSON.stringify({ name: currentPage, content: html })
     });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Unknown error');
+    if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
     showToast(data.message || '保存しました。', 'success');
   } catch (err) {
     showToast(`保存失敗: ${err.message}`, 'error');
+    console.error('saveFile error:', err);
   }
 }
 
-// ────────────────────────────────────────────────────────────
-// Download
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// DOWNLOAD
+// ================================================================
 function downloadFile() {
-  if (!currentDoc) return;
+  if (!currentDoc) { showToast('ファイルが読み込まれていません', 'error'); return; }
   applyFormToDoc(currentDoc);
   const html = '<!DOCTYPE html>' + currentDoc.documentElement.outerHTML;
-  const a = document.createElement('a');
   const fileNames = { index: 'index.html', nini: 'nini.html', event: 'event-modelhouse.html' };
+  const filename = fileNames[currentPage] || 'page.html';
+  const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-  a.download = fileNames[currentPage] || 'page.html';
+  a.download = filename;
+  document.body.appendChild(a);
   a.click();
-  showToast(`${a.download} をダウンロードしました。`);
+  document.body.removeChild(a);
+  showToast(`${filename} をダウンロードしました。`);
 }
 
-// ────────────────────────────────────────────────────────────
-// Tab switch
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// TAB SWITCH
+// ================================================================
 function switchTab(pageName, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   loadPage(pageName);
 }
 
-// ────────────────────────────────────────────────────────────
-// Toast
-// ────────────────────────────────────────────────────────────
-function showToast(msg, type = '') {
+// ================================================================
+// TOAST
+// ================================================================
+let toastTimer = null;
+function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'show' + (type ? ' ' + type : '');
-  clearTimeout(t._timer);
-  t._timer = setTimeout(() => { t.className = ''; }, 3000);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 3500);
 }
 
-// ────────────────────────────────────────────────────────────
-// Init
-// ────────────────────────────────────────────────────────────
+// ================================================================
+// INIT — load first tab on start
+// ================================================================
 loadPage('index');
 </script>
 </body>
