@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ni-ni | 株式会社ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8E4DC;--bg2:#DEDAD1;--dark:#2A2520;--mid:#6B6158;
+  --light:#F2EFE8;--line:rgba(42,37,32,0.12);--white:#FAF8F4;
+  --c-mocha:#A08060;--c-gray:#888880;--c-pop:#C07850;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Serif JP',serif;background:var(--bg);color:var(--dark);font-weight:300;overflow-x:hidden;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(232,228,220,0.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:400;color:var(--dark);letter-spacing:0.08em;text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;}
+.nav-logo-sub{font-size:0.55rem;letter-spacing:0.22em;color:var(--mid);font-family:'Noto Sans JP',sans-serif;font-weight:300;align-self:center;}
+.nav-right{display:flex;align-items:center;gap:2rem;}
+.nav-back{font-size:0.62rem;letter-spacing:0.18em;color:var(--mid);text-decoration:none;font-family:'Noto Sans JP',sans-serif;transition:color 0.3s;}
+.nav-back:hover{color:var(--dark);}
+.nav-cta{font-size:0.62rem;letter-spacing:0.18em;color:var(--dark);padding:0.45rem 1.2rem;border:1px solid rgba(42,37,32,0.35);text-decoration:none;font-family:'Noto Sans JP',sans-serif;transition:all 0.3s;}
+.nav-cta:hover{background:var(--dark);color:var(--white);}
+
+#hero{padding-top:64px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;background:var(--bg);}
+.hero-vline{position:absolute;top:64px;bottom:0;width:1px;background:var(--line);}
+.hero-vline.l{left:3rem;}.hero-vline.r{right:3rem;}
+.hero-vtext{position:absolute;writing-mode:vertical-rl;font-family:'Cormorant Garamond',serif;font-size:0.6rem;letter-spacing:0.45em;color:rgba(42,37,32,0.15);top:50%;transform:translateY(-50%);}
+.hero-vtext.l{left:1rem;}.hero-vtext.r{right:1rem;}
+.hero-inner{position:relative;z-index:2;padding:4rem 2rem;}
+.hero-catch{font-family:'Noto Serif JP',serif;font-size:clamp(0.8rem,1.4vw,0.95rem);font-weight:200;color:var(--mid);letter-spacing:0.22em;line-height:2.4;margin-bottom:2rem;opacity:0;animation:fadeUp 1s 0.2s forwards;}
+.hero-brand{font-family:'Playfair Display',serif;font-size:clamp(5rem,14vw,11rem);font-weight:400;color:var(--dark);letter-spacing:0.04em;line-height:1;margin-bottom:3rem;opacity:0;animation:fadeUp 1s 0.45s forwards;font-style:normal;}
+.hero-specs{margin-bottom:2.5rem;opacity:0;animation:fadeUp 1s 0.65s forwards;}
+.hero-spec-main{font-family:'Noto Serif JP',serif;font-size:clamp(1.2rem,3vw,2rem);font-weight:400;color:var(--dark);letter-spacing:0.12em;line-height:1.7;}
+.hero-spec-note{font-size:0.72rem;font-weight:200;color:var(--mid);letter-spacing:0.15em;margin-top:0.5rem;}
+.hero-line{width:1px;height:52px;background:var(--line);margin:2.5rem auto;opacity:0;animation:fadeUp 1s 0.85s forwards;}
+.hero-copy{font-family:'Noto Serif JP',serif;font-size:clamp(0.82rem,1.5vw,1rem);font-weight:200;color:var(--mid);line-height:2.8;letter-spacing:0.1em;max-width:460px;margin:0 auto 1.2rem;opacity:0;animation:fadeUp 1s 1.05s forwards;}
+.hero-copy2{font-family:'Noto Serif JP',serif;font-size:clamp(0.78rem,1.3vw,0.9rem);font-weight:200;color:rgba(42,37,32,0.45);line-height:2.6;letter-spacing:0.08em;max-width:460px;margin:0 auto 3.5rem;opacity:0;animation:fadeUp 1s 1.15s forwards;}
+.hero-num-wrap{opacity:0;animation:fadeUp 1s 1.3s forwards;}
+.hero-num{font-family:'Playfair Display',serif;font-size:clamp(5rem,11vw,8rem);font-weight:400;color:var(--dark);line-height:1;letter-spacing:-0.02em;}
+.hero-num-sub{font-family:'Cormorant Garamond',serif;font-size:0.85rem;font-weight:300;color:var(--mid);letter-spacing:0.4em;margin-top:0.3rem;}
+
+#concept{background:var(--light);padding:6rem 2.5rem;border-top:1px solid var(--line);}
+.concept-inner{max-width:660px;margin:0 auto;text-align:center;}
+.sec-ey{font-family:'Cormorant Garamond',serif;font-size:0.7rem;letter-spacing:0.5em;color:var(--mid);display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1.2rem;}
+.sec-ey::before,.sec-ey::after{content:'';display:block;width:24px;height:1px;background:var(--line);}
+.concept-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.2rem,2.2vw,1.6rem);font-weight:200;color:var(--dark);letter-spacing:0.15em;line-height:2;margin-bottom:2rem;}
+.concept-body{font-family:'Noto Serif JP',serif;font-size:0.84rem;font-weight:200;color:var(--mid);line-height:2.8;letter-spacing:0.06em;}
+
+#plans{background:var(--bg);padding:4rem 0;}
+.plans-head{text-align:center;padding:0 2.5rem 3rem;}
+
+.plan-block{border-top:1px solid var(--line);padding:4rem 2.5rem;}
+.plan-block:last-child{border-bottom:1px solid var(--line);}
+.plan-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:180px 1fr;gap:4rem;align-items:start;}
+.plan-block:nth-child(even) .plan-inner{grid-template-columns:1fr 180px;}
+.plan-block:nth-child(even) .plan-l{order:2;}
+.plan-block:nth-child(even) .plan-r{order:1;}
+.plan-style-num{font-family:'Cormorant Garamond',serif;font-size:0.62rem;letter-spacing:0.4em;color:var(--mid);margin-bottom:0.8rem;}
+.plan-name{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:400;line-height:1;letter-spacing:0.06em;margin-bottom:0.6rem;}
+.plan-block.mocha .plan-name{color:var(--c-mocha);}
+.plan-block.gray .plan-name{color:var(--c-gray);}
+.plan-block.pop .plan-name{color:var(--c-pop);}
+.plan-bar{width:18px;height:1px;margin-bottom:1.2rem;}
+.plan-block.mocha .plan-bar{background:var(--c-mocha);}
+.plan-block.gray .plan-bar{background:var(--c-gray);}
+.plan-block.pop .plan-bar{background:var(--c-pop);}
+.plan-concept-ja{font-family:'Noto Serif JP',serif;font-size:0.78rem;font-weight:200;color:var(--mid);line-height:2.1;letter-spacing:0.06em;}
+.plan-visual{width:100%;aspect-ratio:3/4;overflow:hidden;position:relative;}
+.plan-visual-bg{width:100%;height:100%;transition:transform 0.8s cubic-bezier(0.16,1,0.3,1);}
+.plan-block:hover .plan-visual-bg{transform:scale(1.04);}
+.plan-block.mocha .plan-visual-bg{background:linear-gradient(160deg,#C4B09A,#A8957E,#8B7B68);}
+.plan-block.gray .plan-visual-bg{background:linear-gradient(160deg,#B8B8B0,#989890,#787870);}
+.plan-block.pop .plan-visual-bg{background:linear-gradient(160deg,#C89070,#A87050,#885030);}
+.plan-visual-lbl{position:absolute;bottom:1rem;right:1rem;font-family:'Cormorant Garamond',serif;font-size:0.58rem;letter-spacing:0.3em;color:rgba(255,255,255,0.4);}
+.plan-desc-area{max-width:900px;margin:2rem auto 0;padding:0;}
+.plan-desc{font-family:'Noto Serif JP',serif;font-size:0.82rem;font-weight:200;color:var(--mid);line-height:2.7;letter-spacing:0.06em;margin-bottom:1.5rem;}
+.plan-tags{display:flex;flex-wrap:wrap;gap:0.45rem;margin-bottom:1.6rem;}
+.plan-tag{font-family:'Noto Sans JP',sans-serif;font-size:0.55rem;letter-spacing:0.14em;padding:0.18rem 0.75rem;border:1px solid var(--line);color:var(--mid);}
+.plan-cta-link{display:inline-flex;align-items:center;gap:0.5rem;font-family:'Noto Sans JP',sans-serif;font-size:0.62rem;letter-spacing:0.18em;text-decoration:none;color:var(--dark);border-bottom:1px solid var(--line);padding-bottom:2px;transition:all 0.3s;}
+.plan-block.mocha .plan-cta-link:hover{color:var(--c-mocha);border-color:var(--c-mocha);}
+.plan-block.gray .plan-cta-link:hover{color:var(--c-gray);border-color:var(--c-gray);}
+.plan-block.pop .plan-cta-link:hover{color:var(--c-pop);border-color:var(--c-pop);}
+
+#spec{background:var(--bg2);padding:6rem 2.5rem;border-top:1px solid var(--line);}
+.spec-inner{max-width:840px;margin:0 auto;}
+.spec-head{text-align:center;margin-bottom:3rem;}
+.spec-ttl-en{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--dark);letter-spacing:0.08em;}
+.spec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);}
+.spec-hl{background:var(--dark);padding:2.5rem 2rem;grid-column:span 3;}
+.spec-hl .s-label{color:rgba(255,255,255,0.35);}
+.spec-hl .s-val{color:var(--white);font-size:2.2rem;}
+.spec-hl .s-note{color:rgba(255,255,255,0.25);}
+.spec-item{background:var(--bg2);padding:2rem 1.8rem;}
+.s-label{font-family:'Noto Sans JP',sans-serif;font-size:0.54rem;letter-spacing:0.3em;color:var(--mid);margin-bottom:0.6rem;}
+.s-val{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--dark);letter-spacing:0.04em;line-height:1.2;}
+.s-unit{font-family:'Noto Serif JP',serif;font-size:0.7rem;color:var(--mid);margin-left:0.15rem;}
+.s-note{font-family:'Noto Serif JP',serif;font-size:0.68rem;font-weight:200;color:rgba(42,37,32,0.4);margin-top:0.4rem;line-height:1.8;}
+
+#cta{background:var(--light);padding:7rem 2.5rem;text-align:center;border-top:1px solid var(--line);}
+.cta-inner{max-width:520px;margin:0 auto;}
+.cta-brand{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:400;color:var(--dark);letter-spacing:0.1em;margin-bottom:0.5rem;}
+.cta-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1rem,1.8vw,1.25rem);font-weight:200;color:var(--dark);letter-spacing:0.12em;line-height:2;margin-bottom:1.5rem;}
+.cta-copy{font-family:'Noto Serif JP',serif;font-size:0.82rem;font-weight:200;color:var(--mid);line-height:2.6;letter-spacing:0.06em;margin-bottom:3rem;}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-line{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2rem;background:#00B900;color:#fff;text-decoration:none;font-family:'Noto Sans JP',sans-serif;font-size:0.66rem;letter-spacing:0.14em;transition:all 0.3s;}
+.btn-line:hover{background:#009900;}
+.btn-line svg{width:18px;height:18px;fill:#fff;flex-shrink:0;}
+.btn-form{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2rem;border:1px solid rgba(42,37,32,0.28);color:var(--dark);text-decoration:none;font-family:'Noto Sans JP',sans-serif;font-size:0.66rem;letter-spacing:0.14em;transition:all 0.3s;}
+.btn-form:hover{background:var(--dark);color:var(--white);}
+
+footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.ft-copy{font-family:'Noto Sans JP',sans-serif;font-size:0.56rem;color:rgba(42,37,32,0.28);letter-spacing:0.07em;}
+.ft-back{font-family:'Noto Sans JP',sans-serif;font-size:0.58rem;letter-spacing:0.14em;color:var(--mid);text-decoration:none;transition:color 0.3s;}
+.ft-back:hover{color:var(--dark);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(14px);transition:opacity 0.9s ease,transform 0.9s ease;}
+.reveal.on{opacity:1;transform:translateY(0);}
+.reveal-d1{transition-delay:0.15s;}.reveal-d2{transition-delay:0.3s;}
+
+@media(max-width:768px){
+  .hero-vline,.hero-vtext{display:none;}
+  .plan-inner,.plan-block:nth-child(even) .plan-inner{grid-template-columns:1fr;gap:1.5rem;}
+  .plan-block:nth-child(even) .plan-l,.plan-block:nth-child(even) .plan-r{order:unset;}
+  .plan-visual{aspect-ratio:16/9;}
+  .spec-grid{grid-template-columns:1fr 1fr;}
+  .spec-hl{grid-column:span 2;}
+  footer{flex-direction:column;gap:1rem;text-align:center;}
+  nav{padding:0 1.2rem;}
+}
+@media(max-width:480px){
+  .spec-grid{grid-template-columns:1fr;}
+  .spec-hl{grid-column:span 1;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← トップへ</a>
+    <a href="index.html#contact" class="nav-cta">CONTACT</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="hero-vline l"></div>
+  <div class="hero-vline r"></div>
+  <div class="hero-vtext l">NI-NI</div>
+  <div class="hero-vtext r">NI-NI</div>
+  <div class="hero-inner">
+    <p class="hero-catch">小さく、豊かに。<br>２２坪で見つける、ちょうどいい幸せ。</p>
+    <h1 class="hero-brand" style="font-family:'Playfair Display',serif;font-weight:400;font-size:clamp(5rem,14vw,11rem);letter-spacing:0.02em;line-height:1;display:flex;align-items:center;justify-content:center;gap:0.2em;">
+      <span style="display:inline-block;">ni</span>
+      <span style="display:inline-block;width:0.4em;height:4px;background:#2A2520;flex-shrink:0;transform:translateY(0.15em);"></span>
+      <span style="display:inline-block;">ni</span>
+    </h1>
+    <div class="hero-specs">
+      <p class="hero-spec-main">耐震等級３　断熱等級５<br>延床２２坪　1850万〜</p>
+      <p class="hero-spec-note">※ガレージは別途費用</p>
+    </div>
+    <div class="hero-line"></div>
+    <p class="hero-copy">余計なものを手放して、<br>自分らしいリズムで暮らしていく。</p>
+    <p class="hero-copy2">
+      "削ぎ落とす"のではなく、<br>
+      そっと"整える"という価値観。<br>
+      ここから、はじめられる家。<br>
+      自分に戻れる暮らしがある。
+    </p>
+    <div class="hero-num-wrap">
+      <p class="hero-num">22</p>
+      <p class="hero-num-sub">ma</p>
+    </div>
+  </div>
+</section>
+
+<section id="concept">
+  <div class="concept-inner reveal">
+    <p class="sec-ey">Concept</p>
+    <h2 class="concept-ttl">必要なものだけを、<br>丁寧に選ぶ暮らし。</h2>
+    <p class="concept-body">ni-niは株式会社maの規格住宅シリーズです。広さより豊かさ。22坪というコンパクトな空間に、maの「間」の哲学を凝縮しました。3つのスタイルから、あなたとご家族のライフスタイルに合ったプランをお選びください。</p>
+  </div>
+</section>
+
+<section id="plans">
+  <div class="plans-head reveal"><p class="sec-ey">Style</p></div>
+
+  <div class="plan-block mocha">
+    <div class="plan-inner reveal">
+      <div class="plan-l">
+        <p class="plan-style-num">STYLE 01</p>
+        <p class="plan-name">MOCHA</p>
+        <div class="plan-bar"></div>
+        <p class="plan-concept-ja">和モダン・穏やかで<br>優しい暮らし</p>
+      </div>
+      <div class="plan-r">
+        <div class="plan-visual"><div class="plan-visual-bg"></div><span class="plan-visual-lbl">MOCHA</span></div>
+      </div>
+    </div>
+    <div class="plan-desc-area reveal reveal-d1" style="max-width:900px;margin:2rem auto 0;padding:0;">
+      <p class="plan-desc">自然素材と柔らかな光が調和した、和の心地よさをまとったプラン。漆喰の壁、無垢の床、落ち着きと温かさが共存する空間。忙しい日常の中に、ほっと息がつける場所を。</p>
+      <div class="plan-tags"><span class="plan-tag">自然素材</span><span class="plan-tag">和モダン</span><span class="plan-tag">無垢材</span><span class="plan-tag">落ち着き</span></div>
+      <a href="index.html#contact" class="plan-cta-link">このプランで相談する →</a>
+    </div>
+  </div>
+
+  <div class="plan-block gray">
+    <div class="plan-inner reveal">
+      <div class="plan-l">
+        <p class="plan-style-num">STYLE 02</p>
+        <p class="plan-name">GRAY</p>
+        <div class="plan-bar"></div>
+        <p class="plan-concept-ja">シンプル・モダンな<br>洗練された暮らし</p>
+      </div>
+      <div class="plan-r">
+        <div class="plan-visual"><div class="plan-visual-bg"></div><span class="plan-visual-lbl">GRAY</span></div>
+      </div>
+    </div>
+    <div class="plan-desc-area reveal reveal-d1" style="max-width:900px;margin:2rem auto 0;padding:0;">
+      <p class="plan-desc">余計なものを削ぎ落とし、本当に必要なものだけを丁寧に選んだプラン。白と黒とグレーが織りなすクリーンな空間は、どんな家具やインテリアとも相性抜群。</p>
+      <div class="plan-tags"><span class="plan-tag">シンプル</span><span class="plan-tag">モダン</span><span class="plan-tag">洗練</span><span class="plan-tag">機能的</span></div>
+      <a href="index.html#contact" class="plan-cta-link">このプランで相談する →</a>
+    </div>
+  </div>
+
+  <div class="plan-block pop">
+    <div class="plan-inner reveal">
+      <div class="plan-l">
+        <p class="plan-style-num">STYLE 03</p>
+        <p class="plan-name">POP</p>
+        <div class="plan-bar"></div>
+        <p class="plan-concept-ja">自分らしく、好きな色で<br>暮らす</p>
+      </div>
+      <div class="plan-r">
+        <div class="plan-visual"><div class="plan-visual-bg"></div><span class="plan-visual-lbl">POP</span></div>
+      </div>
+    </div>
+    <div class="plan-desc-area reveal reveal-d1" style="max-width:900px;margin:2rem auto 0;padding:0;">
+      <p class="plan-desc">色を楽しみ、個性を大切に。「自分の家」らしさを思いきり表現できる自由なプラン。アクセントカラーや素材の組み合わせで、唯一無二の空間をつくりあげます。</p>
+      <div class="plan-tags"><span class="plan-tag">カラフル</span><span class="plan-tag">個性的</span><span class="plan-tag">自由</span><span class="plan-tag">オリジナル</span></div>
+      <a href="index.html#contact" class="plan-cta-link">このプランで相談する →</a>
+    </div>
+  </div>
+</section>
+
+<section id="spec">
+  <div class="spec-inner">
+    <div class="spec-head reveal">
+      <p class="sec-ey">Spec</p>
+      <p class="spec-ttl-en">Standard Specification</p>
+    </div>
+    <div class="spec-grid reveal">
+      <div class="spec-hl">
+        <p class="s-label">価格</p>
+        <p class="s-val">1,850<span class="s-unit">万円〜（税込）</span></p>
+        <p class="s-note">※ガレージは別途費用　※土地代・外構工事は含みません</p>
+      </div>
+      <div class="spec-item"><p class="s-label">延床面積</p><p class="s-val">22<span class="s-unit">坪（約72㎡）</span></p><p class="s-note">家族4人が心地よく暮らせるコンパクト設計</p></div>
+      <div class="spec-item"><p class="s-label">耐震等級</p><p class="s-val">3<span class="s-unit">等級</span></p><p class="s-note">最高等級。地震に強い安心の構造</p></div>
+      <div class="spec-item"><p class="s-label">断熱等級</p><p class="s-val">5<span class="s-unit">等級</span></p><p class="s-note">高断熱・高気密で一年中快適な室内環境</p></div>
+      <div class="spec-item"><p class="s-label">構造</p><p class="s-val" style="font-size:1.2rem;">木造<span class="s-unit">軸組工法</span></p><p class="s-note">茨城の気候に最適化した工法</p></div>
+      <div class="spec-item"><p class="s-label">工期目安</p><p class="s-val">4〜5<span class="s-unit">ヶ月</span></p><p class="s-note">規格住宅のため短期間で実現</p></div>
+      <div class="spec-item"><p class="s-label">対応エリア</p><p class="s-val" style="font-size:1.2rem;">茨城県<span class="s-unit">全域</span></p><p class="s-note">水戸市を中心に県内全域対応</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="cta-inner reveal">
+    <p class="cta-brand" style="display:flex;align-items:center;justify-content:center;gap:0.2em;font-family:'Playfair Display',serif;font-weight:400;">
+      <span style="display:inline-block;">ni</span>
+      <span style="display:inline-block;width:0.4em;height:3px;background:#2A2520;flex-shrink:0;transform:translateY(0.15em);"></span>
+      <span style="display:inline-block;">ni</span>
+    </p>
+    <h2 class="cta-ttl">気になるプランがありましたか？</h2>
+    <p class="cta-copy">「どのスタイルが合うかわからない」でも大歓迎です。<br>まずはお気軽にご相談ください。</p>
+    <div class="cta-btns">
+      <a href="https://line.me/R/ti/p/@manoie" class="btn-line" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        LINEで相談する
+      </a>
+      <a href="index.html#contact" class="btn-form">お問い合わせフォーム →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p class="ft-copy">© 2026 株式会社ma ／ ni-niは株式会社maの規格住宅シリーズです。</p>
+  <a href="index.html" class="ft-back">← 株式会社maトップへ</a>
+</footer>
+
+<script>
+const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('on');io.unobserve(el.target);}});},{threshold:0.06});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
