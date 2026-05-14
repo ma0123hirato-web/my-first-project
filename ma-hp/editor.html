@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>株式会社ma HP 編集アプリ</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --mocha: #B8977E; --mocha-d: #9A7A63; --mocha-l: #D4B99E;
+  --bg: #FAF8F5; --dark: #2E2A27; --mid: #6B5B4E;
+  --soft: #EDE6DC; --border: #D9CFC6; --white: #fff;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); font-size: 14px; }
+
+/* ── WELCOME SCREEN ── */
+#welcome {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  height: 100vh; text-align: center; gap: 1.5rem;
+}
+#welcome h1 { font-size: 1.3rem; font-weight: 500; color: var(--dark); letter-spacing: 0.08em; }
+#welcome p { font-size: 0.85rem; color: var(--mid); line-height: 2; }
+#welcome .brand { color: var(--mocha); font-weight: 500; }
+.open-btn {
+  margin-top: 0.5rem; padding: 0.9rem 2.5rem; background: var(--mocha);
+  color: var(--white); border: none; border-radius: 4px; font-family: inherit;
+  font-size: 0.95rem; cursor: pointer; letter-spacing: 0.08em; transition: background 0.2s;
+}
+.open-btn:hover { background: var(--mocha-d); }
+#welcome .note {
+  font-size: 0.72rem; color: #aaa; max-width: 320px; line-height: 1.8;
+  border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem 1rem;
+  background: var(--white);
+}
+
+/* ── APP LAYOUT ── */
+#app { display: none; flex-direction: column; height: 100vh; }
+#app.visible { display: flex; }
+
+#app-nav {
+  height: 52px; background: var(--dark); color: var(--white); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem;
+}
+.nav-title { font-size: 0.88rem; letter-spacing: 0.05em; }
+.nav-brand { color: var(--mocha-l); margin-right: 0.4rem; }
+.nav-folder { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-left: 0.75rem; }
+.nav-actions { display: flex; gap: 0.6rem; }
+
+.btn { cursor: pointer; border: none; font-family: inherit; font-size: 0.8rem; border-radius: 3px; padding: 0.42rem 0.9rem; transition: all 0.2s; letter-spacing: 0.04em; }
+.btn-primary { background: var(--mocha); color: var(--white); }
+.btn-primary:hover { background: var(--mocha-d); }
+.btn-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+.btn-outline:hover { background: rgba(255,255,255,0.08); }
+.btn-ghost { background: transparent; color: var(--mocha-l); font-size: 0.75rem; padding: 0.35rem 0.7rem; text-decoration: underline; }
+.btn-ghost:hover { color: var(--white); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#app-body { display: flex; flex: 1; overflow: hidden; }
+
+/* ── LEFT PANEL ── */
+#left-panel {
+  width: 400px; min-width: 300px; display: flex; flex-direction: column;
+  border-right: 2px solid var(--border); background: var(--white); overflow: hidden;
+}
+#tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--soft); flex-shrink: 0; }
+.tab-btn {
+  flex: 1; padding: 0.8rem 0.4rem; border: none; background: transparent;
+  font-family: inherit; font-size: 0.75rem; color: var(--mid); cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.03em;
+}
+.tab-btn.active { color: var(--mocha-d); border-bottom-color: var(--mocha); background: var(--white); font-weight: 500; }
+.tab-btn:hover:not(.active) { background: rgba(184,151,126,0.08); }
+
+#form-area { flex: 1; overflow-y: auto; padding: 0.75rem 1rem 3rem; }
+
+.sec-label {
+  font-size: 0.58rem; letter-spacing: 0.2em; color: var(--mocha); font-weight: 500;
+  text-transform: uppercase; padding: 1.1rem 0 0.45rem; border-bottom: 1px solid var(--soft);
+  margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.sec-label::before { content: ''; display: block; width: 14px; height: 1px; background: var(--mocha); }
+
+.field-group { margin-bottom: 0.85rem; }
+.field-label { display: block; font-size: 0.7rem; color: var(--mid); margin-bottom: 0.28rem; }
+.field-input, .field-textarea, .field-url {
+  width: 100%; font-family: inherit; font-size: 0.8rem; color: var(--dark);
+  background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+  padding: 0.44rem 0.6rem; transition: border-color 0.2s, box-shadow 0.2s; line-height: 1.5;
+}
+.field-input:focus, .field-textarea:focus, .field-url:focus {
+  outline: none; border-color: var(--mocha); background: var(--white);
+  box-shadow: 0 0 0 2px rgba(184,151,126,0.15);
+}
+.field-textarea { resize: vertical; min-height: 64px; }
+.field-url { font-size: 0.72rem; font-family: monospace; color: var(--mid); }
+
+.card-box {
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 0.7rem 0.8rem 0.3rem; margin-bottom: 0.7rem; background: #FDFBF9;
+}
+.card-box-title {
+  font-size: 0.65rem; font-weight: 500; color: var(--mocha-d);
+  margin-bottom: 0.55rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--soft);
+  letter-spacing: 0.06em;
+}
+
+/* ── RIGHT PANEL ── */
+#right-panel { flex: 1; display: flex; flex-direction: column; background: #E8E4DC; overflow: hidden; }
+#preview-bar {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.9rem;
+  background: rgba(42,37,32,0.06); border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+#preview-label { font-size: 0.65rem; color: var(--mid); letter-spacing: 0.1em; flex: 1; text-transform: uppercase; }
+.btn-preview { background: var(--mocha); color: var(--white); font-size: 0.73rem; padding: 0.32rem 0.9rem; }
+.btn-preview:hover { background: var(--mocha-d); }
+#preview-frame { flex: 1; width: 100%; border: none; background: var(--white); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.7rem 1.2rem;
+  background: var(--dark); color: var(--white); border-radius: 4px; font-size: 0.8rem;
+  opacity: 0; transform: translateY(8px); transition: all 0.25s;
+  pointer-events: none; z-index: 999; max-width: 300px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.ok { background: #2E7D32; }
+#toast.ng { background: #C62828; }
+
+@media (max-width: 860px) {
+  #app-body { flex-direction: column; }
+  #left-panel { width: 100%; min-width: unset; height: 55vh; border-right: none; border-bottom: 2px solid var(--border); }
+  #right-panel { height: 45vh; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── WELCOME ── -->
+<div id="welcome">
+  <h1><span class="brand">株式会社ma</span> HP 編集アプリ</h1>
+  <p>ma-hp フォルダを選択すると<br>ホームページを編集できます</p>
+  <button class="open-btn" onclick="openFolder()">📁 ma-hp フォルダを開く</button>
+  <div class="note">
+    ※ Chrome または Edge で開いてください<br>
+    ※ ファイルの保存許可を求められたら「許可」を押してください
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <nav id="app-nav">
+    <div class="nav-title">
+      <span class="nav-brand">株式会社ma</span>HP 編集アプリ
+      <span class="nav-folder" id="folder-name"></span>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="downloadFile()">ダウンロード</button>
+      <button class="btn btn-outline" onclick="updatePreview()">▶ プレビュー更新</button>
+      <button class="btn btn-primary" onclick="saveFile()">💾 保存</button>
+    </div>
+  </nav>
+
+  <div id="app-body">
+    <div id="left-panel">
+      <div id="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('index', this)">トップページ</button>
+        <button class="tab-btn" onclick="switchTab('nini', this)">ni-ni</button>
+        <button class="tab-btn" onclick="switchTab('event', this)">イベント</button>
+      </div>
+      <div id="form-area"></div>
+    </div>
+    <div id="right-panel">
+      <div id="preview-bar">
+        <span id="preview-label">Preview</span>
+        <button class="btn btn-preview" onclick="updatePreview()">▶ プレビュー更新</button>
+      </div>
+      <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── STATE ──
+let dirHandle = null;
+let fileHandles = {};
+let currentTab = 'index';
+let htmlDocs = {};   // parsed DOM per tab
+let blobUrl = null;
+
+const FILE_MAP = { index: 'index.html', nini: 'nini.html', event: 'event-modelhouse.html' };
+
+// ── FIELD DEFINITIONS ──
+// Each field: { id, label, selector, prop, type, nth }
+// prop: 'textContent' | 'style.backgroundImage' | 'src' | 'style.backgroundImage'
+// type: 'input' | 'textarea' | 'url'
+// nth: 0-based index when selector returns multiple elements
+
+const FIELDS = {
+  index: [
+    { sec: 'ヒーロー' },
+    { id:'hero-bg',    label:'背景画像URL',    selector:'.hero-bg',       prop:'bgUrl',         type:'url' },
+    { id:'hero-copy',  label:'メインコピー',   selector:'.hero-copy',     prop:'textContent',   type:'textarea' },
+    { id:'hero-sub',   label:'サブコピー',     selector:'.hero-sub',      prop:'textContent',   type:'textarea' },
+
+    { sec: 'お知らせ（NEWS）' },
+    { id:'n1-date',  label:'NEWS 1 ― 日付',   selector:'.news-card-date',  prop:'textContent', type:'input', nth:0 },
+    { id:'n1-tag',   label:'NEWS 1 ― タグ',   selector:'.news-card-tag',   prop:'textContent', type:'input', nth:0 },
+    { id:'n1-ttl',   label:'NEWS 1 ― タイトル',selector:'.news-card-ttl',  prop:'textContent', type:'input', nth:0 },
+    { id:'n1-img',   label:'NEWS 1 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',  type:'url',   nth:0 },
+    { id:'n2-date',  label:'NEWS 2 ― 日付',   selector:'.news-card-date',  prop:'textContent', type:'input', nth:1 },
+    { id:'n2-tag',   label:'NEWS 2 ― タグ',   selector:'.news-card-tag',   prop:'textContent', type:'input', nth:1 },
+    { id:'n2-ttl',   label:'NEWS 2 ― タイトル',selector:'.news-card-ttl',  prop:'textContent', type:'input', nth:1 },
+    { id:'n2-img',   label:'NEWS 2 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',  type:'url',   nth:1 },
+    { id:'n3-date',  label:'NEWS 3 ― 日付',   selector:'.news-card-date',  prop:'textContent', type:'input', nth:2 },
+    { id:'n3-tag',   label:'NEWS 3 ― タグ',   selector:'.news-card-tag',   prop:'textContent', type:'input', nth:2 },
+    { id:'n3-ttl',   label:'NEWS 3 ― タイトル',selector:'.news-card-ttl',  prop:'textContent', type:'input', nth:2 },
+    { id:'n3-img',   label:'NEWS 3 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',  type:'url',   nth:2 },
+
+    { sec: 'イベント（EVENT）' },
+    { id:'e1-date',  label:'EVENT 1 ― 日付',   selector:'.ev-card-date',   prop:'textContent', type:'input', nth:0 },
+    { id:'e1-ttl',   label:'EVENT 1 ― タイトル',selector:'.ev-card-ttl',   prop:'textContent', type:'input', nth:0 },
+    { id:'e1-sub',   label:'EVENT 1 ― サブ',   selector:'.ev-card-sub',    prop:'textContent', type:'input', nth:0 },
+    { id:'e1-img',   label:'EVENT 1 ― 画像URL', selector:'.ev-thumb-bg',   prop:'bgUrl',       type:'url',   nth:0 },
+    { id:'e2-date',  label:'EVENT 2 ― 日付',   selector:'.ev-card-date',   prop:'textContent', type:'input', nth:1 },
+    { id:'e2-ttl',   label:'EVENT 2 ― タイトル',selector:'.ev-card-ttl',   prop:'textContent', type:'input', nth:1 },
+    { id:'e2-sub',   label:'EVENT 2 ― サブ',   selector:'.ev-card-sub',    prop:'textContent', type:'input', nth:1 },
+    { id:'e2-img',   label:'EVENT 2 ― 画像URL', selector:'.ev-thumb-bg',   prop:'bgUrl',       type:'url',   nth:1 },
+    { id:'e3-date',  label:'EVENT 3 ― 日付',   selector:'.ev-card-date',   prop:'textContent', type:'input', nth:2 },
+    { id:'e3-ttl',   label:'EVENT 3 ― タイトル',selector:'.ev-card-ttl',   prop:'textContent', type:'input', nth:2 },
+    { id:'e3-sub',   label:'EVENT 3 ― サブ',   selector:'.ev-card-sub',    prop:'textContent', type:'input', nth:2 },
+    { id:'e3-img',   label:'EVENT 3 ― 画像URL', selector:'.ev-thumb-bg',   prop:'bgUrl',       type:'url',   nth:2 },
+
+    { sec: 'サービス' },
+    { id:'svc1', label:'サービス 1 ― 説明文', selector:'.svc-desc', prop:'textContent', type:'textarea', nth:0 },
+    { id:'svc2', label:'サービス 2 ― 説明文', selector:'.svc-desc', prop:'textContent', type:'textarea', nth:1 },
+    { id:'svc3', label:'サービス 3 ― 説明文', selector:'.svc-desc', prop:'textContent', type:'textarea', nth:2 },
+
+    { sec: '施工例（WORKS）' },
+    { id:'w1-ttl', label:'WORKS 1 ― タイトル',   selector:'.works-ttl',  prop:'textContent', type:'input',    nth:0 },
+    { id:'w1-sub', label:'WORKS 1 ― サブ',       selector:'.works-sub',  prop:'textContent', type:'input',    nth:0 },
+    { id:'w1-img', label:'WORKS 1 ― 画像URL',    selector:'.works-img',  prop:'bgUrl',       type:'url',      nth:0 },
+    { id:'w2-ttl', label:'WORKS 2 ― タイトル',   selector:'.works-ttl',  prop:'textContent', type:'input',    nth:1 },
+    { id:'w2-sub', label:'WORKS 2 ― サブ',       selector:'.works-sub',  prop:'textContent', type:'input',    nth:1 },
+    { id:'w2-img', label:'WORKS 2 ― 画像URL',    selector:'.works-img',  prop:'bgUrl',       type:'url',      nth:1 },
+    { id:'w3-ttl', label:'WORKS 3 ― タイトル',   selector:'.works-ttl',  prop:'textContent', type:'input',    nth:2 },
+    { id:'w3-sub', label:'WORKS 3 ― サブ',       selector:'.works-sub',  prop:'textContent', type:'input',    nth:2 },
+    { id:'w3-img', label:'WORKS 3 ― 画像URL',    selector:'.works-img',  prop:'bgUrl',       type:'url',      nth:2 },
+  ],
+
+  nini: [
+    { sec: 'ヒーロー' },
+    { id:'nn-catch',  label:'キャッチコピー',    selector:'.hero-catch',    prop:'textContent', type:'textarea' },
+    { id:'nn-copy',   label:'コピー文1',          selector:'.hero-copy',     prop:'textContent', type:'textarea' },
+    { id:'nn-copy2',  label:'コピー文2',          selector:'.hero-copy2',    prop:'textContent', type:'textarea' },
+    { id:'nn-spec',   label:'スペック（22坪〜）', selector:'.hero-spec-main',prop:'textContent', type:'textarea' },
+    { id:'nn-specn',  label:'スペック注記',       selector:'.hero-spec-note',prop:'textContent', type:'input'    },
+
+    { sec: 'コンセプト' },
+    { id:'nn-cttl',  label:'タイトル',    selector:'.concept-ttl',  prop:'textContent', type:'textarea' },
+    { id:'nn-cbody', label:'本文',        selector:'.concept-body', prop:'textContent', type:'textarea' },
+
+    { sec: 'MOCHA スタイル' },
+    { id:'nn-m-cpt', label:'コンセプト', selector:'.plan-block.mocha .plan-concept-ja', prop:'textContent', type:'textarea' },
+    { id:'nn-m-dsc', label:'説明文',     selector:'.plan-block.mocha .plan-desc',       prop:'textContent', type:'textarea' },
+
+    { sec: 'GRAY スタイル' },
+    { id:'nn-g-cpt', label:'コンセプト', selector:'.plan-block.gray .plan-concept-ja',  prop:'textContent', type:'textarea' },
+    { id:'nn-g-dsc', label:'説明文',     selector:'.plan-block.gray .plan-desc',        prop:'textContent', type:'textarea' },
+
+    { sec: 'POP スタイル' },
+    { id:'nn-p-cpt', label:'コンセプト', selector:'.plan-block.pop .plan-concept-ja',   prop:'textContent', type:'textarea' },
+    { id:'nn-p-dsc', label:'説明文',     selector:'.plan-block.pop .plan-desc',         prop:'textContent', type:'textarea' },
+
+    { sec: 'スペック' },
+    { id:'nn-price', label:'価格',        selector:'.spec-hl .s-val',  prop:'textContent', type:'input' },
+    { id:'nn-pnote', label:'価格注記',    selector:'.spec-hl .s-note', prop:'textContent', type:'input' },
+    { id:'nn-area',  label:'延床面積',    selector:'.spec-item:nth-child(2) .s-val',  prop:'textContent', type:'input' },
+    { id:'nn-ctaf',  label:'CTAタイトル', selector:'.cta-ttl',  prop:'textContent', type:'input' },
+    { id:'nn-ctac',  label:'CTAコピー',   selector:'.cta-copy', prop:'textContent', type:'textarea' },
+  ],
+
+  event: [
+    { sec: 'ヒーロー' },
+    { id:'ev-bg',    label:'ヒーロー背景画像URL', selector:'.ev-hero',       prop:'bgUrl',       type:'url' },
+    { id:'ev-badge', label:'バッジ（種別）',      selector:'.ev-hero-badge', prop:'textContent', type:'input' },
+    { id:'ev-ttl',   label:'イベントタイトル',    selector:'.ev-hero-ttl',   prop:'textContent', type:'textarea' },
+    { id:'ev-date',  label:'日付サブテキスト',    selector:'.ev-hero-date',  prop:'textContent', type:'input' },
+
+    { sec: 'イベント情報' },
+    { id:'ev-i0', label:'日程',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:0 },
+    { id:'ev-i1', label:'時間',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:1 },
+    { id:'ev-i2', label:'場所',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:2 },
+    { id:'ev-i3', label:'参加費', selector:'.ev-info-value', prop:'textContent', type:'input', nth:3 },
+    { id:'ev-i4', label:'定員',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:4 },
+
+    { sec: 'イベント説明' },
+    { id:'ev-dttl', label:'説明タイトル', selector:'.ev-desc-ttl',  prop:'textContent', type:'input'    },
+    { id:'ev-dbody', label:'説明本文',    selector:'.ev-desc-body', prop:'textContent', type:'textarea' },
+
+    { sec: 'ギャラリー写真（画像URLを入力）' },
+    { id:'ev-g0', label:'写真 1 URL', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
+    { id:'ev-g1', label:'写真 2 URL', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
+    { id:'ev-g2', label:'写真 3 URL', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
+    { id:'ev-g3', label:'写真 4 URL', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
+  ],
+};
+
+// ── FOLDER OPEN ──
+async function openFolder() {
+  if (!window.showDirectoryPicker) {
+    alert('この機能は Chrome または Edge が必要です。\nInternet Explorer や Firefox では動作しません。');
+    return;
+  }
+  try {
+    dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    document.getElementById('folder-name').textContent = dirHandle.name;
+
+    // Get file handles
+    for (const [tab, fname] of Object.entries(FILE_MAP)) {
+      try {
+        fileHandles[tab] = await dirHandle.getFileHandle(fname);
+      } catch {
+        fileHandles[tab] = null;
+      }
+    }
+
+    document.getElementById('welcome').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+
+    await loadTab('index');
+  } catch (e) {
+    if (e.name !== 'AbortError') alert('フォルダを開けませんでした: ' + e.message);
+  }
+}
+
+// ── LOAD TAB ──
+async function loadTab(tab) {
+  currentTab = tab;
+  const fh = fileHandles[tab];
+  if (!fh) { showToast('ファイルが見つかりません', 'ng'); return; }
+
+  const file = await fh.getFile();
+  const text = await file.text();
+  const parser = new DOMParser();
+  htmlDocs[tab] = parser.parseFromString(text, 'text/html');
+
+  renderForm(tab);
+  refreshPreview(tab);
+}
+
+// ── RENDER FORM ──
+function renderForm(tab) {
+  const fields = FIELDS[tab];
+  const doc = htmlDocs[tab];
+  let html = '';
+
+  for (const f of fields) {
+    if (f.sec !== undefined) {
+      html += `<div class="sec-label">${f.sec}</div>`;
+      continue;
+    }
+
+    const elements = doc.querySelectorAll(f.selector);
+    const el = (f.nth !== undefined) ? elements[f.nth] : elements[0];
+    let val = '';
+    let missing = !el;
+
+    if (el) {
+      if (f.prop === 'bgUrl') {
+        const s = el.style.backgroundImage || '';
+        val = s.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
+      } else if (f.prop === 'src') {
+        val = el.getAttribute('src') || '';
+      } else {
+        val = el.textContent.trim();
+      }
+    }
+
+    const cls = missing ? ' style="opacity:0.45"' : '';
+    const missingNote = missing ? '<div style="font-size:0.68rem;color:#bbb;font-style:italic;margin-top:2px">※ 要素が見つかりません（保存時スキップ）</div>' : '';
+
+    html += `<div class="field-group">
+      <label class="field-label"${cls}>${f.label}</label>`;
+
+    const inputCls = f.type === 'url' ? 'field-url' : (f.type === 'textarea' ? 'field-textarea' : 'field-input');
+    const escaped = val.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+
+    if (f.type === 'textarea') {
+      const escapedTA = val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      html += `<textarea class="${inputCls}" id="f-${f.id}" rows="3">${escapedTA}</textarea>`;
+    } else {
+      html += `<input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}">`;
+    }
+    html += missingNote + '</div>';
+  }
+
+  document.getElementById('form-area').innerHTML = html;
+}
+
+// ── APPLY FORM → DOM ──
+function applyForm(tab) {
+  const fields = FIELDS[tab];
+  const doc = htmlDocs[tab];
+
+  for (const f of fields) {
+    if (f.sec !== undefined) continue;
+    const input = document.getElementById('f-' + f.id);
+    if (!input) continue;
+    const val = input.value;
+
+    const elements = doc.querySelectorAll(f.selector);
+    const el = (f.nth !== undefined) ? elements[f.nth] : elements[0];
+    if (!el) continue;
+
+    if (f.prop === 'bgUrl') {
+      if (val.trim()) {
+        el.style.backgroundImage = `url('${val}')`;
+      }
+    } else if (f.prop === 'src') {
+      el.setAttribute('src', val);
+    } else {
+      el.textContent = val;
+    }
+  }
+}
+
+// ── PREVIEW ──
+function refreshPreview(tab) {
+  const doc = htmlDocs[tab];
+  if (!doc) return;
+  const html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+  if (blobUrl) URL.revokeObjectURL(blobUrl);
+  blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  document.getElementById('preview-frame').src = blobUrl;
+  document.getElementById('preview-label').textContent = FILE_MAP[tab] + ' — プレビュー';
+}
+
+function updatePreview() {
+  applyForm(currentTab);
+  refreshPreview(currentTab);
+}
+
+// ── SAVE ──
+async function saveFile() {
+  const fh = fileHandles[currentTab];
+  if (!fh) { showToast('ファイルハンドルがありません', 'ng'); return; }
+
+  applyForm(currentTab);
+
+  try {
+    const writable = await fh.createWritable();
+    const doc = htmlDocs[currentTab];
+    const html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+    await writable.write(html);
+    await writable.close();
+    showToast('✓ 保存しました — ' + FILE_MAP[currentTab], 'ok');
+  } catch (e) {
+    showToast('保存に失敗しました: ' + e.message, 'ng');
+  }
+}
+
+// ── DOWNLOAD ──
+function downloadFile() {
+  applyForm(currentTab);
+  const doc = htmlDocs[currentTab];
+  if (!doc) return;
+  const html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+  a.download = FILE_MAP[currentTab];
+  a.click();
+}
+
+// ── TAB SWITCH ──
+async function switchTab(tab, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!htmlDocs[tab]) {
+    await loadTab(tab);
+  } else {
+    currentTab = tab;
+    renderForm(tab);
+    refreshPreview(tab);
+  }
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 2800);
+}
+</script>
+</body>
+</html>
