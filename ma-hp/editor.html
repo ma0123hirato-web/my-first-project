@@ -109,6 +109,26 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   border: 1px solid var(--border); margin-top: 0.3rem; display: none;
 }
 
+.field-label-row {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.28rem;
+}
+.field-label-row .field-label { margin-bottom: 0; }
+.font-size-ctrl {
+  display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0;
+}
+.font-size-ctrl span {
+  font-size: 0.65rem; color: var(--mid); min-width: 2.8rem; text-align: center;
+  background: var(--soft); border: 1px solid var(--border); border-radius: 2px;
+  padding: 0.1rem 0.3rem;
+}
+.btn-fs {
+  width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 2px;
+  background: var(--soft); cursor: pointer; font-family: inherit; color: var(--mid);
+  display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
+  transition: all 0.15s; flex-shrink: 0; padding: 0;
+}
+.btn-fs:hover { background: var(--mocha); color: var(--white); border-color: var(--mocha); }
+
 .card-box {
   border: 1px solid var(--border); border-radius: 4px;
   padding: 0.7rem 0.8rem 0.3rem; margin-bottom: 0.7rem; background: #FDFBF9;
@@ -397,17 +417,34 @@ function renderForm(tab) {
     const cls = missing ? ' style="opacity:0.45"' : '';
     const missingNote = missing ? '<div style="font-size:0.68rem;color:#bbb;font-style:italic;margin-top:2px">※ 要素が見つかりません（保存時スキップ）</div>' : '';
 
-    html += `<div class="field-group">
-      <label class="field-label"${cls}>${f.label}</label>`;
-
     const inputCls = f.type === 'url' ? 'field-url' : (f.type === 'textarea' ? 'field-textarea' : 'field-input');
     const escaped = val.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+
+    // 文字サイズ取得
+    const isText = (f.type === 'textarea' || f.type === 'input') && f.prop === 'textContent';
+    let fsPx = '';
+    if (isText && el) {
+      const inlineFs = el.style.fontSize;
+      fsPx = inlineFs ? parseFloat(inlineFs) : '';
+    }
+    const fsDisplay = fsPx !== '' ? fsPx + 'px' : '—';
+    const fsSizeCtrl = isText && !missing ? `
+      <div class="font-size-ctrl">
+        <button class="btn-fs" onclick="changeFontSize('${f.id}','${f.selector}',${f.nth??'null'},-1)" title="小さく">A−</button>
+        <span id="fs-${f.id}">${fsDisplay}</span>
+        <button class="btn-fs" onclick="changeFontSize('${f.id}','${f.selector}',${f.nth??'null'},1)" title="大きく">A+</button>
+      </div>` : '';
+
+    html += `<div class="field-group">
+      <div class="field-label-row">
+        <label class="field-label"${cls}>${f.label}</label>
+        ${fsSizeCtrl}
+      </div>`;
 
     if (f.type === 'textarea') {
       const escapedTA = val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       html += `<textarea class="${inputCls}" id="f-${f.id}" rows="3">${escapedTA}</textarea>`;
     } else if (f.type === 'url') {
-      // URL欄には「写真を選ぶ」ボタンを追加
       const thumbSrc = (val && !val.startsWith('linear-gradient')) ? val : '';
       const thumbStyle = thumbSrc ? 'display:block' : 'display:none';
       html += `<div class="url-row">
@@ -464,6 +501,31 @@ function refreshPreview(tab) {
 
 function updatePreview() {
   applyForm(currentTab);
+  refreshPreview(currentTab);
+}
+
+// ── FONT SIZE ──
+function changeFontSize(fieldId, selector, nth, delta) {
+  const doc = htmlDocs[currentTab];
+  if (!doc) return;
+  const elements = doc.querySelectorAll(selector);
+  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
+  if (!el) return;
+
+  // 現在のフォントサイズを取得（inline style優先、なければ16px基準）
+  let cur = parseFloat(el.style.fontSize);
+  if (isNaN(cur)) {
+    // inline styleがなければ16pxから始める
+    cur = 16;
+  }
+  const next = Math.max(8, Math.min(120, cur + delta));
+  el.style.fontSize = next + 'px';
+
+  // 表示更新
+  const fsSpan = document.getElementById('fs-' + fieldId);
+  if (fsSpan) fsSpan.textContent = next + 'px';
+
+  // プレビュー自動更新
   refreshPreview(currentTab);
 }
 
