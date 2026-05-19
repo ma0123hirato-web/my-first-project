@@ -108,6 +108,16 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   width: 100%; height: 60px; object-fit: cover; border-radius: 3px;
   border: 1px solid var(--border); margin-top: 0.3rem; display: none;
 }
+.img-pos-ctrl {
+  display: none; gap: 0.3rem; margin-top: 0.3rem; align-items: center;
+}
+.img-pos-ctrl span { font-size: 0.68rem; color: var(--mid); }
+.btn-pos {
+  padding: 0.2rem 0.55rem; font-size: 0.68rem; border: 1px solid var(--border);
+  border-radius: 2px; background: var(--soft); cursor: pointer; font-family: inherit;
+  color: var(--mid); transition: all 0.15s;
+}
+.btn-pos:hover, .btn-pos.active { background: var(--mocha); color: var(--white); border-color: var(--mocha); }
 
 .field-label-row {
   display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.28rem;
@@ -450,11 +460,18 @@ function renderForm(tab) {
     } else if (f.type === 'url') {
       const thumbSrc = (val && !val.startsWith('linear-gradient')) ? val : '';
       const thumbStyle = thumbSrc ? 'display:block' : 'display:none';
+      const posStyle = thumbSrc ? 'display:flex' : 'display:none';
       html += `<div class="url-row">
         <input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}" oninput="onUrlInput('${f.id}')">
-        <button class="btn-pick-img" onclick="pickImage('${f.id}')">📷 写真を選ぶ</button>
+        <button class="btn-pick-img" onclick="pickImage('${f.id}','${f.selector}',${f.nth??'null'})">📷 写真を選ぶ</button>
       </div>
-      <img id="thumb-${f.id}" class="img-preview-thumb" src="${escaped}" style="${thumbStyle}" alt="">`;
+      <img id="thumb-${f.id}" class="img-preview-thumb" src="${thumbSrc}" style="${thumbStyle}" alt="">
+      <div id="pos-${f.id}" class="img-pos-ctrl" style="${posStyle}">
+        <span>表示位置：</span>
+        <button class="btn-pos" onclick="setImgPos('${f.id}','${f.selector}',${f.nth??'null'},'top')">上</button>
+        <button class="btn-pos active" onclick="setImgPos('${f.id}','${f.selector}',${f.nth??'null'},'center')">中央</button>
+        <button class="btn-pos" onclick="setImgPos('${f.id}','${f.selector}',${f.nth??'null'},'bottom')">下</button>
+      </div>`;
     } else {
       html += `<input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}">`;
     }
@@ -533,7 +550,7 @@ function changeFontSize(fieldId, selector, nth, delta) {
 }
 
 // ── IMAGE PICK ──
-function pickImage(fieldId) {
+function pickImage(fieldId, selector, nth) {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
@@ -547,10 +564,46 @@ function pickImage(fieldId) {
       if (urlInput) urlInput.value = dataUrl;
       const thumb = document.getElementById('thumb-' + fieldId);
       if (thumb) { thumb.src = dataUrl; thumb.style.display = 'block'; }
+      const posCtrl = document.getElementById('pos-' + fieldId);
+      if (posCtrl) posCtrl.style.display = 'flex';
+      // DOMに即反映
+      if (selector) applyImgToDom(dataUrl, selector, nth, 'center');
+      refreshPreview(currentTab);
     };
     reader.readAsDataURL(file);
   };
   input.click();
+}
+
+function applyImgToDom(val, selector, nth, pos) {
+  const doc = htmlDocs[currentTab];
+  if (!doc) return;
+  const elements = doc.querySelectorAll(selector);
+  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
+  if (!el) return;
+  if (el.tagName === 'IMG') {
+    el.setAttribute('src', val);
+  } else {
+    el.style.backgroundImage = val ? `url('${val}')` : '';
+    if (pos) el.style.backgroundPosition = pos;
+  }
+}
+
+function setImgPos(fieldId, selector, nth, pos) {
+  const doc = htmlDocs[currentTab];
+  if (!doc) return;
+  const elements = doc.querySelectorAll(selector);
+  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
+  if (!el) return;
+  el.style.backgroundPosition = pos;
+  // ボタンのactive状態を更新
+  const posCtrl = document.getElementById('pos-' + fieldId);
+  if (posCtrl) {
+    posCtrl.querySelectorAll('.btn-pos').forEach(b => b.classList.remove('active'));
+    const labels = { top:'上', center:'中央', bottom:'下' };
+    [...posCtrl.querySelectorAll('.btn-pos')].find(b => b.textContent === labels[pos])?.classList.add('active');
+  }
+  refreshPreview(currentTab);
 }
 
 function onUrlInput(fieldId) {
