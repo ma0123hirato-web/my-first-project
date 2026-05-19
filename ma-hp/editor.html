@@ -95,6 +95,20 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
 .field-textarea { resize: vertical; min-height: 64px; }
 .field-url { font-size: 0.72rem; font-family: monospace; color: var(--mid); }
 
+.url-row { display: flex; gap: 0.4rem; align-items: center; }
+.url-row .field-url { flex: 1; }
+.btn-pick-img {
+  flex-shrink: 0; padding: 0.44rem 0.7rem; background: var(--soft);
+  border: 1px solid var(--border); border-radius: 3px; cursor: pointer;
+  font-family: inherit; font-size: 0.72rem; color: var(--mid); white-space: nowrap;
+  transition: all 0.2s;
+}
+.btn-pick-img:hover { background: var(--mocha-l); color: var(--white); border-color: var(--mocha-l); }
+.img-preview-thumb {
+  width: 100%; height: 60px; object-fit: cover; border-radius: 3px;
+  border: 1px solid var(--border); margin-top: 0.3rem; display: none;
+}
+
 .card-box {
   border: 1px solid var(--border); border-radius: 4px;
   padding: 0.7rem 0.8rem 0.3rem; margin-bottom: 0.7rem; background: #FDFBF9;
@@ -301,11 +315,11 @@ const FIELDS = {
     { id:'ev-dttl', label:'説明タイトル', selector:'.ev-desc-ttl',  prop:'textContent', type:'input'    },
     { id:'ev-dbody', label:'説明本文',    selector:'.ev-desc-body', prop:'textContent', type:'textarea' },
 
-    { sec: 'ギャラリー写真（画像URLを入力）' },
-    { id:'ev-g0', label:'写真 1 URL', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
-    { id:'ev-g1', label:'写真 2 URL', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
-    { id:'ev-g2', label:'写真 3 URL', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
-    { id:'ev-g3', label:'写真 4 URL', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
+    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択できます）' },
+    { id:'ev-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
+    { id:'ev-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
+    { id:'ev-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
+    { id:'ev-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
   ],
 };
 
@@ -392,6 +406,15 @@ function renderForm(tab) {
     if (f.type === 'textarea') {
       const escapedTA = val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       html += `<textarea class="${inputCls}" id="f-${f.id}" rows="3">${escapedTA}</textarea>`;
+    } else if (f.type === 'url') {
+      // URL欄には「写真を選ぶ」ボタンを追加
+      const thumbSrc = (val && !val.startsWith('linear-gradient')) ? val : '';
+      const thumbStyle = thumbSrc ? 'display:block' : 'display:none';
+      html += `<div class="url-row">
+        <input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}" oninput="onUrlInput('${f.id}')">
+        <button class="btn-pick-img" onclick="pickImage('${f.id}')">📷 写真を選ぶ</button>
+      </div>
+      <img id="thumb-${f.id}" class="img-preview-thumb" src="${escaped}" style="${thumbStyle}" alt="">`;
     } else {
       html += `<input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}">`;
     }
@@ -442,6 +465,40 @@ function refreshPreview(tab) {
 function updatePreview() {
   applyForm(currentTab);
   refreshPreview(currentTab);
+}
+
+// ── IMAGE PICK ──
+function pickImage(fieldId) {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const dataUrl = ev.target.result;
+      const urlInput = document.getElementById('f-' + fieldId);
+      if (urlInput) urlInput.value = dataUrl;
+      const thumb = document.getElementById('thumb-' + fieldId);
+      if (thumb) { thumb.src = dataUrl; thumb.style.display = 'block'; }
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function onUrlInput(fieldId) {
+  const urlInput = document.getElementById('f-' + fieldId);
+  const thumb = document.getElementById('thumb-' + fieldId);
+  if (!thumb || !urlInput) return;
+  const val = urlInput.value.trim();
+  if (val && !val.startsWith('linear-gradient')) {
+    thumb.src = val;
+    thumb.style.display = 'block';
+  } else {
+    thumb.style.display = 'none';
+  }
 }
 
 // ── SAVE ──
