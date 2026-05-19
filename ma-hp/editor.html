@@ -461,16 +461,18 @@ function renderForm(tab) {
       const thumbSrc = (val && !val.startsWith('linear-gradient')) ? val : '';
       const thumbStyle = thumbSrc ? 'display:block' : 'display:none';
       const posStyle = thumbSrc ? 'display:flex' : 'display:none';
+      const safeSelector = f.selector.replace(/"/g, '&quot;');
+      const nthVal = f.nth ?? 'null';
       html += `<div class="url-row">
         <input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}" oninput="onUrlInput('${f.id}')">
-        <button class="btn-pick-img" onclick="pickImage('${f.id}','${f.selector}',${f.nth??'null'})">📷 写真を選ぶ</button>
+        <button class="btn-pick-img" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" onclick="pickImage(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth)">📷 写真を選ぶ</button>
       </div>
       <img id="thumb-${f.id}" class="img-preview-thumb" src="${thumbSrc}" style="${thumbStyle}" alt="">
       <div id="pos-${f.id}" class="img-pos-ctrl" style="${posStyle}">
         <span>表示位置：</span>
-        <button class="btn-pos" onclick="setImgPos('${f.id}','${f.selector}',${f.nth??'null'},'top')">上</button>
-        <button class="btn-pos active" onclick="setImgPos('${f.id}','${f.selector}',${f.nth??'null'},'center')">中央</button>
-        <button class="btn-pos" onclick="setImgPos('${f.id}','${f.selector}',${f.nth??'null'},'bottom')">下</button>
+        <button class="btn-pos" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" data-pos="top" onclick="setImgPos(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth,this.dataset.pos)">上</button>
+        <button class="btn-pos active" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" data-pos="center" onclick="setImgPos(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth,this.dataset.pos)">中央</button>
+        <button class="btn-pos" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" data-pos="bottom" onclick="setImgPos(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth,this.dataset.pos)">下</button>
       </div>`;
     } else {
       html += `<input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}">`;
