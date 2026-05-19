@@ -499,6 +499,8 @@ function applyForm(tab) {
     if (f.prop === 'bgUrl') {
       if (val.trim()) {
         el.style.backgroundImage = `url('${val}')`;
+        el.style.backgroundSize = 'cover';
+        if (!el.style.backgroundPosition) el.style.backgroundPosition = 'center';
       }
     } else if (f.prop === 'src') {
       el.setAttribute('src', val);
@@ -585,7 +587,8 @@ function applyImgToDom(val, selector, nth, pos) {
     el.setAttribute('src', val);
   } else {
     el.style.backgroundImage = val ? `url('${val}')` : '';
-    if (pos) el.style.backgroundPosition = pos;
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = pos || 'center';
   }
 }
 
