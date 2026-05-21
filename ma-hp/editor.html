@@ -221,6 +221,13 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
         <button class="tab-btn" onclick="switchTab('events', this)">イベント一覧</button>
         <button class="tab-btn" onclick="switchTab('works', this)">施工例</button>
         <button class="tab-btn" onclick="switchTab('service', this)">サービス</button>
+        <button class="tab-btn" onclick="switchTab('news-1', this)">お知らせ①</button>
+        <button class="tab-btn" onclick="switchTab('news-2', this)">お知らせ②</button>
+        <button class="tab-btn" onclick="switchTab('news-3', this)">お知らせ③</button>
+        <button class="tab-btn" onclick="switchTab('event-1', this)">イベント①</button>
+        <button class="tab-btn" onclick="switchTab('event-2', this)">イベント②</button>
+        <button class="tab-btn" onclick="switchTab('event-3', this)">イベント③</button>
+        <button class="tab-btn" onclick="switchTab('works-detail', this)">施工例詳細</button>
       </div>
       <div id="form-area"></div>
     </div>
@@ -246,7 +253,10 @@ let blobUrl = null;
 
 const FILE_MAP = {
   index: 'index.html', nini: 'nini.html', event: 'event-modelhouse.html',
-  news: 'news.html', events: 'events.html', works: 'works.html', service: 'service.html'
+  news: 'news.html', events: 'events.html', works: 'works.html', service: 'service.html',
+  'news-1': 'news-1.html', 'news-2': 'news-2.html', 'news-3': 'news-3.html',
+  'event-1': 'event-1.html', 'event-2': 'event-2.html', 'event-3': 'event-3.html',
+  'works-detail': 'works-detail.html'
 };
 
 // ── FIELD DEFINITIONS ──
@@ -518,6 +528,135 @@ const FIELDS = {
     { id:'svc-s3-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:2 },
     { id:'svc-s3-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:2 },
     { id:'svc-s3-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:2 },
+  ],
+
+  'news-1': [
+    { sec: 'ヒーロー' },
+    { id:'nd1-date', label:'日付',         selector:'.nd-date', prop:'textContent', type:'input' },
+    { id:'nd1-tag',  label:'タグ',         selector:'.nd-tag',  prop:'textContent', type:'input' },
+    { id:'nd1-ttl',  label:'タイトル',     selector:'.nd-ttl',  prop:'textContent', type:'textarea' },
+    { id:'nd1-thumb',label:'サムネイル画像URL', selector:'.nd-thumb', prop:'bgUrl', type:'url' },
+    { sec: '本文' },
+    { id:'nd1-lead', label:'リード文',     selector:'.nd-lead', prop:'textContent', type:'textarea' },
+    { id:'nd1-txt0', label:'本文段落 1',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:0 },
+    { id:'nd1-txt1', label:'本文段落 2',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:1 },
+    { id:'nd1-txt2', label:'本文段落 3',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:2 },
+  ],
+
+  'news-2': [
+    { sec: 'ヒーロー' },
+    { id:'nd2-date', label:'日付',         selector:'.nd-date', prop:'textContent', type:'input' },
+    { id:'nd2-tag',  label:'タグ',         selector:'.nd-tag',  prop:'textContent', type:'input' },
+    { id:'nd2-ttl',  label:'タイトル',     selector:'.nd-ttl',  prop:'textContent', type:'textarea' },
+    { id:'nd2-thumb',label:'サムネイル画像URL', selector:'.nd-thumb', prop:'bgUrl', type:'url' },
+    { sec: '本文' },
+    { id:'nd2-lead', label:'リード文',     selector:'.nd-lead', prop:'textContent', type:'textarea' },
+    { id:'nd2-txt0', label:'本文段落 1',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:0 },
+    { id:'nd2-txt1', label:'本文段落 2',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:1 },
+    { id:'nd2-txt2', label:'本文段落 3',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:2 },
+  ],
+
+  'news-3': [
+    { sec: 'ヒーロー' },
+    { id:'nd3-date', label:'日付',         selector:'.nd-date', prop:'textContent', type:'input' },
+    { id:'nd3-tag',  label:'タグ',         selector:'.nd-tag',  prop:'textContent', type:'input' },
+    { id:'nd3-ttl',  label:'タイトル',     selector:'.nd-ttl',  prop:'textContent', type:'textarea' },
+    { id:'nd3-thumb',label:'サムネイル画像URL', selector:'.nd-thumb', prop:'bgUrl', type:'url' },
+    { sec: '本文' },
+    { id:'nd3-lead', label:'リード文',     selector:'.nd-lead', prop:'textContent', type:'textarea' },
+    { id:'nd3-txt0', label:'本文段落 1',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:0 },
+    { id:'nd3-txt1', label:'本文段落 2',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:1 },
+    { id:'nd3-txt2', label:'本文段落 3',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:2 },
+  ],
+
+  'event-1': [
+    { sec: 'ヒーロー' },
+    { id:'ev1-bg',    label:'ヒーロー背景画像URL', selector:'.ev-detail-hero', prop:'bgUrl',       type:'url' },
+    { id:'ev1-badge', label:'バッジ（種別）',      selector:'.ev-detail-badge', prop:'textContent', type:'input' },
+    { id:'ev1-ttl',   label:'イベントタイトル',    selector:'.ev-detail-ttl',   prop:'textContent', type:'textarea' },
+    { id:'ev1-date',  label:'日付テキスト',        selector:'.ev-detail-date',  prop:'textContent', type:'input' },
+    { sec: 'イベント情報' },
+    { id:'ev1-i0', label:'日程',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:0 },
+    { id:'ev1-i1', label:'時間',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:1 },
+    { id:'ev1-i2', label:'場所',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:2 },
+    { id:'ev1-i3', label:'参加費', selector:'.ev-info-val', prop:'textContent', type:'input', nth:3 },
+    { id:'ev1-i4', label:'定員',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:4 },
+    { sec: 'イベント説明' },
+    { id:'ev1-dttl',  label:'説明タイトル', selector:'.ev-detail-desc-ttl',  prop:'textContent', type:'input' },
+    { id:'ev1-dbody', label:'説明本文',     selector:'.ev-detail-desc-body', prop:'textContent', type:'textarea' },
+    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
+    { id:'ev1-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
+    { id:'ev1-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
+    { id:'ev1-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
+    { id:'ev1-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
+  ],
+
+  'event-2': [
+    { sec: 'ヒーロー' },
+    { id:'ev2-bg',    label:'ヒーロー背景画像URL', selector:'.ev-detail-hero', prop:'bgUrl',       type:'url' },
+    { id:'ev2-badge', label:'バッジ（種別）',      selector:'.ev-detail-badge', prop:'textContent', type:'input' },
+    { id:'ev2-ttl',   label:'イベントタイトル',    selector:'.ev-detail-ttl',   prop:'textContent', type:'textarea' },
+    { id:'ev2-date',  label:'日付テキスト',        selector:'.ev-detail-date',  prop:'textContent', type:'input' },
+    { sec: 'イベント情報' },
+    { id:'ev2-i0', label:'日程',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:0 },
+    { id:'ev2-i1', label:'時間',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:1 },
+    { id:'ev2-i2', label:'場所',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:2 },
+    { id:'ev2-i3', label:'参加費', selector:'.ev-info-val', prop:'textContent', type:'input', nth:3 },
+    { id:'ev2-i4', label:'定員',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:4 },
+    { sec: 'イベント説明' },
+    { id:'ev2-dttl',  label:'説明タイトル', selector:'.ev-detail-desc-ttl',  prop:'textContent', type:'input' },
+    { id:'ev2-dbody', label:'説明本文',     selector:'.ev-detail-desc-body', prop:'textContent', type:'textarea' },
+    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
+    { id:'ev2-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
+    { id:'ev2-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
+    { id:'ev2-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
+    { id:'ev2-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
+  ],
+
+  'event-3': [
+    { sec: 'ヒーロー' },
+    { id:'ev3-bg',    label:'ヒーロー背景画像URL', selector:'.ev-detail-hero', prop:'bgUrl',       type:'url' },
+    { id:'ev3-badge', label:'バッジ（種別）',      selector:'.ev-detail-badge', prop:'textContent', type:'input' },
+    { id:'ev3-ttl',   label:'イベントタイトル',    selector:'.ev-detail-ttl',   prop:'textContent', type:'textarea' },
+    { id:'ev3-date',  label:'日付テキスト',        selector:'.ev-detail-date',  prop:'textContent', type:'input' },
+    { sec: 'イベント情報' },
+    { id:'ev3-i0', label:'日程',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:0 },
+    { id:'ev3-i1', label:'時間',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:1 },
+    { id:'ev3-i2', label:'場所',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:2 },
+    { id:'ev3-i3', label:'参加費', selector:'.ev-info-val', prop:'textContent', type:'input', nth:3 },
+    { id:'ev3-i4', label:'定員',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:4 },
+    { sec: 'イベント説明' },
+    { id:'ev3-dttl',  label:'説明タイトル', selector:'.ev-detail-desc-ttl',  prop:'textContent', type:'input' },
+    { id:'ev3-dbody', label:'説明本文',     selector:'.ev-detail-desc-body', prop:'textContent', type:'textarea' },
+    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
+    { id:'ev3-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
+    { id:'ev3-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
+    { id:'ev3-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
+    { id:'ev3-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
+  ],
+
+  'works-detail': [
+    { sec: 'ヒーロー' },
+    { id:'wkd-bg',  label:'ヒーロー背景画像URL', selector:'.wk-detail-hero', prop:'bgUrl',       type:'url' },
+    { id:'wkd-ttl', label:'物件名',              selector:'.wk-detail-ttl',   prop:'textContent', type:'input' },
+    { id:'wkd-sub', label:'サブテキスト（所在地/構造/坪数）', selector:'.wk-detail-sub', prop:'textContent', type:'input' },
+    { sec: 'スペック' },
+    { id:'wkd-sp0', label:'所在地',   selector:'.wk-spec-val', prop:'textContent', type:'input', nth:0 },
+    { id:'wkd-sp1', label:'延床面積', selector:'.wk-spec-val', prop:'textContent', type:'input', nth:1 },
+    { id:'wkd-sp2', label:'構造',     selector:'.wk-spec-val', prop:'textContent', type:'input', nth:2 },
+    { id:'wkd-sp3', label:'竣工年',   selector:'.wk-spec-val', prop:'textContent', type:'input', nth:3 },
+    { id:'wkd-sp4', label:'スタイル', selector:'.wk-spec-val', prop:'textContent', type:'input', nth:4 },
+    { id:'wkd-sp5', label:'家族構成', selector:'.wk-spec-val', prop:'textContent', type:'input', nth:5 },
+    { sec: 'コンセプト' },
+    { id:'wkd-cttl', label:'コンセプトタイトル', selector:'.wk-concept-ttl',  prop:'textContent', type:'textarea' },
+    { id:'wkd-cbody',label:'説明文',             selector:'.wk-concept-body', prop:'textContent', type:'textarea' },
+    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
+    { id:'wkd-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'bgUrl', type:'url' },
+    { id:'wkd-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'bgUrl', type:'url' },
+    { id:'wkd-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'bgUrl', type:'url' },
+    { id:'wkd-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'bgUrl', type:'url' },
+    { id:'wkd-g4', label:'写真 5', selector:'[data-gallery-index="4"]', prop:'bgUrl', type:'url' },
+    { id:'wkd-g5', label:'写真 6', selector:'[data-gallery-index="5"]', prop:'bgUrl', type:'url' },
   ],
 };
 
