@@ -63,7 +63,7 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
   width: 400px; min-width: 300px; display: flex; flex-direction: column;
   border-right: 2px solid var(--border); background: var(--white); overflow: hidden;
 }
-#tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--soft); flex-shrink: 0; }
+#tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--soft); flex-shrink: 0; overflow-x: auto; flex-wrap: nowrap; }
 .tab-btn {
   flex: 1; padding: 0.8rem 0.4rem; border: none; background: transparent;
   font-family: inherit; font-size: 0.75rem; color: var(--mid); cursor: pointer;
@@ -139,6 +139,11 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
 }
 .btn-fs:hover { background: var(--mocha); color: var(--white); border-color: var(--mocha); }
 
+.card-toggle-row { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0 0.4rem; margin-bottom:0.5rem; border-bottom: 1px solid var(--soft); }
+.btn-toggle { padding:0.28rem 0.75rem; font-size:0.7rem; border-radius:20px; border:1px solid var(--mocha); background:var(--mocha); color:white; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.btn-toggle.inactive { background:transparent; color:var(--mid); border-color:var(--border); }
+.card-toggle-label { font-size:0.75rem; font-weight:500; color:var(--dark); letter-spacing:0.05em; }
+
 .card-box {
   border: 1px solid var(--border); border-radius: 4px;
   padding: 0.7rem 0.8rem 0.3rem; margin-bottom: 0.7rem; background: #FDFBF9;
@@ -212,6 +217,10 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
         <button class="tab-btn active" onclick="switchTab('index', this)">トップページ</button>
         <button class="tab-btn" onclick="switchTab('nini', this)">ni-ni</button>
         <button class="tab-btn" onclick="switchTab('event', this)">イベント</button>
+        <button class="tab-btn" onclick="switchTab('news', this)">お知らせ</button>
+        <button class="tab-btn" onclick="switchTab('events', this)">イベント一覧</button>
+        <button class="tab-btn" onclick="switchTab('works', this)">施工例</button>
+        <button class="tab-btn" onclick="switchTab('service', this)">サービス</button>
       </div>
       <div id="form-area"></div>
     </div>
@@ -235,7 +244,10 @@ let currentTab = 'index';
 let htmlDocs = {};   // parsed DOM per tab
 let blobUrl = null;
 
-const FILE_MAP = { index: 'index.html', nini: 'nini.html', event: 'event-modelhouse.html' };
+const FILE_MAP = {
+  index: 'index.html', nini: 'nini.html', event: 'event-modelhouse.html',
+  news: 'news.html', events: 'events.html', works: 'works.html', service: 'service.html'
+};
 
 // ── FIELD DEFINITIONS ──
 // Each field: { id, label, selector, prop, type, nth }
@@ -251,28 +263,34 @@ const FIELDS = {
     { id:'hero-copy',  label:'メインコピー',           selector:'.hero-copy',     prop:'textContent',   type:'textarea' },
 
     { sec: 'お知らせ（NEWS）' },
+    { type:'toggle', id:'idx-n1-toggle', label:'NEWS カード 1', cardSelector:'.news-card', nth:0 },
     { id:'n1-date',  label:'NEWS 1 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input',    nth:0 },
     { id:'n1-tag',   label:'NEWS 1 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input',    nth:0 },
     { id:'n1-ttl',   label:'NEWS 1 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input',    nth:0 },
     { id:'n1-img',   label:'NEWS 1 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',      nth:0 },
+    { type:'toggle', id:'idx-n2-toggle', label:'NEWS カード 2', cardSelector:'.news-card', nth:1 },
     { id:'n2-date',  label:'NEWS 2 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input',    nth:1 },
     { id:'n2-tag',   label:'NEWS 2 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input',    nth:1 },
     { id:'n2-ttl',   label:'NEWS 2 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input',    nth:1 },
     { id:'n2-img',   label:'NEWS 2 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',      nth:1 },
+    { type:'toggle', id:'idx-n3-toggle', label:'NEWS カード 3', cardSelector:'.news-card', nth:2 },
     { id:'n3-date',  label:'NEWS 3 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input',    nth:2 },
     { id:'n3-tag',   label:'NEWS 3 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input',    nth:2 },
     { id:'n3-ttl',   label:'NEWS 3 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input',    nth:2 },
     { id:'n3-img',   label:'NEWS 3 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',      nth:2 },
 
     { sec: 'イベント（EVENT）' },
+    { type:'toggle', id:'idx-e1-toggle', label:'EVENT カード 1', cardSelector:'.ev-card', nth:0 },
     { id:'e1-date',  label:'EVENT 1 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:0 },
     { id:'e1-ttl',   label:'EVENT 1 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:0 },
     { id:'e1-sub',   label:'EVENT 1 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:0 },
     { id:'e1-img',   label:'EVENT 1 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:0 },
+    { type:'toggle', id:'idx-e2-toggle', label:'EVENT カード 2', cardSelector:'.ev-card', nth:1 },
     { id:'e2-date',  label:'EVENT 2 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:1 },
     { id:'e2-ttl',   label:'EVENT 2 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:1 },
     { id:'e2-sub',   label:'EVENT 2 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:1 },
     { id:'e2-img',   label:'EVENT 2 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:1 },
+    { type:'toggle', id:'idx-e3-toggle', label:'EVENT カード 3', cardSelector:'.ev-card', nth:2 },
     { id:'e3-date',  label:'EVENT 3 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:2 },
     { id:'e3-ttl',   label:'EVENT 3 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:2 },
     { id:'e3-sub',   label:'EVENT 3 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:2 },
@@ -287,15 +305,18 @@ const FIELDS = {
     { id:'svc3-dsc', label:'サービス 3 ― 説明文',   selector:'.svc-desc', prop:'textContent', type:'textarea', nth:2 },
 
     { sec: '施工例（WORKS）' },
+    { type:'toggle', id:'idx-w1-toggle', label:'WORKS カード 1', cardSelector:'.wk', nth:0 },
     { id:'w1-ttl', label:'WORKS 1 ― タイトル',   selector:'.wk-ttl', prop:'textContent', type:'input', nth:0 },
     { id:'w1-sub', label:'WORKS 1 ― サブ',       selector:'.wk-sub', prop:'textContent', type:'input', nth:0 },
-    { id:'w1-img', label:'WORKS 1 ― 画像URL',    selector:'.wk-img', prop:'src',         type:'url',   nth:0 },
+    { id:'w1-img', label:'WORKS 1 ― 画像URL',    selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:0 },
+    { type:'toggle', id:'idx-w2-toggle', label:'WORKS カード 2', cardSelector:'.wk', nth:1 },
     { id:'w2-ttl', label:'WORKS 2 ― タイトル',   selector:'.wk-ttl', prop:'textContent', type:'input', nth:1 },
     { id:'w2-sub', label:'WORKS 2 ― サブ',       selector:'.wk-sub', prop:'textContent', type:'input', nth:1 },
-    { id:'w2-img', label:'WORKS 2 ― 画像URL',    selector:'.wk-img', prop:'src',         type:'url',   nth:1 },
+    { id:'w2-img', label:'WORKS 2 ― 画像URL',    selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:1 },
+    { type:'toggle', id:'idx-w3-toggle', label:'WORKS カード 3', cardSelector:'.wk', nth:2 },
     { id:'w3-ttl', label:'WORKS 3 ― タイトル',   selector:'.wk-ttl', prop:'textContent', type:'input', nth:2 },
     { id:'w3-sub', label:'WORKS 3 ― サブ',       selector:'.wk-sub', prop:'textContent', type:'input', nth:2 },
-    { id:'w3-img', label:'WORKS 3 ― 画像URL',    selector:'.wk-img', prop:'src',         type:'url',   nth:2 },
+    { id:'w3-img', label:'WORKS 3 ― 画像URL',    selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:2 },
   ],
 
   nini: [
@@ -354,6 +375,150 @@ const FIELDS = {
     { id:'ev-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
     { id:'ev-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
   ],
+
+  news: [
+    { sec: 'ページヘッダー' },
+    { id:'news-hero-en',  label:'英語ラベル',   selector:'.page-hero-en',  prop:'textContent', type:'input' },
+    { id:'news-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
+
+    { sec: 'お知らせカード' },
+    { type:'toggle', id:'news-c1-toggle', label:'NEWS カード 1', cardSelector:'.news-card', nth:0 },
+    { id:'news-n1-date', label:'カード 1 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:0 },
+    { id:'news-n1-tag',  label:'カード 1 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:0 },
+    { id:'news-n1-ttl',  label:'カード 1 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:0 },
+    { id:'news-n1-img',  label:'カード 1 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:0 },
+    { type:'toggle', id:'news-c2-toggle', label:'NEWS カード 2', cardSelector:'.news-card', nth:1 },
+    { id:'news-n2-date', label:'カード 2 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:1 },
+    { id:'news-n2-tag',  label:'カード 2 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:1 },
+    { id:'news-n2-ttl',  label:'カード 2 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:1 },
+    { id:'news-n2-img',  label:'カード 2 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:1 },
+    { type:'toggle', id:'news-c3-toggle', label:'NEWS カード 3', cardSelector:'.news-card', nth:2 },
+    { id:'news-n3-date', label:'カード 3 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:2 },
+    { id:'news-n3-tag',  label:'カード 3 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:2 },
+    { id:'news-n3-ttl',  label:'カード 3 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:2 },
+    { id:'news-n3-img',  label:'カード 3 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:2 },
+    { type:'toggle', id:'news-c4-toggle', label:'NEWS カード 4', cardSelector:'.news-card', nth:3 },
+    { id:'news-n4-date', label:'カード 4 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:3 },
+    { id:'news-n4-tag',  label:'カード 4 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:3 },
+    { id:'news-n4-ttl',  label:'カード 4 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:3 },
+    { id:'news-n4-img',  label:'カード 4 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:3 },
+    { type:'toggle', id:'news-c5-toggle', label:'NEWS カード 5', cardSelector:'.news-card', nth:4 },
+    { id:'news-n5-date', label:'カード 5 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:4 },
+    { id:'news-n5-tag',  label:'カード 5 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:4 },
+    { id:'news-n5-ttl',  label:'カード 5 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:4 },
+    { id:'news-n5-img',  label:'カード 5 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:4 },
+    { type:'toggle', id:'news-c6-toggle', label:'NEWS カード 6', cardSelector:'.news-card', nth:5 },
+    { id:'news-n6-date', label:'カード 6 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:5 },
+    { id:'news-n6-tag',  label:'カード 6 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:5 },
+    { id:'news-n6-ttl',  label:'カード 6 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:5 },
+    { id:'news-n6-img',  label:'カード 6 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:5 },
+  ],
+
+  events: [
+    { sec: 'ページヘッダー' },
+    { id:'evs-hero-en',  label:'英語ラベル',    selector:'.page-hero-en',  prop:'textContent', type:'input' },
+    { id:'evs-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
+
+    { sec: 'イベントカード' },
+    { type:'toggle', id:'evs-c1-toggle', label:'EVENT カード 1', cardSelector:'.event-card', nth:0 },
+    { id:'evs-e1-date',  label:'カード 1 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:0 },
+    { id:'evs-e1-ttl',   label:'カード 1 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:0 },
+    { id:'evs-e1-sub',   label:'カード 1 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:0 },
+    { id:'evs-e1-badge', label:'カード 1 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:0 },
+    { id:'evs-e1-img',   label:'カード 1 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:0 },
+    { type:'toggle', id:'evs-c2-toggle', label:'EVENT カード 2', cardSelector:'.event-card', nth:1 },
+    { id:'evs-e2-date',  label:'カード 2 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:1 },
+    { id:'evs-e2-ttl',   label:'カード 2 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:1 },
+    { id:'evs-e2-sub',   label:'カード 2 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:1 },
+    { id:'evs-e2-badge', label:'カード 2 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:1 },
+    { id:'evs-e2-img',   label:'カード 2 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:1 },
+    { type:'toggle', id:'evs-c3-toggle', label:'EVENT カード 3', cardSelector:'.event-card', nth:2 },
+    { id:'evs-e3-date',  label:'カード 3 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:2 },
+    { id:'evs-e3-ttl',   label:'カード 3 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:2 },
+    { id:'evs-e3-sub',   label:'カード 3 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:2 },
+    { id:'evs-e3-badge', label:'カード 3 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:2 },
+    { id:'evs-e3-img',   label:'カード 3 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:2 },
+    { type:'toggle', id:'evs-c4-toggle', label:'EVENT カード 4', cardSelector:'.event-card', nth:3 },
+    { id:'evs-e4-date',  label:'カード 4 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:3 },
+    { id:'evs-e4-ttl',   label:'カード 4 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:3 },
+    { id:'evs-e4-sub',   label:'カード 4 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:3 },
+    { id:'evs-e4-badge', label:'カード 4 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:3 },
+    { id:'evs-e4-img',   label:'カード 4 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:3 },
+    { type:'toggle', id:'evs-c5-toggle', label:'EVENT カード 5', cardSelector:'.event-card', nth:4 },
+    { id:'evs-e5-date',  label:'カード 5 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:4 },
+    { id:'evs-e5-ttl',   label:'カード 5 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:4 },
+    { id:'evs-e5-sub',   label:'カード 5 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:4 },
+    { id:'evs-e5-badge', label:'カード 5 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:4 },
+    { id:'evs-e5-img',   label:'カード 5 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:4 },
+  ],
+
+  works: [
+    { sec: 'ページヘッダー' },
+    { id:'wks-hero-en',  label:'英語ラベル',    selector:'.page-hero-en',  prop:'textContent', type:'input' },
+    { id:'wks-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
+
+    { sec: '施工例カード' },
+    { type:'toggle', id:'wks-c1-toggle', label:'WORKS カード 1', cardSelector:'.wk', nth:0 },
+    { id:'wks-w1-ttl', label:'No.01 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:0 },
+    { id:'wks-w1-sub', label:'No.01 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:0 },
+    { id:'wks-w1-img', label:'No.01 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:0 },
+    { type:'toggle', id:'wks-c2-toggle', label:'WORKS カード 2', cardSelector:'.wk', nth:1 },
+    { id:'wks-w2-ttl', label:'No.02 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:1 },
+    { id:'wks-w2-sub', label:'No.02 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:1 },
+    { id:'wks-w2-img', label:'No.02 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:1 },
+    { type:'toggle', id:'wks-c3-toggle', label:'WORKS カード 3', cardSelector:'.wk', nth:2 },
+    { id:'wks-w3-ttl', label:'No.03 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:2 },
+    { id:'wks-w3-sub', label:'No.03 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:2 },
+    { id:'wks-w3-img', label:'No.03 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:2 },
+    { type:'toggle', id:'wks-c4-toggle', label:'WORKS カード 4', cardSelector:'.wk', nth:3 },
+    { id:'wks-w4-ttl', label:'No.04 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:3 },
+    { id:'wks-w4-sub', label:'No.04 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:3 },
+    { id:'wks-w4-img', label:'No.04 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:3 },
+    { type:'toggle', id:'wks-c5-toggle', label:'WORKS カード 5', cardSelector:'.wk', nth:4 },
+    { id:'wks-w5-ttl', label:'No.05 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:4 },
+    { id:'wks-w5-sub', label:'No.05 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:4 },
+    { id:'wks-w5-img', label:'No.05 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:4 },
+    { type:'toggle', id:'wks-c6-toggle', label:'WORKS カード 6', cardSelector:'.wk', nth:5 },
+    { id:'wks-w6-ttl', label:'No.06 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:5 },
+    { id:'wks-w6-sub', label:'No.06 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:5 },
+    { id:'wks-w6-img', label:'No.06 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:5 },
+    { type:'toggle', id:'wks-c7-toggle', label:'WORKS カード 7', cardSelector:'.wk', nth:6 },
+    { id:'wks-w7-ttl', label:'No.07 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:6 },
+    { id:'wks-w7-sub', label:'No.07 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:6 },
+    { id:'wks-w7-img', label:'No.07 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:6 },
+    { type:'toggle', id:'wks-c8-toggle', label:'WORKS カード 8', cardSelector:'.wk', nth:7 },
+    { id:'wks-w8-ttl', label:'No.08 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:7 },
+    { id:'wks-w8-sub', label:'No.08 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:7 },
+    { id:'wks-w8-img', label:'No.08 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:7 },
+    { type:'toggle', id:'wks-c9-toggle', label:'WORKS カード 9', cardSelector:'.wk', nth:8 },
+    { id:'wks-w9-ttl', label:'No.09 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:8 },
+    { id:'wks-w9-sub', label:'No.09 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:8 },
+    { id:'wks-w9-img', label:'No.09 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:8 },
+  ],
+
+  service: [
+    { sec: 'ページヘッダー' },
+    { id:'svc-hero-en',  label:'英語ラベル',    selector:'.page-hero-en',  prop:'textContent', type:'input' },
+    { id:'svc-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
+
+    { sec: 'サービス 01 ― 注文住宅' },
+    { type:'toggle', id:'svc-s1-toggle', label:'サービス セクション 1', cardSelector:'.svc-section', nth:0 },
+    { id:'svc-s1-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:0 },
+    { id:'svc-s1-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:0 },
+    { id:'svc-s1-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:0 },
+
+    { sec: 'サービス 02 ― 規格住宅 ni-ni' },
+    { type:'toggle', id:'svc-s2-toggle', label:'サービス セクション 2', cardSelector:'.svc-section', nth:1 },
+    { id:'svc-s2-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:1 },
+    { id:'svc-s2-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:1 },
+    { id:'svc-s2-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:1 },
+
+    { sec: 'サービス 03 ― リノベーション' },
+    { type:'toggle', id:'svc-s3-toggle', label:'サービス セクション 3', cardSelector:'.svc-section', nth:2 },
+    { id:'svc-s3-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:2 },
+    { id:'svc-s3-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:2 },
+    { id:'svc-s3-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:2 },
+  ],
 };
 
 // ── FOLDER OPEN ──
@@ -408,6 +573,21 @@ function renderForm(tab) {
   for (const f of fields) {
     if (f.sec !== undefined) {
       html += `<div class="sec-label">${f.sec}</div>`;
+      continue;
+    }
+
+    if (f.type === 'toggle') {
+      const elements = doc.querySelectorAll(f.cardSelector);
+      const el = (f.nth !== null && f.nth !== undefined) ? elements[f.nth] : elements[0];
+      const isHidden = el && el.style.display === 'none';
+      const activeCls = isHidden ? 'inactive' : '';
+      const btnText = isHidden ? '○ 非公開' : '● 公開中';
+      const nthVal = f.nth !== undefined ? f.nth : 'null';
+      const safeSelector = f.cardSelector.replace(/"/g, '&quot;');
+      html += `<div class="card-toggle-row">
+        <button class="btn-toggle ${activeCls}" id="toggle-${f.id}" onclick="toggleCard('${safeSelector}',${nthVal},'${f.id}')">${btnText}</button>
+        <span class="card-toggle-label">${f.label}</span>
+      </div>`;
       continue;
     }
 
@@ -490,6 +670,7 @@ function applyForm(tab) {
 
   for (const f of fields) {
     if (f.sec !== undefined) continue;
+    if (f.type === 'toggle') continue;
     const input = document.getElementById('f-' + f.id);
     if (!input) continue;
     const val = input.value;
@@ -666,6 +847,26 @@ async function switchTab(tab, btn) {
     renderForm(tab);
     refreshPreview(tab);
   }
+}
+
+// ── TOGGLE CARD ──
+function toggleCard(selector, nth, toggleId) {
+  const doc = htmlDocs[currentTab];
+  if (!doc) return;
+  const elements = doc.querySelectorAll(selector);
+  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
+  if (!el) return;
+  const btn = document.getElementById('toggle-' + toggleId);
+  if (el.style.display === 'none') {
+    el.style.display = '';
+    btn.textContent = '● 公開中';
+    btn.classList.remove('inactive');
+  } else {
+    el.style.display = 'none';
+    btn.textContent = '○ 非公開';
+    btn.classList.add('inactive');
+  }
+  refreshPreview(currentTab);
 }
 
 // ── TOAST ──
