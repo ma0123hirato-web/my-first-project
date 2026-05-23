@@ -212,7 +212,14 @@ index: [
   {id:'idx-nc3-date',  lbl:'カード③ 日付',           type:'input',    sel:'#news .news-card:nth-child(3) .news-card-date'},
   {id:'idx-nc3-tag',   lbl:'カード③ タグ',           type:'input',    sel:'#news .news-card:nth-child(3) .news-card-tag'},
   {id:'idx-nc3-ttl',   lbl:'カード③ タイトル',       type:'input',    sel:'#news .news-card:nth-child(3) .news-card-ttl'},
+  {sec:'セクション見出し（お知らせ）'},
+  {id:'idx-news-ey',   lbl:'英語ラベル',   type:'input', sel:'#news .sec-ey'},
+  {id:'idx-news-ttl',  lbl:'日本語見出し', type:'input', sel:'#news .sec-ttl'},
+  {id:'idx-news-ttl-fs', lbl:'見出し文字サイズ', type:'fs', sel:'#news .sec-ttl'},
   {sec:'イベントカード'},
+  {id:'idx-ev-ey',     lbl:'英語ラベル',   type:'input', sel:'#event .sec-ey'},
+  {id:'idx-ev-ttl',    lbl:'日本語見出し', type:'input', sel:'#event .sec-ttl'},
+  {id:'idx-ev-ttl-fs', lbl:'見出し文字サイズ', type:'fs', sel:'#event .sec-ttl'},
   {id:'idx-ec1-vis',    lbl:'カード① 表示/非表示',          type:'toggle', sel:'#event .event-card:nth-child(1)'},
   {id:'idx-ec1-thumb',  lbl:'カード① サムネイル',             type:'image',  sel:'#event .event-card:nth-child(1) .ev-thumb-bg', prop:'bg'},
   {id:'idx-ec1-status', lbl:'カード① ステータス（画像上）',   type:'input',  sel:'#event .event-card:nth-child(1) .ev-status'},
@@ -234,6 +241,44 @@ index: [
   {id:'idx-ec3-ttl',    lbl:'カード③ タイトル',               type:'input',  sel:'#event .event-card:nth-child(3) .ev-card-ttl'},
   {id:'idx-ec3-sub',    lbl:'カード③ サブ',                   type:'input',  sel:'#event .event-card:nth-child(3) .ev-card-sub'},
   {id:'idx-ec3-badge',  lbl:'カード③ バッジ（タイトル下）',   type:'input',  sel:'#event .event-card:nth-child(3) .ev-card-badge'},
+  {sec:'NINIセクション'},
+  {id:'idx-nini-brand',    lbl:'ブランド名',         type:'input',    sel:'#nini .nini-brand'},
+  {id:'idx-nini-tagline',  lbl:'タグライン',         type:'input',    sel:'#nini .nini-tagline'},
+  {id:'idx-nini-tagline-fs',lbl:'タグライン文字サイズ', type:'fs',    sel:'#nini .nini-tagline'},
+  {id:'idx-nini-sub',      lbl:'サブコピー',         type:'input',    sel:'#nini .nini-sub'},
+  {id:'idx-nini-m-concept',lbl:'MOCHA コンセプト',   type:'input',    sel:'#nini .nini-card.mocha .nini-card-concept'},
+  {id:'idx-nini-m-desc',   lbl:'MOCHA 説明文',       type:'textarea', sel:'#nini .nini-card.mocha .nini-card-desc'},
+  {id:'idx-nini-g-concept',lbl:'GRAY コンセプト',    type:'input',    sel:'#nini .nini-card.gray .nini-card-concept'},
+  {id:'idx-nini-g-desc',   lbl:'GRAY 説明文',        type:'textarea', sel:'#nini .nini-card.gray .nini-card-desc'},
+  {id:'idx-nini-p-concept',lbl:'POP コンセプト',     type:'input',    sel:'#nini .nini-card.pop .nini-card-concept'},
+  {id:'idx-nini-p-desc',   lbl:'POP 説明文',         type:'textarea', sel:'#nini .nini-card.pop .nini-card-desc'},
+  {sec:'サービスセクション'},
+  {id:'idx-svc-ey',    lbl:'英語ラベル',             type:'input', sel:'#service .sec-ey'},
+  {id:'idx-svc-ttl',   lbl:'日本語見出し',           type:'input', sel:'#service .sec-ttl'},
+  {id:'idx-svc-ttl-fs',lbl:'見出し文字サイズ',       type:'fs',    sel:'#service .sec-ttl'},
+  {id:'idx-svc1-ttl',  lbl:'サービス① タイトル',    type:'input',    sel:'#service .svc:nth-child(1) .svc-ttl'},
+  {id:'idx-svc1-desc', lbl:'サービス① 説明文',      type:'textarea', sel:'#service .svc:nth-child(1) .svc-desc'},
+  {id:'idx-svc2-ttl',  lbl:'サービス② タイトル',    type:'input',    sel:'#service .svc:nth-child(2) .svc-ttl'},
+  {id:'idx-svc2-desc', lbl:'サービス② 説明文',      type:'textarea', sel:'#service .svc:nth-child(2) .svc-desc'},
+  {id:'idx-svc3-ttl',  lbl:'サービス③ タイトル',    type:'input',    sel:'#service .svc:nth-child(3) .svc-ttl'},
+  {id:'idx-svc3-desc', lbl:'サービス③ 説明文',      type:'textarea', sel:'#service .svc:nth-child(3) .svc-desc'},
+  {sec:'施工事例（TOP表示3件）'},
+  {id:'idx-wk-ey',     lbl:'英語ラベル',             type:'input', sel:'#works .sec-ey'},
+  {id:'idx-wk-ttl',    lbl:'日本語見出し',           type:'input', sel:'#works .sec-ttl'},
+  {id:'idx-wk1-img',   lbl:'事例① 写真',            type:'image', sel:'#works .wk:nth-child(1) .wk-img'},
+  {id:'idx-wk1-ttl',   lbl:'事例① タイトル（英）',  type:'input', sel:'#works .wk:nth-child(1) .wk-ttl'},
+  {id:'idx-wk1-sub',   lbl:'事例① サブ（和）',      type:'input', sel:'#works .wk:nth-child(1) .wk-sub'},
+  {id:'idx-wk2-img',   lbl:'事例② 写真',            type:'image', sel:'#works .wk:nth-child(2) .wk-img'},
+  {id:'idx-wk2-ttl',   lbl:'事例② タイトル（英）',  type:'input', sel:'#works .wk:nth-child(2) .wk-ttl'},
+  {id:'idx-wk2-sub',   lbl:'事例② サブ（和）',      type:'input', sel:'#works .wk:nth-child(2) .wk-sub'},
+  {id:'idx-wk3-img',   lbl:'事例③ 写真',            type:'image', sel:'#works .wk:nth-child(3) .wk-img'},
+  {id:'idx-wk3-ttl',   lbl:'事例③ タイトル（英）',  type:'input', sel:'#works .wk:nth-child(3) .wk-ttl'},
+  {id:'idx-wk3-sub',   lbl:'事例③ サブ（和）',      type:'input', sel:'#works .wk:nth-child(3) .wk-sub'},
+  {sec:'お問い合わせセクション'},
+  {id:'idx-ct-ey',     lbl:'英語ラベル',             type:'input',    sel:'#contact .sec-ey'},
+  {id:'idx-ct-ttl',    lbl:'見出し',                 type:'textarea', sel:'#contact .contact-ttl'},
+  {id:'idx-ct-ttl-fs', lbl:'見出し文字サイズ',       type:'fs',       sel:'#contact .contact-ttl'},
+  {id:'idx-ct-copy',   lbl:'説明文',                 type:'textarea', sel:'#contact .contact-copy'},
 ],
 
 nini: [
@@ -665,11 +710,18 @@ function applyImageToDoc(fid) {
     el.style.backgroundPosition = posMap[pos];
     el.style.backgroundRepeat = 'no-repeat';
   } else {
-    let img = el.querySelector('img');
-    if(!img) { img = curDoc.createElement('img'); el.appendChild(img); }
+    let img;
+    if(el.tagName && el.tagName.toLowerCase() === 'img') {
+      img = el;
+    } else {
+      img = el.querySelector('img');
+      if(!img) { img = curDoc.createElement('img'); el.appendChild(img); }
+    }
     img.src = dataUrl;
-    img.style.width = '100%';
-    img.style.height = '100%';
+    if(el !== img) {
+      img.style.width = '100%';
+      img.style.height = '100%';
+    }
     img.style.objectFit = 'cover';
     img.style.objectPosition = posMap[pos];
   }
