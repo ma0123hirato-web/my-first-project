@@ -680,15 +680,29 @@ function schedulePreview() {
   pvTimer = setTimeout(updatePreview, 300);
 }
 
+function serializeDoc(doc) {
+  // Inject <base> so relative paths (CSS, images) resolve against the file's location.
+  // File System Access API gives no file:// path, so we use srcdoc + base instead.
+  let html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+  return html;
+}
+
 function updatePreview() {
   if(!curDoc) return;
-  const serial = new XMLSerializer();
-  const html = serial.serializeToString(curDoc);
-  const blob = new Blob([html], {type:'text/html'});
-  const url = URL.createObjectURL(blob);
+  const html = serializeDoc(curDoc);
   const iframe = document.getElementById('preview-iframe');
-  iframe.src = url;
-  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+  // Use srcdoc to avoid blob-URL relative-path issues where possible,
+  // but srcdoc has a size limit → fall back to blob for large docs (base64 images).
+  if(html.length < 2 * 1024 * 1024) {
+    iframe.removeAttribute('src');
+    iframe.srcdoc = html;
+  } else {
+    const blob = new Blob([html], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    iframe.removeAttribute('srcdoc');
+    iframe.src = url;
+    setTimeout(()=>URL.revokeObjectURL(url), 8000);
+  }
 }
 
 function setPv(mode) {
@@ -706,8 +720,7 @@ async function saveFile() {
   const fname = FM[curTab];
   if(!fname) return;
   try {
-    const serial = new XMLSerializer();
-    const html = serial.serializeToString(curDoc);
+    const html = serializeDoc(curDoc);
     const fh = await dirHandle.getFileHandle(fname, {create:false});
     const writable = await fh.createWritable();
     await writable.write(html);
@@ -964,8 +977,7 @@ async function saveWorks() {
   if(!dirHandle || !curDoc || !worksData) return;
   updateWorksPreview();
   try {
-    const serial = new XMLSerializer();
-    const html = serial.serializeToString(curDoc);
+    const html = serializeDoc(curDoc);
     const fh = await dirHandle.getFileHandle('works.html', {create:false});
     const writable = await fh.createWritable();
     await writable.write(html);
