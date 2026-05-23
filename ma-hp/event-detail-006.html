@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>縁側のある家 完成見学会 | 株式会社ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;gap:0.5rem;}
+.nav-back:hover{color:#fff;}
+.ev-hero{position:relative;height:55vh;min-height:360px;display:flex;align-items:flex-end;overflow:hidden;margin-top:70px;filter:grayscale(30%);}
+.ev-hero-img{position:absolute;inset:0;background:linear-gradient(145deg,#6E7A88,#545F6B,#3C4855);}
+.ev-hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.ev-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(20,14,10,0.8) 0%,transparent 60%);}
+.ev-hero-content{position:relative;z-index:10;padding:3rem 4rem;width:100%;}
+.done-badge{display:inline-block;font-size:0.58rem;letter-spacing:0.25em;color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.25);padding:0.25rem 0.8rem;margin-bottom:1rem;}
+.ev-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2.2rem);font-weight:200;color:rgba(255,255,255,0.75);letter-spacing:0.1em;line-height:1.5;margin-bottom:0.8rem;}
+.ev-hero-date{font-size:0.75rem;letter-spacing:0.2em;color:rgba(255,255,255,0.4);}
+.ev-body{max-width:860px;margin:0 auto;padding:4rem 2.5rem 6rem;}
+.done-notice{background:rgba(100,100,100,0.08);border-left:3px solid #999;padding:1rem 1.5rem;font-size:0.75rem;color:#888;letter-spacing:0.1em;margin-bottom:3rem;}
+.ev-info{background:var(--white);border:1px solid var(--line);margin-bottom:4rem;}
+.ev-info-row{display:grid;grid-template-columns:140px 1fr;border-bottom:1px solid var(--line);}
+.ev-info-row:last-child{border-bottom:none;}
+.ev-info-label{padding:1.2rem 1.5rem;font-size:0.68rem;letter-spacing:0.18em;color:var(--mocha-d);background:var(--soft);display:flex;align-items:center;}
+.ev-info-value{padding:1.2rem 1.8rem;font-size:0.8rem;color:var(--dark);line-height:1.8;display:flex;align-items:center;}
+.ev-desc-ttl{font-family:'Noto Serif JP',serif;font-size:1.1rem;font-weight:300;letter-spacing:0.12em;color:var(--dark);margin-bottom:1.2rem;padding-bottom:0.8rem;border-bottom:1px solid var(--line);}
+.ev-desc-body{font-size:0.82rem;line-height:2.3;color:var(--mid);margin-bottom:3rem;}
+.ev-photos{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:3rem;}
+.ev-photo{aspect-ratio:4/3;overflow:hidden;background:var(--soft);border:1px dashed rgba(184,151,126,0.3);display:flex;align-items:center;justify-content:center;}
+.ev-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.ev-photo span{font-size:0.58rem;letter-spacing:0.12em;color:rgba(184,151,126,0.5);}
+.back-link{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.65rem;letter-spacing:0.2em;color:var(--mocha-d);text-decoration:none;border-bottom:1px solid rgba(155,122,99,0.3);padding-bottom:2px;}
+.back-link::before{content:'←';}
+.back-link:hover{color:var(--mocha);}
+
+/* Reserve button */
+.timerex-wrap{margin:2.5rem 0 3rem;text-align:center;}
+.btn-reserve{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.72rem;letter-spacing:0.22em;font-family:"Noto Sans JP",sans-serif;transition:background 0.3s;}
+.btn-reserve:hover{background:var(--mocha-l);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="events.html" class="nav-back">← イベント一覧に戻る</a>
+</nav>
+<div class="ev-hero">
+  <div class="ev-hero-img"><!-- <img src="event-003.jpg" alt="縁側の家"> --></div>
+  <div class="ev-hero-overlay"></div>
+  <div class="ev-hero-content">
+    <span class="done-badge">FINISHED</span>
+    <h1 class="ev-hero-ttl">縁側のある家 ― 完成見学会</h1>
+    <p class="ev-hero-date">2026.04.15（火）10:00〜16:00 ― つくば市</p>
+  </div>
+</div>
+<div class="ev-body">
+  <p class="done-notice">このイベントは終了しました。次回開催のご案内はLINEにてお知らせします。</p>
+  <div class="ev-info">
+    <div class="ev-info-row"><span class="ev-info-label">日時</span><span class="ev-info-value">2026年4月15日（火）10:00〜16:00 ※終了</span></div>
+    <div class="ev-info-row"><span class="ev-info-label">会場</span><span class="ev-info-value">茨城県つくば市（詳細は非公開）</span></div>
+    <div class="ev-info-row"><span class="ev-info-label">参加費</span><span class="ev-info-value">無料</span></div>
+  </div>
+  <p class="ev-desc-ttl">イベントについて</p>
+  <p class="ev-desc-body">縁側と庭が連続する、昔ながらの「外と内のあいだ」を現代的な設計で再解釈した住まいの見学会でした。多くの方にお越しいただきありがとうございました。</p>
+  <div class="ev-photos">
+    <div class="ev-photo"><!-- <img src="event-003-sub1.jpg"> --><span>写真①</span></div>
+    <div class="ev-photo"><!-- <img src="event-003-sub2.jpg"> --><span>写真②</span></div>
+  </div>
+    <div class="timerex-wrap">
+    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →</a>
+  </div>
+<a href="events.html" class="back-link">イベント一覧に戻る</a>
+</div>
+</body>
+</html>

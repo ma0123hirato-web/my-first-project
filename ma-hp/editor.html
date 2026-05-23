@@ -3,240 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>株式会社ma HP 編集アプリ</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<title>MA HP Editor</title>
 <style>
-:root {
-  --mocha: #B8977E; --mocha-d: #9A7A63; --mocha-l: #D4B99E;
-  --bg: #FAF8F5; --dark: #2E2A27; --mid: #6B5B4E;
-  --soft: #EDE6DC; --border: #D9CFC6; --white: #fff;
+:root{
+  --mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;
+  --bg:#1A1714;--panel:#232019;--card:#2C2824;--border:rgba(184,151,126,0.18);
+  --text:#E8E0D6;--muted:rgba(232,224,214,0.5);--white:#fff;
+  --ok:#4CAF50;--ng:#E57373;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--dark); font-size: 14px; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);font-size:13px;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 
-/* ── WELCOME SCREEN ── */
-#welcome {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  height: 100vh; text-align: center; gap: 1.5rem;
-}
-#welcome h1 { font-size: 1.3rem; font-weight: 500; color: var(--dark); letter-spacing: 0.08em; }
-#welcome p { font-size: 0.85rem; color: var(--mid); line-height: 2; }
-#welcome .brand { color: var(--mocha); font-weight: 500; }
-.open-btn {
-  margin-top: 0.5rem; padding: 0.9rem 2.5rem; background: var(--mocha);
-  color: var(--white); border: none; border-radius: 4px; font-family: inherit;
-  font-size: 0.95rem; cursor: pointer; letter-spacing: 0.08em; transition: background 0.2s;
-}
-.open-btn:hover { background: var(--mocha-d); }
-#welcome .note {
-  font-size: 0.72rem; color: #aaa; max-width: 320px; line-height: 1.8;
-  border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem 1rem;
-  background: var(--white);
-}
+/* top bar */
+#topbar{height:48px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;}
+#topbar h1{font-size:13px;font-weight:600;letter-spacing:0.1em;color:var(--mocha-l);margin-right:auto;}
+#btn-open{padding:6px 14px;background:var(--mocha);color:#1A1714;border:none;cursor:pointer;font-size:11px;letter-spacing:0.1em;font-weight:600;border-radius:2px;}
+#btn-open:hover{background:var(--mocha-l);}
+#dir-label{font-size:11px;color:var(--muted);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#preview-mode{display:flex;gap:6px;align-items:center;}
+#preview-mode span{font-size:10px;color:var(--muted);}
+.pv-btn{padding:4px 10px;background:var(--card);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-size:10px;border-radius:2px;}
+.pv-btn.active{background:var(--mocha);color:#1A1714;border-color:var(--mocha);}
 
-/* ── APP LAYOUT ── */
-#app { display: none; flex-direction: column; height: 100vh; }
-#app.visible { display: flex; }
+/* tabs */
+#tabbar{height:38px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:flex-end;padding:0 12px;gap:2px;flex-shrink:0;overflow-x:auto;}
+#tabbar::-webkit-scrollbar{height:3px;}
+#tabbar::-webkit-scrollbar-track{background:transparent;}
+#tabbar::-webkit-scrollbar-thumb{background:var(--border);}
+.tab-btn{padding:6px 14px;background:transparent;color:var(--muted);border:none;cursor:pointer;font-size:11px;letter-spacing:0.08em;border-bottom:2px solid transparent;white-space:nowrap;transition:color 0.2s;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--mocha-l);border-bottom-color:var(--mocha);}
 
-#app-nav {
-  height: 52px; background: var(--dark); color: var(--white); flex-shrink: 0;
-  display: flex; align-items: center; justify-content: space-between; padding: 0 1.25rem;
-}
-.nav-title { font-size: 0.88rem; letter-spacing: 0.05em; }
-.nav-brand { color: var(--mocha-l); margin-right: 0.4rem; }
-.nav-folder { font-size: 0.72rem; color: rgba(255,255,255,0.4); margin-left: 0.75rem; }
-.nav-actions { display: flex; gap: 0.6rem; }
+/* main layout */
+#main{flex:1;display:flex;overflow:hidden;}
 
-.btn { cursor: pointer; border: none; font-family: inherit; font-size: 0.8rem; border-radius: 3px; padding: 0.42rem 0.9rem; transition: all 0.2s; letter-spacing: 0.04em; }
-.btn-primary { background: var(--mocha); color: var(--white); }
-.btn-primary:hover { background: var(--mocha-d); }
-.btn-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
-.btn-outline:hover { background: rgba(255,255,255,0.08); }
-.btn-ghost { background: transparent; color: var(--mocha-l); font-size: 0.75rem; padding: 0.35rem 0.7rem; text-decoration: underline; }
-.btn-ghost:hover { color: var(--white); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+/* form panel */
+#form-panel{width:360px;flex-shrink:0;overflow-y:auto;border-right:1px solid var(--border);padding:0;}
+#form-panel::-webkit-scrollbar{width:4px;}
+#form-panel::-webkit-scrollbar-track{background:transparent;}
+#form-panel::-webkit-scrollbar-thumb{background:var(--border);}
 
-#app-body { display: flex; flex: 1; overflow: hidden; }
+.section-hd{padding:10px 16px 6px;font-size:10px;letter-spacing:0.18em;color:var(--mocha-d);background:var(--panel);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;}
+.field{padding:10px 16px;border-bottom:1px solid rgba(184,151,126,0.08);}
+.field-label{font-size:10px;letter-spacing:0.1em;color:var(--muted);margin-bottom:5px;display:flex;align-items:center;gap:6px;}
+.field input[type=text],.field textarea{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:6px 10px;font-size:12px;border-radius:2px;font-family:inherit;}
+.field textarea{resize:vertical;min-height:60px;line-height:1.6;}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--mocha);}
 
-/* ── LEFT PANEL ── */
-#left-panel {
-  width: 400px; min-width: 300px; display: flex; flex-direction: column;
-  border-right: 2px solid var(--border); background: var(--white); overflow: hidden;
-}
-#tab-bar { display: flex; border-bottom: 1px solid var(--border); background: var(--soft); flex-shrink: 0; overflow-x: auto; flex-wrap: nowrap; }
-.tab-btn {
-  flex: 1; padding: 0.8rem 0.4rem; border: none; background: transparent;
-  font-family: inherit; font-size: 0.75rem; color: var(--mid); cursor: pointer;
-  border-bottom: 2px solid transparent; transition: all 0.2s; letter-spacing: 0.03em;
-}
-.tab-btn.active { color: var(--mocha-d); border-bottom-color: var(--mocha); background: var(--white); font-weight: 500; }
-.tab-btn:hover:not(.active) { background: rgba(184,151,126,0.08); }
+/* font size control */
+.fs-row{display:flex;align-items:center;gap:6px;}
+.fs-row input{flex:1;}
+.fs-btn{padding:4px 10px;background:var(--card);color:var(--mocha-l);border:1px solid var(--border);cursor:pointer;font-size:12px;font-weight:600;border-radius:2px;line-height:1;}
+.fs-btn:hover{background:var(--mocha);color:#1A1714;}
 
-#form-area { flex: 1; overflow-y: auto; padding: 0.75rem 1rem 3rem; }
+/* image upload */
+.img-upload-area{border:1px dashed var(--border);padding:10px;border-radius:2px;background:var(--card);cursor:pointer;text-align:center;transition:border-color 0.2s;}
+.img-upload-area:hover{border-color:var(--mocha);}
+.img-upload-area.has-img{border-style:solid;border-color:var(--mocha-d);}
+.img-preview{width:100%;height:80px;object-fit:cover;display:block;margin-bottom:6px;border-radius:1px;}
+.img-hint{font-size:10px;color:var(--muted);letter-spacing:0.1em;}
+.img-pos{display:flex;gap:4px;margin-top:6px;}
+.pos-btn{flex:1;padding:3px 0;background:var(--panel);color:var(--muted);border:1px solid var(--border);cursor:pointer;font-size:10px;border-radius:2px;}
+.pos-btn.active{background:var(--mocha-d);color:var(--white);border-color:var(--mocha-d);}
 
-.sec-label {
-  font-size: 0.58rem; letter-spacing: 0.2em; color: var(--mocha); font-weight: 500;
-  text-transform: uppercase; padding: 1.1rem 0 0.45rem; border-bottom: 1px solid var(--soft);
-  margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.5rem;
-}
-.sec-label::before { content: ''; display: block; width: 14px; height: 1px; background: var(--mocha); }
+/* toggle */
+.toggle-row{display:flex;align-items:center;gap:10px;}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#555;border-radius:12px;cursor:pointer;transition:0.2s;}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:0.2s;}
+.toggle input:checked+.toggle-slider{background:var(--mocha);}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px);}
+.toggle-label{font-size:12px;color:var(--text);}
 
-.field-group { margin-bottom: 0.85rem; }
-.field-label { display: block; font-size: 0.7rem; color: var(--mid); margin-bottom: 0.28rem; }
-.field-input, .field-textarea, .field-url {
-  width: 100%; font-family: inherit; font-size: 0.8rem; color: var(--dark);
-  background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
-  padding: 0.44rem 0.6rem; transition: border-color 0.2s, box-shadow 0.2s; line-height: 1.5;
-}
-.field-input:focus, .field-textarea:focus, .field-url:focus {
-  outline: none; border-color: var(--mocha); background: var(--white);
-  box-shadow: 0 0 0 2px rgba(184,151,126,0.15);
-}
-.field-textarea { resize: vertical; min-height: 64px; }
-.field-url { font-size: 0.72rem; font-family: monospace; color: var(--mid); }
+/* note field */
+.field-note{font-size:11px;color:var(--muted);line-height:1.6;padding:8px 12px;background:var(--card);border-radius:2px;border-left:2px solid var(--mocha-d);}
 
-.url-row { display: flex; gap: 0.4rem; align-items: center; }
-.url-row .field-url { flex: 1; }
-.btn-pick-img {
-  flex-shrink: 0; padding: 0.44rem 0.7rem; background: var(--soft);
-  border: 1px solid var(--border); border-radius: 3px; cursor: pointer;
-  font-family: inherit; font-size: 0.72rem; color: var(--mid); white-space: nowrap;
-  transition: all 0.2s;
-}
-.btn-pick-img:hover { background: var(--mocha-l); color: var(--white); border-color: var(--mocha-l); }
-.img-preview-thumb {
-  width: 100%; height: 60px; object-fit: cover; border-radius: 3px;
-  border: 1px solid var(--border); margin-top: 0.3rem; display: none;
-}
-.img-pos-ctrl {
-  display: none; gap: 0.3rem; margin-top: 0.3rem; align-items: center;
-}
-.img-pos-ctrl span { font-size: 0.68rem; color: var(--mid); }
-.btn-pos {
-  padding: 0.2rem 0.55rem; font-size: 0.68rem; border: 1px solid var(--border);
-  border-radius: 2px; background: var(--soft); cursor: pointer; font-family: inherit;
-  color: var(--mid); transition: all 0.15s;
-}
-.btn-pos:hover, .btn-pos.active { background: var(--mocha); color: var(--white); border-color: var(--mocha); }
+/* save button */
+#save-bar{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;}
+#btn-save{width:100%;padding:10px;background:var(--mocha);color:#1A1714;border:none;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:0.15em;border-radius:2px;transition:background 0.2s;}
+#btn-save:hover{background:var(--mocha-l);}
+#btn-save:disabled{background:#555;color:#888;cursor:not-allowed;}
 
-.field-label-row {
-  display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.28rem;
-}
-.field-label-row .field-label { margin-bottom: 0; }
-.font-size-ctrl {
-  display: flex; align-items: center; gap: 0.3rem; flex-shrink: 0;
-}
-.font-size-ctrl span {
-  font-size: 0.65rem; color: var(--mid); min-width: 2.8rem; text-align: center;
-  background: var(--soft); border: 1px solid var(--border); border-radius: 2px;
-  padding: 0.1rem 0.3rem;
-}
-.btn-fs {
-  width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 2px;
-  background: var(--soft); cursor: pointer; font-family: inherit; color: var(--mid);
-  display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
-  transition: all 0.15s; flex-shrink: 0; padding: 0;
-}
-.btn-fs:hover { background: var(--mocha); color: var(--white); border-color: var(--mocha); }
+/* iframe preview */
+#preview-pane{flex:1;display:flex;flex-direction:column;overflow:hidden;background:#111;}
+#preview-wrap{flex:1;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;padding:16px;}
+#preview-iframe{border:none;background:#fff;transition:width 0.3s;}
+#preview-iframe.pc{width:100%;height:100%;}
+#preview-iframe.sp{width:390px;height:844px;box-shadow:0 0 0 8px #222;border-radius:8px;}
 
-.card-toggle-row { display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0 0.4rem; margin-bottom:0.5rem; border-bottom: 1px solid var(--soft); }
-.btn-toggle { padding:0.28rem 0.75rem; font-size:0.7rem; border-radius:20px; border:1px solid var(--mocha); background:var(--mocha); color:white; cursor:pointer; font-family:inherit; transition:all 0.2s; }
-.btn-toggle.inactive { background:transparent; color:var(--mid); border-color:var(--border); }
-.card-toggle-label { font-size:0.75rem; font-weight:500; color:var(--dark); letter-spacing:0.05em; }
+/* toast */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ok);color:#fff;padding:10px 20px;border-radius:4px;font-size:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:999;}
+#toast.show{opacity:1;}
+#toast.err{background:var(--ng);}
 
-.card-box {
-  border: 1px solid var(--border); border-radius: 4px;
-  padding: 0.7rem 0.8rem 0.3rem; margin-bottom: 0.7rem; background: #FDFBF9;
-}
-.card-box-title {
-  font-size: 0.65rem; font-weight: 500; color: var(--mocha-d);
-  margin-bottom: 0.55rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--soft);
-  letter-spacing: 0.06em;
-}
-
-/* ── RIGHT PANEL ── */
-#right-panel { flex: 1; display: flex; flex-direction: column; background: #E8E4DC; overflow: hidden; }
-#preview-bar {
-  display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.9rem;
-  background: rgba(42,37,32,0.06); border-bottom: 1px solid var(--border); flex-shrink: 0;
-}
-#preview-label { font-size: 0.65rem; color: var(--mid); letter-spacing: 0.1em; flex: 1; text-transform: uppercase; }
-.btn-preview { background: var(--mocha); color: var(--white); font-size: 0.73rem; padding: 0.32rem 0.9rem; }
-.btn-preview:hover { background: var(--mocha-d); }
-#preview-frame { flex: 1; width: 100%; border: none; background: var(--white); }
-
-/* ── TOAST ── */
-#toast {
-  position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 0.7rem 1.2rem;
-  background: var(--dark); color: var(--white); border-radius: 4px; font-size: 0.8rem;
-  opacity: 0; transform: translateY(8px); transition: all 0.25s;
-  pointer-events: none; z-index: 999; max-width: 300px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-}
-#toast.show { opacity: 1; transform: translateY(0); }
-#toast.ok { background: #2E7D32; }
-#toast.ng { background: #C62828; }
-
-@media (max-width: 860px) {
-  #app-body { flex-direction: column; }
-  #left-panel { width: 100%; min-width: unset; height: 55vh; border-right: none; border-bottom: 2px solid var(--border); }
-  #right-panel { height: 45vh; }
-}
+/* works special */
+.wk-accordion{border:1px solid var(--border);border-radius:2px;margin-bottom:8px;overflow:hidden;}
+.wk-acc-hd{padding:8px 12px;background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+.wk-acc-hd:hover{background:var(--panel);}
+.wk-acc-arrow{color:var(--mocha);font-size:14px;transition:transform 0.2s;}
+.wk-acc-body{display:none;padding:10px 12px;background:var(--bg);border-top:1px solid var(--border);}
+.wk-acc-body.open{display:block;}
+.wk-field{margin-bottom:8px;}
+.wk-field label{font-size:10px;color:var(--muted);display:block;margin-bottom:3px;}
+.wk-field input,.wk-field textarea,.wk-field select{width:100%;background:var(--card);border:1px solid var(--border);color:var(--text);padding:5px 8px;font-size:11px;border-radius:2px;font-family:inherit;}
+.wk-field textarea{resize:vertical;min-height:50px;}
+.spec-row{display:flex;gap:6px;margin-bottom:4px;align-items:center;}
+.spec-row input{flex:1;}
+.spec-del{padding:3px 7px;background:var(--ng);color:#fff;border:none;cursor:pointer;border-radius:2px;font-size:11px;}
+.spec-add{padding:4px 10px;background:var(--card);color:var(--mocha-l);border:1px solid var(--border);cursor:pointer;font-size:10px;border-radius:2px;margin-top:4px;}
+.wk-img-area{border:1px dashed var(--border);padding:8px;border-radius:2px;background:var(--card);cursor:pointer;text-align:center;}
+.wk-img-area:hover{border-color:var(--mocha);}
+.wk-img-area.has-img{border-style:solid;border-color:var(--mocha-d);}
+.wk-img-preview{width:100%;height:60px;object-fit:cover;display:block;margin-bottom:4px;}
 </style>
 </head>
 <body>
 
-<!-- ── WELCOME ── -->
-<div id="welcome">
-  <h1><span class="brand">株式会社ma</span> HP 編集アプリ</h1>
-  <p>ma-hp フォルダを選択すると<br>ホームページを編集できます</p>
-  <button class="open-btn" onclick="openFolder()">📁 ma-hp フォルダを開く</button>
-  <div class="note">
-    ※ Chrome または Edge で開いてください<br>
-    ※ ファイルの保存許可を求められたら「許可」を押してください
+<div id="topbar">
+  <h1>MA HP EDITOR</h1>
+  <span id="dir-label">フォルダを開いてください</span>
+  <div id="preview-mode">
+    <span>プレビュー</span>
+    <button class="pv-btn active" id="pv-pc" onclick="setPv('pc')">PC</button>
+    <button class="pv-btn" id="pv-sp" onclick="setPv('sp')">SP</button>
   </div>
+  <button id="btn-open" onclick="openDir()">フォルダを開く</button>
 </div>
 
-<!-- ── APP ── -->
-<div id="app">
-  <nav id="app-nav">
-    <div class="nav-title">
-      <span class="nav-brand">株式会社ma</span>HP 編集アプリ
-      <span class="nav-folder" id="folder-name"></span>
-    </div>
-    <div class="nav-actions">
-      <button class="btn btn-ghost" onclick="downloadFile()">ダウンロード</button>
-      <button class="btn btn-outline" onclick="updatePreview()">▶ プレビュー更新</button>
-      <button class="btn btn-primary" onclick="saveFile()">💾 保存</button>
-    </div>
-  </nav>
+<div id="tabbar">
+  <button class="tab-btn active" onclick="switchTab('index')">TOP</button>
+  <button class="tab-btn" onclick="switchTab('nini')">NINI</button>
+  <button class="tab-btn" onclick="switchTab('works')">施工例</button>
+  <button class="tab-btn" onclick="switchTab('service')">サービス</button>
+  <button class="tab-btn" onclick="switchTab('events')">イベント一覧</button>
+  <button class="tab-btn" onclick="switchTab('ev1')">イベント①</button>
+  <button class="tab-btn" onclick="switchTab('ev2')">イベント②</button>
+  <button class="tab-btn" onclick="switchTab('ev3')">イベント③</button>
+  <button class="tab-btn" onclick="switchTab('ev4')">イベント④</button>
+  <button class="tab-btn" onclick="switchTab('ev5')">イベント⑤</button>
+  <button class="tab-btn" onclick="switchTab('ev6')">イベント⑥</button>
+  <button class="tab-btn" onclick="switchTab('ns1')">お知らせ①</button>
+  <button class="tab-btn" onclick="switchTab('ns2')">お知らせ②</button>
+  <button class="tab-btn" onclick="switchTab('ns3')">お知らせ③</button>
+</div>
 
-  <div id="app-body">
-    <div id="left-panel">
-      <div id="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('index', this)">トップページ</button>
-        <button class="tab-btn" onclick="switchTab('nini', this)">ni-ni</button>
-        <button class="tab-btn" onclick="switchTab('event', this)">イベント</button>
-        <button class="tab-btn" onclick="switchTab('news', this)">お知らせ</button>
-        <button class="tab-btn" onclick="switchTab('events', this)">イベント一覧</button>
-        <button class="tab-btn" onclick="switchTab('works', this)">施工例</button>
-        <button class="tab-btn" onclick="switchTab('service', this)">サービス</button>
-        <button class="tab-btn" onclick="switchTab('news-1', this)">お知らせ①</button>
-        <button class="tab-btn" onclick="switchTab('news-2', this)">お知らせ②</button>
-        <button class="tab-btn" onclick="switchTab('news-3', this)">お知らせ③</button>
-        <button class="tab-btn" onclick="switchTab('event-1', this)">イベント①</button>
-        <button class="tab-btn" onclick="switchTab('event-2', this)">イベント②</button>
-        <button class="tab-btn" onclick="switchTab('event-3', this)">イベント③</button>
-        <button class="tab-btn" onclick="switchTab('works-detail', this)">施工例詳細</button>
-      </div>
-      <div id="form-area"></div>
+<div id="main">
+  <div id="form-panel">
+    <div id="fields-container"></div>
+    <div id="save-bar">
+      <button id="btn-save" onclick="saveFile()" disabled>保存する</button>
     </div>
-    <div id="right-panel">
-      <div id="preview-bar">
-        <span id="preview-label">Preview</span>
-        <button class="btn btn-preview" onclick="updatePreview()">▶ プレビュー更新</button>
-      </div>
-      <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+  </div>
+  <div id="preview-pane">
+    <div id="preview-wrap">
+      <iframe id="preview-iframe" class="pc"></iframe>
     </div>
   </div>
 </div>
@@ -244,778 +165,815 @@ html, body { height: 100%; font-family: 'Noto Sans JP', sans-serif; background: 
 <div id="toast"></div>
 
 <script>
-// ── STATE ──
-let dirHandle = null;
-let fileHandles = {};
-let currentTab = 'index';
-let htmlDocs = {};   // parsed DOM per tab
-let blobUrl = null;
-
-const FILE_MAP = {
-  index: 'index.html', nini: 'nini.html', event: 'event-modelhouse.html',
-  news: 'news.html', events: 'events.html', works: 'works.html', service: 'service.html',
-  'news-1': 'news-1.html', 'news-2': 'news-2.html', 'news-3': 'news-3.html',
-  'event-1': 'event-1.html', 'event-2': 'event-2.html', 'event-3': 'event-3.html',
-  'works-detail': 'works-detail.html'
+// ── File map ─────────────────────────────────────────────────────────────────
+const FM = {
+  index: 'index.html',
+  nini: 'nini.html',
+  works: 'works.html',
+  service: 'service.html',
+  events: 'events.html',
+  ev1: 'event-detail-001.html',
+  ev2: 'event-detail-002.html',
+  ev3: 'event-detail-003.html',
+  ev4: 'event-detail-004.html',
+  ev5: 'event-detail-005.html',
+  ev6: 'event-detail-006.html',
+  ns1: 'news-detail-001.html',
+  ns2: 'news-detail-002.html',
+  ns3: 'news-detail-003.html',
 };
 
-// ── FIELD DEFINITIONS ──
-// Each field: { id, label, selector, prop, type, nth }
-// prop: 'textContent' | 'style.backgroundImage' | 'src' | 'style.backgroundImage'
-// type: 'input' | 'textarea' | 'url'
-// nth: 0-based index when selector returns multiple elements
-
+// ── Field definitions ─────────────────────────────────────────────────────────
+// type: 'input' | 'textarea' | 'image' | 'toggle' | 'fs' | 'note'
+// prop: 'bg' = backgroundImage, else img.src
+// sel: CSS selector
+// nth: if set, use querySelectorAll(sel)[nth-1]
 const FIELDS = {
-  index: [
-    { sec: 'ヒーロー' },
-    { id:'hero-bg',    label:'背景画像URL',           selector:'.hero-bg',       prop:'bgUrl',         type:'url' },
-    { id:'hero-en',    label:'英語サブテキスト',       selector:'.hero-en',       prop:'textContent',   type:'input' },
-    { id:'hero-copy',  label:'メインコピー',           selector:'.hero-copy',     prop:'textContent',   type:'textarea' },
 
-    { sec: 'お知らせ（NEWS）' },
-    { type:'toggle', id:'idx-n1-toggle', label:'NEWS カード 1', cardSelector:'.news-card', nth:0 },
-    { id:'n1-date',  label:'NEWS 1 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input',    nth:0 },
-    { id:'n1-tag',   label:'NEWS 1 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input',    nth:0 },
-    { id:'n1-ttl',   label:'NEWS 1 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input',    nth:0 },
-    { id:'n1-img',   label:'NEWS 1 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',      nth:0 },
-    { type:'toggle', id:'idx-n2-toggle', label:'NEWS カード 2', cardSelector:'.news-card', nth:1 },
-    { id:'n2-date',  label:'NEWS 2 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input',    nth:1 },
-    { id:'n2-tag',   label:'NEWS 2 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input',    nth:1 },
-    { id:'n2-ttl',   label:'NEWS 2 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input',    nth:1 },
-    { id:'n2-img',   label:'NEWS 2 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',      nth:1 },
-    { type:'toggle', id:'idx-n3-toggle', label:'NEWS カード 3', cardSelector:'.news-card', nth:2 },
-    { id:'n3-date',  label:'NEWS 3 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input',    nth:2 },
-    { id:'n3-tag',   label:'NEWS 3 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input',    nth:2 },
-    { id:'n3-ttl',   label:'NEWS 3 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input',    nth:2 },
-    { id:'n3-img',   label:'NEWS 3 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',      nth:2 },
+index: [
+  {sec:'ヒーロー'},
+  {id:'idx-hero-en',   lbl:'英語テキスト（小）',   type:'input',    sel:'.hero-en'},
+  {id:'idx-hero-copy', lbl:'キャッチコピー',         type:'textarea', sel:'.hero-copy'},
+  {id:'idx-hero-copy-fs', lbl:'コピー文字サイズ',    type:'fs',       sel:'.hero-copy'},
+  {id:'idx-hero-bg',   lbl:'ヒーロー背景画像',       type:'image',    sel:'#hero .hero-bg', prop:'bg'},
+  {sec:'お知らせカード'},
+  {id:'idx-nc1-vis',   lbl:'カード① 表示/非表示',   type:'toggle',   sel:'#news .news-card:nth-child(1)'},
+  {id:'idx-nc1-thumb', lbl:'カード① サムネイル',     type:'image',    sel:'#news .news-card:nth-child(1) .news-card-thumb-bg', prop:'bg'},
+  {id:'idx-nc1-date',  lbl:'カード① 日付',           type:'input',    sel:'#news .news-card:nth-child(1) .news-card-date'},
+  {id:'idx-nc1-tag',   lbl:'カード① タグ',           type:'input',    sel:'#news .news-card:nth-child(1) .news-card-tag'},
+  {id:'idx-nc1-ttl',   lbl:'カード① タイトル',       type:'input',    sel:'#news .news-card:nth-child(1) .news-card-ttl'},
+  {id:'idx-nc2-vis',   lbl:'カード② 表示/非表示',   type:'toggle',   sel:'#news .news-card:nth-child(2)'},
+  {id:'idx-nc2-thumb', lbl:'カード② サムネイル',     type:'image',    sel:'#news .news-card:nth-child(2) .news-card-thumb-bg', prop:'bg'},
+  {id:'idx-nc2-date',  lbl:'カード② 日付',           type:'input',    sel:'#news .news-card:nth-child(2) .news-card-date'},
+  {id:'idx-nc2-tag',   lbl:'カード② タグ',           type:'input',    sel:'#news .news-card:nth-child(2) .news-card-tag'},
+  {id:'idx-nc2-ttl',   lbl:'カード② タイトル',       type:'input',    sel:'#news .news-card:nth-child(2) .news-card-ttl'},
+  {id:'idx-nc3-vis',   lbl:'カード③ 表示/非表示',   type:'toggle',   sel:'#news .news-card:nth-child(3)'},
+  {id:'idx-nc3-thumb', lbl:'カード③ サムネイル',     type:'image',    sel:'#news .news-card:nth-child(3) .news-card-thumb-bg', prop:'bg'},
+  {id:'idx-nc3-date',  lbl:'カード③ 日付',           type:'input',    sel:'#news .news-card:nth-child(3) .news-card-date'},
+  {id:'idx-nc3-tag',   lbl:'カード③ タグ',           type:'input',    sel:'#news .news-card:nth-child(3) .news-card-tag'},
+  {id:'idx-nc3-ttl',   lbl:'カード③ タイトル',       type:'input',    sel:'#news .news-card:nth-child(3) .news-card-ttl'},
+  {sec:'イベントカード'},
+  {id:'idx-ec1-vis',   lbl:'カード① 表示/非表示',   type:'toggle',   sel:'#event .event-card:nth-child(1)'},
+  {id:'idx-ec1-thumb', lbl:'カード① サムネイル',     type:'image',    sel:'#event .event-card:nth-child(1) .ev-thumb-bg', prop:'bg'},
+  {id:'idx-ec1-date',  lbl:'カード① 日時',           type:'input',    sel:'#event .event-card:nth-child(1) .ev-card-date'},
+  {id:'idx-ec1-ttl',   lbl:'カード① タイトル',       type:'input',    sel:'#event .event-card:nth-child(1) .ev-card-ttl'},
+  {id:'idx-ec1-sub',   lbl:'カード① サブ',           type:'input',    sel:'#event .event-card:nth-child(1) .ev-card-sub'},
+  {id:'idx-ec2-vis',   lbl:'カード② 表示/非表示',   type:'toggle',   sel:'#event .event-card:nth-child(2)'},
+  {id:'idx-ec2-thumb', lbl:'カード② サムネイル',     type:'image',    sel:'#event .event-card:nth-child(2) .ev-thumb-bg', prop:'bg'},
+  {id:'idx-ec2-date',  lbl:'カード② 日時',           type:'input',    sel:'#event .event-card:nth-child(2) .ev-card-date'},
+  {id:'idx-ec2-ttl',   lbl:'カード② タイトル',       type:'input',    sel:'#event .event-card:nth-child(2) .ev-card-ttl'},
+  {id:'idx-ec2-sub',   lbl:'カード② サブ',           type:'input',    sel:'#event .event-card:nth-child(2) .ev-card-sub'},
+  {id:'idx-ec3-vis',   lbl:'カード③ 表示/非表示',   type:'toggle',   sel:'#event .event-card:nth-child(3)'},
+  {id:'idx-ec3-thumb', lbl:'カード③ サムネイル',     type:'image',    sel:'#event .event-card:nth-child(3) .ev-thumb-bg', prop:'bg'},
+  {id:'idx-ec3-date',  lbl:'カード③ 日時',           type:'input',    sel:'#event .event-card:nth-child(3) .ev-card-date'},
+  {id:'idx-ec3-ttl',   lbl:'カード③ タイトル',       type:'input',    sel:'#event .event-card:nth-child(3) .ev-card-ttl'},
+  {id:'idx-ec3-sub',   lbl:'カード③ サブ',           type:'input',    sel:'#event .event-card:nth-child(3) .ev-card-sub'},
+],
 
-    { sec: 'イベント（EVENT）' },
-    { type:'toggle', id:'idx-e1-toggle', label:'EVENT カード 1', cardSelector:'.ev-card', nth:0 },
-    { id:'e1-date',  label:'EVENT 1 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:0 },
-    { id:'e1-ttl',   label:'EVENT 1 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:0 },
-    { id:'e1-sub',   label:'EVENT 1 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:0 },
-    { id:'e1-img',   label:'EVENT 1 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:0 },
-    { type:'toggle', id:'idx-e2-toggle', label:'EVENT カード 2', cardSelector:'.ev-card', nth:1 },
-    { id:'e2-date',  label:'EVENT 2 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:1 },
-    { id:'e2-ttl',   label:'EVENT 2 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:1 },
-    { id:'e2-sub',   label:'EVENT 2 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:1 },
-    { id:'e2-img',   label:'EVENT 2 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:1 },
-    { type:'toggle', id:'idx-e3-toggle', label:'EVENT カード 3', cardSelector:'.ev-card', nth:2 },
-    { id:'e3-date',  label:'EVENT 3 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:2 },
-    { id:'e3-ttl',   label:'EVENT 3 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:2 },
-    { id:'e3-sub',   label:'EVENT 3 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:2 },
-    { id:'e3-img',   label:'EVENT 3 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:2 },
+nini: [
+  {sec:'ヒーロー'},
+  {id:'nini-hero-catch',    lbl:'キャッチコピー（大）',  type:'textarea', sel:'.hero-catch'},
+  {id:'nini-hero-catch-fs', lbl:'キャッチ文字サイズ',    type:'fs',       sel:'.hero-catch'},
+  {id:'nini-hero-spec',     lbl:'スペック（メイン）',    type:'input',    sel:'.hero-spec-main'},
+  {id:'nini-hero-note',     lbl:'スペック（注記）',      type:'input',    sel:'.hero-spec-note'},
+  {id:'nini-hero-copy',     lbl:'コピー文①',             type:'textarea', sel:'.hero-copy'},
+  {id:'nini-hero-copy2',    lbl:'コピー文②',             type:'textarea', sel:'.hero-copy2'},
+  {sec:'コンセプト'},
+  {id:'nini-concept-ttl',  lbl:'タイトル',    type:'input',    sel:'.concept-ttl'},
+  {id:'nini-concept-body', lbl:'本文',        type:'textarea', sel:'.concept-body'},
+  {sec:'プラン MOCHA'},
+  {id:'nini-p1-name',  lbl:'プラン名',  type:'input',    sel:'.plan-block.mocha .plan-concept-ja'},
+  {id:'nini-p1-desc',  lbl:'説明文',    type:'textarea', sel:'.plan-block.mocha .plan-desc'},
+  {sec:'プラン GRAY'},
+  {id:'nini-p2-name',  lbl:'プラン名',  type:'input',    sel:'.plan-block.gray .plan-concept-ja'},
+  {id:'nini-p2-desc',  lbl:'説明文',    type:'textarea', sel:'.plan-block.gray .plan-desc'},
+  {sec:'プラン POP'},
+  {id:'nini-p3-name',  lbl:'プラン名',  type:'input',    sel:'.plan-block.pop .plan-concept-ja'},
+  {id:'nini-p3-desc',  lbl:'説明文',    type:'textarea', sel:'.plan-block.pop .plan-desc'},
+  {sec:'スペック表'},
+  {id:'nini-s1', lbl:'スペック①値', type:'input', sel:'.spec-item:nth-child(1) .s-val'},
+  {id:'nini-s2', lbl:'スペック②値', type:'input', sel:'.spec-item:nth-child(2) .s-val'},
+  {id:'nini-s3', lbl:'スペック③値', type:'input', sel:'.spec-item:nth-child(3) .s-val'},
+  {id:'nini-s4', lbl:'スペック④値', type:'input', sel:'.spec-item:nth-child(4) .s-val'},
+  {id:'nini-s5', lbl:'スペック⑤値', type:'input', sel:'.spec-item:nth-child(5) .s-val'},
+  {sec:'CTA'},
+  {id:'nini-cta-ttl', lbl:'CTAタイトル', type:'input', sel:'.cta-ttl'},
+  {sec:'ギャラリー写真'},
+  {id:'nini-photo-note', lbl:'', type:'note', text:'ギャラリー写真はNINIページ自身のローカルストレージで管理されています。ブラウザでnini.htmlを開き、ページ内の写真エリアから直接アップロードしてください。'},
+],
 
-    { sec: 'サービス' },
-    { id:'svc1-ttl', label:'サービス 1 ― タイトル', selector:'.svc-ttl',  prop:'textContent', type:'input',    nth:0 },
-    { id:'svc1-dsc', label:'サービス 1 ― 説明文',   selector:'.svc-desc', prop:'textContent', type:'textarea', nth:0 },
-    { id:'svc2-ttl', label:'サービス 2 ― タイトル', selector:'.svc-ttl',  prop:'textContent', type:'input',    nth:1 },
-    { id:'svc2-dsc', label:'サービス 2 ― 説明文',   selector:'.svc-desc', prop:'textContent', type:'textarea', nth:1 },
-    { id:'svc3-ttl', label:'サービス 3 ― タイトル', selector:'.svc-ttl',  prop:'textContent', type:'input',    nth:2 },
-    { id:'svc3-dsc', label:'サービス 3 ― 説明文',   selector:'.svc-desc', prop:'textContent', type:'textarea', nth:2 },
+works: null, // handled specially
 
-    { sec: '施工例（WORKS）' },
-    { type:'toggle', id:'idx-w1-toggle', label:'WORKS カード 1', cardSelector:'.wk', nth:0 },
-    { id:'w1-ttl', label:'WORKS 1 ― タイトル',   selector:'.wk-ttl', prop:'textContent', type:'input', nth:0 },
-    { id:'w1-sub', label:'WORKS 1 ― サブ',       selector:'.wk-sub', prop:'textContent', type:'input', nth:0 },
-    { id:'w1-img', label:'WORKS 1 ― 画像URL',    selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:0 },
-    { type:'toggle', id:'idx-w2-toggle', label:'WORKS カード 2', cardSelector:'.wk', nth:1 },
-    { id:'w2-ttl', label:'WORKS 2 ― タイトル',   selector:'.wk-ttl', prop:'textContent', type:'input', nth:1 },
-    { id:'w2-sub', label:'WORKS 2 ― サブ',       selector:'.wk-sub', prop:'textContent', type:'input', nth:1 },
-    { id:'w2-img', label:'WORKS 2 ― 画像URL',    selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:1 },
-    { type:'toggle', id:'idx-w3-toggle', label:'WORKS カード 3', cardSelector:'.wk', nth:2 },
-    { id:'w3-ttl', label:'WORKS 3 ― タイトル',   selector:'.wk-ttl', prop:'textContent', type:'input', nth:2 },
-    { id:'w3-sub', label:'WORKS 3 ― サブ',       selector:'.wk-sub', prop:'textContent', type:'input', nth:2 },
-    { id:'w3-img', label:'WORKS 3 ― 画像URL',    selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:2 },
-  ],
+service: [
+  {sec:'ページヘッダー'},
+  {id:'svc-hero-ttl', lbl:'タイトル', type:'input',    sel:'.page-hero-ttl'},
+  {id:'svc-hero-sub', lbl:'サブタイトル', type:'textarea', sel:'.page-hero-sub'},
+  {sec:'新築 テキスト'},
+  {id:'svc-nc-ttl',   lbl:'タイトル', type:'input',    sel:'#shinchiku .svc-ttl'},
+  {id:'svc-nc-lead',  lbl:'リード文', type:'textarea', sel:'#shinchiku .svc-lead'},
+  {id:'svc-nc-p1t',   lbl:'ポイント①タイトル', type:'input',    sel:'#shinchiku .svc-point:nth-child(1) .sp-ttl'},
+  {id:'svc-nc-p1d',   lbl:'ポイント①説明',     type:'textarea', sel:'#shinchiku .svc-point:nth-child(1) .sp-desc'},
+  {id:'svc-nc-p2t',   lbl:'ポイント②タイトル', type:'input',    sel:'#shinchiku .svc-point:nth-child(2) .sp-ttl'},
+  {id:'svc-nc-p2d',   lbl:'ポイント②説明',     type:'textarea', sel:'#shinchiku .svc-point:nth-child(2) .sp-desc'},
+  {id:'svc-nc-p3t',   lbl:'ポイント③タイトル', type:'input',    sel:'#shinchiku .svc-point:nth-child(3) .sp-ttl'},
+  {id:'svc-nc-p3d',   lbl:'ポイント③説明',     type:'textarea', sel:'#shinchiku .svc-point:nth-child(3) .sp-desc'},
+  {sec:'新築 画像'},
+  {id:'svc-nc-img',   lbl:'メイン画像',   type:'image', sel:'#shinchiku .svc-img', prop:'bg'},
+  {id:'svc-nc-imgs',  lbl:'サブ画像',     type:'image', sel:'#shinchiku .svc-img-small', prop:'bg'},
+  {sec:'リフォーム テキスト'},
+  {id:'svc-rf-ttl',   lbl:'タイトル', type:'input',    sel:'#reform .svc-ttl'},
+  {id:'svc-rf-lead',  lbl:'リード文', type:'textarea', sel:'#reform .svc-lead'},
+  {id:'svc-rf-p1t',   lbl:'ポイント①タイトル', type:'input',    sel:'#reform .svc-point:nth-child(1) .sp-ttl'},
+  {id:'svc-rf-p1d',   lbl:'ポイント①説明',     type:'textarea', sel:'#reform .svc-point:nth-child(1) .sp-desc'},
+  {id:'svc-rf-p2t',   lbl:'ポイント②タイトル', type:'input',    sel:'#reform .svc-point:nth-child(2) .sp-ttl'},
+  {id:'svc-rf-p2d',   lbl:'ポイント②説明',     type:'textarea', sel:'#reform .svc-point:nth-child(2) .sp-desc'},
+  {id:'svc-rf-p3t',   lbl:'ポイント③タイトル', type:'input',    sel:'#reform .svc-point:nth-child(3) .sp-ttl'},
+  {id:'svc-rf-p3d',   lbl:'ポイント③説明',     type:'textarea', sel:'#reform .svc-point:nth-child(3) .sp-desc'},
+  {sec:'リフォーム 画像'},
+  {id:'svc-rf-img',   lbl:'メイン画像',   type:'image', sel:'#reform .svc-img', prop:'bg'},
+  {id:'svc-rf-imgs',  lbl:'サブ画像',     type:'image', sel:'#reform .svc-img-small', prop:'bg'},
+  {sec:'アフターサポート テキスト'},
+  {id:'svc-af-ttl',   lbl:'タイトル', type:'input',    sel:'#after .svc-ttl'},
+  {id:'svc-af-lead',  lbl:'リード文', type:'textarea', sel:'#after .svc-lead'},
+  {id:'svc-af-p1t',   lbl:'ポイント①タイトル', type:'input',    sel:'#after .svc-point:nth-child(1) .sp-ttl'},
+  {id:'svc-af-p1d',   lbl:'ポイント①説明',     type:'textarea', sel:'#after .svc-point:nth-child(1) .sp-desc'},
+  {id:'svc-af-p2t',   lbl:'ポイント②タイトル', type:'input',    sel:'#after .svc-point:nth-child(2) .sp-ttl'},
+  {id:'svc-af-p2d',   lbl:'ポイント②説明',     type:'textarea', sel:'#after .svc-point:nth-child(2) .sp-desc'},
+  {id:'svc-af-p3t',   lbl:'ポイント③タイトル', type:'input',    sel:'#after .svc-point:nth-child(3) .sp-ttl'},
+  {id:'svc-af-p3d',   lbl:'ポイント③説明',     type:'textarea', sel:'#after .svc-point:nth-child(3) .sp-desc'},
+  {sec:'アフターサポート 画像'},
+  {id:'svc-af-img',   lbl:'メイン画像',   type:'image', sel:'#after .svc-img', prop:'bg'},
+  {id:'svc-af-imgs',  lbl:'サブ画像',     type:'image', sel:'#after .svc-img-small', prop:'bg'},
+  {sec:'CTA'},
+  {id:'svc-cta-ttl', lbl:'CTAタイトル', type:'input',    sel:'.svc-cta-ttl'},
+  {id:'svc-cta-sub', lbl:'CTAサブ',     type:'textarea', sel:'.svc-cta-sub'},
+],
 
-  nini: [
-    { sec: 'ヒーロー' },
-    { id:'nn-catch',  label:'キャッチコピー',    selector:'.hero-catch',    prop:'textContent', type:'textarea' },
-    { id:'nn-copy',   label:'コピー文1',          selector:'.hero-copy',     prop:'textContent', type:'textarea' },
-    { id:'nn-copy2',  label:'コピー文2',          selector:'.hero-copy2',    prop:'textContent', type:'textarea' },
-    { id:'nn-spec',   label:'スペック（22坪〜）', selector:'.hero-spec-main',prop:'textContent', type:'textarea' },
-    { id:'nn-specn',  label:'スペック注記',       selector:'.hero-spec-note',prop:'textContent', type:'input'    },
+events: [
+  {sec:'開催予定イベント'},
+  {id:'ev-u1-vis',   lbl:'カード① 表示/非表示', type:'toggle', sel:'.events-section:first-child .event-card:nth-child(1)'},
+  {id:'ev-u1-bg',    lbl:'カード① 画像',        type:'image',  sel:'.events-section:first-child .event-card:nth-child(1) .ec-img-bg', prop:'bg'},
+  {id:'ev-u1-date',  lbl:'カード① 日時',         type:'input',  sel:'.events-section:first-child .event-card:nth-child(1) .ec-date'},
+  {id:'ev-u1-ttl',   lbl:'カード① タイトル',     type:'input',  sel:'.events-section:first-child .event-card:nth-child(1) .ec-ttl'},
+  {id:'ev-u1-sub',   lbl:'カード① サブ',         type:'input',  sel:'.events-section:first-child .event-card:nth-child(1) .ec-sub'},
+  {id:'ev-u1-badge', lbl:'カード① バッジ',       type:'input',  sel:'.events-section:first-child .event-card:nth-child(1) .ec-badge'},
+  {id:'ev-u2-vis',   lbl:'カード② 表示/非表示', type:'toggle', sel:'.events-section:first-child .event-card:nth-child(2)'},
+  {id:'ev-u2-bg',    lbl:'カード② 画像',        type:'image',  sel:'.events-section:first-child .event-card:nth-child(2) .ec-img-bg', prop:'bg'},
+  {id:'ev-u2-date',  lbl:'カード② 日時',         type:'input',  sel:'.events-section:first-child .event-card:nth-child(2) .ec-date'},
+  {id:'ev-u2-ttl',   lbl:'カード② タイトル',     type:'input',  sel:'.events-section:first-child .event-card:nth-child(2) .ec-ttl'},
+  {id:'ev-u2-sub',   lbl:'カード② サブ',         type:'input',  sel:'.events-section:first-child .event-card:nth-child(2) .ec-sub'},
+  {id:'ev-u2-badge', lbl:'カード② バッジ',       type:'input',  sel:'.events-section:first-child .event-card:nth-child(2) .ec-badge'},
+  {id:'ev-u3-vis',   lbl:'カード③ 表示/非表示', type:'toggle', sel:'.events-section:first-child .event-card:nth-child(3)'},
+  {id:'ev-u3-bg',    lbl:'カード③ 画像',        type:'image',  sel:'.events-section:first-child .event-card:nth-child(3) .ec-img-bg', prop:'bg'},
+  {id:'ev-u3-date',  lbl:'カード③ 日時',         type:'input',  sel:'.events-section:first-child .event-card:nth-child(3) .ec-date'},
+  {id:'ev-u3-ttl',   lbl:'カード③ タイトル',     type:'input',  sel:'.events-section:first-child .event-card:nth-child(3) .ec-ttl'},
+  {id:'ev-u3-sub',   lbl:'カード③ サブ',         type:'input',  sel:'.events-section:first-child .event-card:nth-child(3) .ec-sub'},
+  {id:'ev-u3-badge', lbl:'カード③ バッジ',       type:'input',  sel:'.events-section:first-child .event-card:nth-child(3) .ec-badge'},
+  {sec:'過去のイベント'},
+  {id:'ev-p1-vis',   lbl:'カード① 表示/非表示', type:'toggle', sel:'.events-section:last-child .event-card:nth-child(1)'},
+  {id:'ev-p1-bg',    lbl:'カード① 画像',        type:'image',  sel:'.events-section:last-child .event-card:nth-child(1) .ec-img-bg', prop:'bg'},
+  {id:'ev-p1-date',  lbl:'カード① 日時',         type:'input',  sel:'.events-section:last-child .event-card:nth-child(1) .ec-date'},
+  {id:'ev-p1-ttl',   lbl:'カード① タイトル',     type:'input',  sel:'.events-section:last-child .event-card:nth-child(1) .ec-ttl'},
+  {id:'ev-p1-sub',   lbl:'カード① サブ',         type:'input',  sel:'.events-section:last-child .event-card:nth-child(1) .ec-sub'},
+  {id:'ev-p1-badge', lbl:'カード① バッジ',       type:'input',  sel:'.events-section:last-child .event-card:nth-child(1) .ec-badge'},
+  {id:'ev-p2-vis',   lbl:'カード② 表示/非表示', type:'toggle', sel:'.events-section:last-child .event-card:nth-child(2)'},
+  {id:'ev-p2-bg',    lbl:'カード② 画像',        type:'image',  sel:'.events-section:last-child .event-card:nth-child(2) .ec-img-bg', prop:'bg'},
+  {id:'ev-p2-date',  lbl:'カード② 日時',         type:'input',  sel:'.events-section:last-child .event-card:nth-child(2) .ec-date'},
+  {id:'ev-p2-ttl',   lbl:'カード② タイトル',     type:'input',  sel:'.events-section:last-child .event-card:nth-child(2) .ec-ttl'},
+  {id:'ev-p2-sub',   lbl:'カード② サブ',         type:'input',  sel:'.events-section:last-child .event-card:nth-child(2) .ec-sub'},
+  {id:'ev-p2-badge', lbl:'カード② バッジ',       type:'input',  sel:'.events-section:last-child .event-card:nth-child(2) .ec-badge'},
+  {id:'ev-p3-vis',   lbl:'カード③ 表示/非表示', type:'toggle', sel:'.events-section:last-child .event-card:nth-child(3)'},
+  {id:'ev-p3-bg',    lbl:'カード③ 画像',        type:'image',  sel:'.events-section:last-child .event-card:nth-child(3) .ec-img-bg', prop:'bg'},
+  {id:'ev-p3-date',  lbl:'カード③ 日時',         type:'input',  sel:'.events-section:last-child .event-card:nth-child(3) .ec-date'},
+  {id:'ev-p3-ttl',   lbl:'カード③ タイトル',     type:'input',  sel:'.events-section:last-child .event-card:nth-child(3) .ec-ttl'},
+  {id:'ev-p3-sub',   lbl:'カード③ サブ',         type:'input',  sel:'.events-section:last-child .event-card:nth-child(3) .ec-sub'},
+  {id:'ev-p3-badge', lbl:'カード③ バッジ',       type:'input',  sel:'.events-section:last-child .event-card:nth-child(3) .ec-badge'},
+],
 
-    { sec: 'コンセプト' },
-    { id:'nn-cttl',  label:'タイトル',    selector:'.concept-ttl',  prop:'textContent', type:'textarea' },
-    { id:'nn-cbody', label:'本文',        selector:'.concept-body', prop:'textContent', type:'textarea' },
+ev1: evDetailFields('ev1'),
+ev2: evDetailFields('ev2'),
+ev3: evDetailFields('ev3'),
+ev4: evDetailFields('ev4'),
+ev5: evDetailFields('ev5'),
+ev6: evDetailFields('ev6'),
 
-    { sec: 'MOCHA スタイル' },
-    { id:'nn-m-cpt', label:'コンセプト', selector:'.plan-block.mocha .plan-concept-ja', prop:'textContent', type:'textarea' },
-    { id:'nn-m-dsc', label:'説明文',     selector:'.plan-block.mocha .plan-desc',       prop:'textContent', type:'textarea' },
-
-    { sec: 'GRAY スタイル' },
-    { id:'nn-g-cpt', label:'コンセプト', selector:'.plan-block.gray .plan-concept-ja',  prop:'textContent', type:'textarea' },
-    { id:'nn-g-dsc', label:'説明文',     selector:'.plan-block.gray .plan-desc',        prop:'textContent', type:'textarea' },
-
-    { sec: 'POP スタイル' },
-    { id:'nn-p-cpt', label:'コンセプト', selector:'.plan-block.pop .plan-concept-ja',   prop:'textContent', type:'textarea' },
-    { id:'nn-p-dsc', label:'説明文',     selector:'.plan-block.pop .plan-desc',         prop:'textContent', type:'textarea' },
-
-    { sec: 'スペック' },
-    { id:'nn-price', label:'価格',        selector:'.spec-hl .s-val',  prop:'textContent', type:'input' },
-    { id:'nn-pnote', label:'価格注記',    selector:'.spec-hl .s-note', prop:'textContent', type:'input' },
-    { id:'nn-area',  label:'延床面積',    selector:'.spec-item:nth-child(2) .s-val',  prop:'textContent', type:'input' },
-    { id:'nn-ctaf',  label:'CTAタイトル', selector:'.cta-ttl',  prop:'textContent', type:'input' },
-    { id:'nn-ctac',  label:'CTAコピー',   selector:'.cta-copy', prop:'textContent', type:'textarea' },
-  ],
-
-  event: [
-    { sec: 'ヒーロー' },
-    { id:'ev-bg',    label:'ヒーロー背景画像URL', selector:'.ev-hero-img',   prop:'bgUrl',       type:'url' },
-    { id:'ev-badge', label:'バッジ（種別）',      selector:'.ev-hero-badge', prop:'textContent', type:'input' },
-    { id:'ev-ttl',   label:'イベントタイトル',    selector:'.ev-hero-ttl',   prop:'textContent', type:'textarea' },
-    { id:'ev-date',  label:'日付サブテキスト',    selector:'.ev-hero-date',  prop:'textContent', type:'input' },
-
-    { sec: 'イベント情報' },
-    { id:'ev-i0', label:'日程',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:0 },
-    { id:'ev-i1', label:'時間',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:1 },
-    { id:'ev-i2', label:'場所',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:2 },
-    { id:'ev-i3', label:'参加費', selector:'.ev-info-value', prop:'textContent', type:'input', nth:3 },
-    { id:'ev-i4', label:'定員',   selector:'.ev-info-value', prop:'textContent', type:'input', nth:4 },
-
-    { sec: 'イベント説明' },
-    { id:'ev-dttl', label:'説明タイトル', selector:'.ev-desc-ttl',  prop:'textContent', type:'input'    },
-    { id:'ev-dbody', label:'説明本文',    selector:'.ev-desc-body', prop:'textContent', type:'textarea' },
-
-    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択できます）' },
-    { id:'ev-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
-    { id:'ev-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
-    { id:'ev-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
-    { id:'ev-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
-  ],
-
-  news: [
-    { sec: 'ページヘッダー' },
-    { id:'news-hero-en',  label:'英語ラベル',   selector:'.page-hero-en',  prop:'textContent', type:'input' },
-    { id:'news-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
-
-    { sec: 'お知らせカード' },
-    { type:'toggle', id:'news-c1-toggle', label:'NEWS カード 1', cardSelector:'.news-card', nth:0 },
-    { id:'news-n1-date', label:'カード 1 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:0 },
-    { id:'news-n1-tag',  label:'カード 1 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:0 },
-    { id:'news-n1-ttl',  label:'カード 1 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:0 },
-    { id:'news-n1-img',  label:'カード 1 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:0 },
-    { type:'toggle', id:'news-c2-toggle', label:'NEWS カード 2', cardSelector:'.news-card', nth:1 },
-    { id:'news-n2-date', label:'カード 2 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:1 },
-    { id:'news-n2-tag',  label:'カード 2 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:1 },
-    { id:'news-n2-ttl',  label:'カード 2 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:1 },
-    { id:'news-n2-img',  label:'カード 2 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:1 },
-    { type:'toggle', id:'news-c3-toggle', label:'NEWS カード 3', cardSelector:'.news-card', nth:2 },
-    { id:'news-n3-date', label:'カード 3 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:2 },
-    { id:'news-n3-tag',  label:'カード 3 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:2 },
-    { id:'news-n3-ttl',  label:'カード 3 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:2 },
-    { id:'news-n3-img',  label:'カード 3 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:2 },
-    { type:'toggle', id:'news-c4-toggle', label:'NEWS カード 4', cardSelector:'.news-card', nth:3 },
-    { id:'news-n4-date', label:'カード 4 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:3 },
-    { id:'news-n4-tag',  label:'カード 4 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:3 },
-    { id:'news-n4-ttl',  label:'カード 4 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:3 },
-    { id:'news-n4-img',  label:'カード 4 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:3 },
-    { type:'toggle', id:'news-c5-toggle', label:'NEWS カード 5', cardSelector:'.news-card', nth:4 },
-    { id:'news-n5-date', label:'カード 5 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:4 },
-    { id:'news-n5-tag',  label:'カード 5 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:4 },
-    { id:'news-n5-ttl',  label:'カード 5 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:4 },
-    { id:'news-n5-img',  label:'カード 5 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:4 },
-    { type:'toggle', id:'news-c6-toggle', label:'NEWS カード 6', cardSelector:'.news-card', nth:5 },
-    { id:'news-n6-date', label:'カード 6 ― 日付',   selector:'.news-card-date',      prop:'textContent', type:'input', nth:5 },
-    { id:'news-n6-tag',  label:'カード 6 ― タグ',   selector:'.news-card-tag',       prop:'textContent', type:'input', nth:5 },
-    { id:'news-n6-ttl',  label:'カード 6 ― タイトル',selector:'.news-card-ttl',      prop:'textContent', type:'input', nth:5 },
-    { id:'news-n6-img',  label:'カード 6 ― 画像URL', selector:'.news-card-thumb-bg', prop:'bgUrl',       type:'url',   nth:5 },
-  ],
-
-  events: [
-    { sec: 'ページヘッダー' },
-    { id:'evs-hero-en',  label:'英語ラベル',    selector:'.page-hero-en',  prop:'textContent', type:'input' },
-    { id:'evs-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
-
-    { sec: 'イベントカード' },
-    { type:'toggle', id:'evs-c1-toggle', label:'EVENT カード 1', cardSelector:'.event-card', nth:0 },
-    { id:'evs-e1-date',  label:'カード 1 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:0 },
-    { id:'evs-e1-ttl',   label:'カード 1 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:0 },
-    { id:'evs-e1-sub',   label:'カード 1 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:0 },
-    { id:'evs-e1-badge', label:'カード 1 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:0 },
-    { id:'evs-e1-img',   label:'カード 1 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:0 },
-    { type:'toggle', id:'evs-c2-toggle', label:'EVENT カード 2', cardSelector:'.event-card', nth:1 },
-    { id:'evs-e2-date',  label:'カード 2 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:1 },
-    { id:'evs-e2-ttl',   label:'カード 2 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:1 },
-    { id:'evs-e2-sub',   label:'カード 2 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:1 },
-    { id:'evs-e2-badge', label:'カード 2 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:1 },
-    { id:'evs-e2-img',   label:'カード 2 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:1 },
-    { type:'toggle', id:'evs-c3-toggle', label:'EVENT カード 3', cardSelector:'.event-card', nth:2 },
-    { id:'evs-e3-date',  label:'カード 3 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:2 },
-    { id:'evs-e3-ttl',   label:'カード 3 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:2 },
-    { id:'evs-e3-sub',   label:'カード 3 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:2 },
-    { id:'evs-e3-badge', label:'カード 3 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:2 },
-    { id:'evs-e3-img',   label:'カード 3 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:2 },
-    { type:'toggle', id:'evs-c4-toggle', label:'EVENT カード 4', cardSelector:'.event-card', nth:3 },
-    { id:'evs-e4-date',  label:'カード 4 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:3 },
-    { id:'evs-e4-ttl',   label:'カード 4 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:3 },
-    { id:'evs-e4-sub',   label:'カード 4 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:3 },
-    { id:'evs-e4-badge', label:'カード 4 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:3 },
-    { id:'evs-e4-img',   label:'カード 4 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:3 },
-    { type:'toggle', id:'evs-c5-toggle', label:'EVENT カード 5', cardSelector:'.event-card', nth:4 },
-    { id:'evs-e5-date',  label:'カード 5 ― 日付',    selector:'.ev-card-date',  prop:'textContent', type:'input', nth:4 },
-    { id:'evs-e5-ttl',   label:'カード 5 ― タイトル', selector:'.ev-card-ttl',  prop:'textContent', type:'input', nth:4 },
-    { id:'evs-e5-sub',   label:'カード 5 ― サブ',    selector:'.ev-card-sub',   prop:'textContent', type:'input', nth:4 },
-    { id:'evs-e5-badge', label:'カード 5 ― バッジ',  selector:'.ev-card-badge', prop:'textContent', type:'input', nth:4 },
-    { id:'evs-e5-img',   label:'カード 5 ― 画像URL',  selector:'.ev-thumb-bg',  prop:'bgUrl',       type:'url',   nth:4 },
-  ],
-
-  works: [
-    { sec: 'ページヘッダー' },
-    { id:'wks-hero-en',  label:'英語ラベル',    selector:'.page-hero-en',  prop:'textContent', type:'input' },
-    { id:'wks-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
-
-    { sec: '施工例カード' },
-    { type:'toggle', id:'wks-c1-toggle', label:'WORKS カード 1', cardSelector:'.wk', nth:0 },
-    { id:'wks-w1-ttl', label:'No.01 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:0 },
-    { id:'wks-w1-sub', label:'No.01 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:0 },
-    { id:'wks-w1-img', label:'No.01 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:0 },
-    { type:'toggle', id:'wks-c2-toggle', label:'WORKS カード 2', cardSelector:'.wk', nth:1 },
-    { id:'wks-w2-ttl', label:'No.02 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:1 },
-    { id:'wks-w2-sub', label:'No.02 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:1 },
-    { id:'wks-w2-img', label:'No.02 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:1 },
-    { type:'toggle', id:'wks-c3-toggle', label:'WORKS カード 3', cardSelector:'.wk', nth:2 },
-    { id:'wks-w3-ttl', label:'No.03 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:2 },
-    { id:'wks-w3-sub', label:'No.03 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:2 },
-    { id:'wks-w3-img', label:'No.03 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:2 },
-    { type:'toggle', id:'wks-c4-toggle', label:'WORKS カード 4', cardSelector:'.wk', nth:3 },
-    { id:'wks-w4-ttl', label:'No.04 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:3 },
-    { id:'wks-w4-sub', label:'No.04 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:3 },
-    { id:'wks-w4-img', label:'No.04 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:3 },
-    { type:'toggle', id:'wks-c5-toggle', label:'WORKS カード 5', cardSelector:'.wk', nth:4 },
-    { id:'wks-w5-ttl', label:'No.05 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:4 },
-    { id:'wks-w5-sub', label:'No.05 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:4 },
-    { id:'wks-w5-img', label:'No.05 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:4 },
-    { type:'toggle', id:'wks-c6-toggle', label:'WORKS カード 6', cardSelector:'.wk', nth:5 },
-    { id:'wks-w6-ttl', label:'No.06 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:5 },
-    { id:'wks-w6-sub', label:'No.06 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:5 },
-    { id:'wks-w6-img', label:'No.06 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:5 },
-    { type:'toggle', id:'wks-c7-toggle', label:'WORKS カード 7', cardSelector:'.wk', nth:6 },
-    { id:'wks-w7-ttl', label:'No.07 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:6 },
-    { id:'wks-w7-sub', label:'No.07 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:6 },
-    { id:'wks-w7-img', label:'No.07 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:6 },
-    { type:'toggle', id:'wks-c8-toggle', label:'WORKS カード 8', cardSelector:'.wk', nth:7 },
-    { id:'wks-w8-ttl', label:'No.08 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:7 },
-    { id:'wks-w8-sub', label:'No.08 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:7 },
-    { id:'wks-w8-img', label:'No.08 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:7 },
-    { type:'toggle', id:'wks-c9-toggle', label:'WORKS カード 9', cardSelector:'.wk', nth:8 },
-    { id:'wks-w9-ttl', label:'No.09 ― タイトル', selector:'.wk-ttl', prop:'textContent', type:'input', nth:8 },
-    { id:'wks-w9-sub', label:'No.09 ― サブ',     selector:'.wk-sub', prop:'textContent', type:'input', nth:8 },
-    { id:'wks-w9-img', label:'No.09 ― 画像URL',  selector:'.wk-img', prop:'bgUrl',       type:'url',   nth:8 },
-  ],
-
-  service: [
-    { sec: 'ページヘッダー' },
-    { id:'svc-hero-en',  label:'英語ラベル',    selector:'.page-hero-en',  prop:'textContent', type:'input' },
-    { id:'svc-hero-ttl', label:'ページタイトル', selector:'.page-hero-ttl', prop:'textContent', type:'input' },
-
-    { sec: 'サービス 01 ― 注文住宅' },
-    { type:'toggle', id:'svc-s1-toggle', label:'サービス セクション 1', cardSelector:'.svc-section', nth:0 },
-    { id:'svc-s1-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:0 },
-    { id:'svc-s1-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:0 },
-    { id:'svc-s1-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:0 },
-
-    { sec: 'サービス 02 ― 規格住宅 ni-ni' },
-    { type:'toggle', id:'svc-s2-toggle', label:'サービス セクション 2', cardSelector:'.svc-section', nth:1 },
-    { id:'svc-s2-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:1 },
-    { id:'svc-s2-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:1 },
-    { id:'svc-s2-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:1 },
-
-    { sec: 'サービス 03 ― リノベーション' },
-    { type:'toggle', id:'svc-s3-toggle', label:'サービス セクション 3', cardSelector:'.svc-section', nth:2 },
-    { id:'svc-s3-ttl-jp', label:'タイトル（日本語）', selector:'.svc-ttl-jp', prop:'textContent', type:'input',    nth:2 },
-    { id:'svc-s3-ttl-en', label:'タイトル（英語）',   selector:'.svc-ttl-en', prop:'textContent', type:'input',    nth:2 },
-    { id:'svc-s3-copy',   label:'本文',               selector:'.svc-copy',   prop:'textContent', type:'textarea', nth:2 },
-  ],
-
-  'news-1': [
-    { sec: 'ヒーロー' },
-    { id:'nd1-date', label:'日付',         selector:'.nd-date', prop:'textContent', type:'input' },
-    { id:'nd1-tag',  label:'タグ',         selector:'.nd-tag',  prop:'textContent', type:'input' },
-    { id:'nd1-ttl',  label:'タイトル',     selector:'.nd-ttl',  prop:'textContent', type:'textarea' },
-    { id:'nd1-thumb',label:'サムネイル画像URL', selector:'.nd-thumb', prop:'bgUrl', type:'url' },
-    { sec: '本文' },
-    { id:'nd1-lead', label:'リード文',     selector:'.nd-lead', prop:'textContent', type:'textarea' },
-    { id:'nd1-txt0', label:'本文段落 1',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:0 },
-    { id:'nd1-txt1', label:'本文段落 2',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:1 },
-    { id:'nd1-txt2', label:'本文段落 3',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:2 },
-  ],
-
-  'news-2': [
-    { sec: 'ヒーロー' },
-    { id:'nd2-date', label:'日付',         selector:'.nd-date', prop:'textContent', type:'input' },
-    { id:'nd2-tag',  label:'タグ',         selector:'.nd-tag',  prop:'textContent', type:'input' },
-    { id:'nd2-ttl',  label:'タイトル',     selector:'.nd-ttl',  prop:'textContent', type:'textarea' },
-    { id:'nd2-thumb',label:'サムネイル画像URL', selector:'.nd-thumb', prop:'bgUrl', type:'url' },
-    { sec: '本文' },
-    { id:'nd2-lead', label:'リード文',     selector:'.nd-lead', prop:'textContent', type:'textarea' },
-    { id:'nd2-txt0', label:'本文段落 1',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:0 },
-    { id:'nd2-txt1', label:'本文段落 2',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:1 },
-    { id:'nd2-txt2', label:'本文段落 3',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:2 },
-  ],
-
-  'news-3': [
-    { sec: 'ヒーロー' },
-    { id:'nd3-date', label:'日付',         selector:'.nd-date', prop:'textContent', type:'input' },
-    { id:'nd3-tag',  label:'タグ',         selector:'.nd-tag',  prop:'textContent', type:'input' },
-    { id:'nd3-ttl',  label:'タイトル',     selector:'.nd-ttl',  prop:'textContent', type:'textarea' },
-    { id:'nd3-thumb',label:'サムネイル画像URL', selector:'.nd-thumb', prop:'bgUrl', type:'url' },
-    { sec: '本文' },
-    { id:'nd3-lead', label:'リード文',     selector:'.nd-lead', prop:'textContent', type:'textarea' },
-    { id:'nd3-txt0', label:'本文段落 1',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:0 },
-    { id:'nd3-txt1', label:'本文段落 2',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:1 },
-    { id:'nd3-txt2', label:'本文段落 3',   selector:'.nd-text', prop:'textContent', type:'textarea', nth:2 },
-  ],
-
-  'event-1': [
-    { sec: 'ヒーロー' },
-    { id:'ev1-bg',    label:'ヒーロー背景画像URL', selector:'.ev-detail-hero', prop:'bgUrl',       type:'url' },
-    { id:'ev1-badge', label:'バッジ（種別）',      selector:'.ev-detail-badge', prop:'textContent', type:'input' },
-    { id:'ev1-ttl',   label:'イベントタイトル',    selector:'.ev-detail-ttl',   prop:'textContent', type:'textarea' },
-    { id:'ev1-date',  label:'日付テキスト',        selector:'.ev-detail-date',  prop:'textContent', type:'input' },
-    { sec: 'イベント情報' },
-    { id:'ev1-i0', label:'日程',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:0 },
-    { id:'ev1-i1', label:'時間',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:1 },
-    { id:'ev1-i2', label:'場所',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:2 },
-    { id:'ev1-i3', label:'参加費', selector:'.ev-info-val', prop:'textContent', type:'input', nth:3 },
-    { id:'ev1-i4', label:'定員',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:4 },
-    { sec: 'イベント説明' },
-    { id:'ev1-dttl',  label:'説明タイトル', selector:'.ev-detail-desc-ttl',  prop:'textContent', type:'input' },
-    { id:'ev1-dbody', label:'説明本文',     selector:'.ev-detail-desc-body', prop:'textContent', type:'textarea' },
-    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
-    { id:'ev1-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
-    { id:'ev1-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
-    { id:'ev1-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
-    { id:'ev1-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
-  ],
-
-  'event-2': [
-    { sec: 'ヒーロー' },
-    { id:'ev2-bg',    label:'ヒーロー背景画像URL', selector:'.ev-detail-hero', prop:'bgUrl',       type:'url' },
-    { id:'ev2-badge', label:'バッジ（種別）',      selector:'.ev-detail-badge', prop:'textContent', type:'input' },
-    { id:'ev2-ttl',   label:'イベントタイトル',    selector:'.ev-detail-ttl',   prop:'textContent', type:'textarea' },
-    { id:'ev2-date',  label:'日付テキスト',        selector:'.ev-detail-date',  prop:'textContent', type:'input' },
-    { sec: 'イベント情報' },
-    { id:'ev2-i0', label:'日程',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:0 },
-    { id:'ev2-i1', label:'時間',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:1 },
-    { id:'ev2-i2', label:'場所',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:2 },
-    { id:'ev2-i3', label:'参加費', selector:'.ev-info-val', prop:'textContent', type:'input', nth:3 },
-    { id:'ev2-i4', label:'定員',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:4 },
-    { sec: 'イベント説明' },
-    { id:'ev2-dttl',  label:'説明タイトル', selector:'.ev-detail-desc-ttl',  prop:'textContent', type:'input' },
-    { id:'ev2-dbody', label:'説明本文',     selector:'.ev-detail-desc-body', prop:'textContent', type:'textarea' },
-    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
-    { id:'ev2-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
-    { id:'ev2-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
-    { id:'ev2-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
-    { id:'ev2-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
-  ],
-
-  'event-3': [
-    { sec: 'ヒーロー' },
-    { id:'ev3-bg',    label:'ヒーロー背景画像URL', selector:'.ev-detail-hero', prop:'bgUrl',       type:'url' },
-    { id:'ev3-badge', label:'バッジ（種別）',      selector:'.ev-detail-badge', prop:'textContent', type:'input' },
-    { id:'ev3-ttl',   label:'イベントタイトル',    selector:'.ev-detail-ttl',   prop:'textContent', type:'textarea' },
-    { id:'ev3-date',  label:'日付テキスト',        selector:'.ev-detail-date',  prop:'textContent', type:'input' },
-    { sec: 'イベント情報' },
-    { id:'ev3-i0', label:'日程',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:0 },
-    { id:'ev3-i1', label:'時間',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:1 },
-    { id:'ev3-i2', label:'場所',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:2 },
-    { id:'ev3-i3', label:'参加費', selector:'.ev-info-val', prop:'textContent', type:'input', nth:3 },
-    { id:'ev3-i4', label:'定員',   selector:'.ev-info-val', prop:'textContent', type:'input', nth:4 },
-    { sec: 'イベント説明' },
-    { id:'ev3-dttl',  label:'説明タイトル', selector:'.ev-detail-desc-ttl',  prop:'textContent', type:'input' },
-    { id:'ev3-dbody', label:'説明本文',     selector:'.ev-detail-desc-body', prop:'textContent', type:'textarea' },
-    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
-    { id:'ev3-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'src', type:'url' },
-    { id:'ev3-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'src', type:'url' },
-    { id:'ev3-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'src', type:'url' },
-    { id:'ev3-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'src', type:'url' },
-  ],
-
-  'works-detail': [
-    { sec: 'ヒーロー' },
-    { id:'wkd-bg',  label:'ヒーロー背景画像URL', selector:'.wk-detail-hero', prop:'bgUrl',       type:'url' },
-    { id:'wkd-ttl', label:'物件名',              selector:'.wk-detail-ttl',   prop:'textContent', type:'input' },
-    { id:'wkd-sub', label:'サブテキスト（所在地/構造/坪数）', selector:'.wk-detail-sub', prop:'textContent', type:'input' },
-    { sec: 'スペック' },
-    { id:'wkd-sp0', label:'所在地',   selector:'.wk-spec-val', prop:'textContent', type:'input', nth:0 },
-    { id:'wkd-sp1', label:'延床面積', selector:'.wk-spec-val', prop:'textContent', type:'input', nth:1 },
-    { id:'wkd-sp2', label:'構造',     selector:'.wk-spec-val', prop:'textContent', type:'input', nth:2 },
-    { id:'wkd-sp3', label:'竣工年',   selector:'.wk-spec-val', prop:'textContent', type:'input', nth:3 },
-    { id:'wkd-sp4', label:'スタイル', selector:'.wk-spec-val', prop:'textContent', type:'input', nth:4 },
-    { id:'wkd-sp5', label:'家族構成', selector:'.wk-spec-val', prop:'textContent', type:'input', nth:5 },
-    { sec: 'コンセプト' },
-    { id:'wkd-cttl', label:'コンセプトタイトル', selector:'.wk-concept-ttl',  prop:'textContent', type:'textarea' },
-    { id:'wkd-cbody',label:'説明文',             selector:'.wk-concept-body', prop:'textContent', type:'textarea' },
-    { sec: 'ギャラリー写真（「写真を選ぶ」でパソコンから選択）' },
-    { id:'wkd-g0', label:'写真 1', selector:'[data-gallery-index="0"]', prop:'bgUrl', type:'url' },
-    { id:'wkd-g1', label:'写真 2', selector:'[data-gallery-index="1"]', prop:'bgUrl', type:'url' },
-    { id:'wkd-g2', label:'写真 3', selector:'[data-gallery-index="2"]', prop:'bgUrl', type:'url' },
-    { id:'wkd-g3', label:'写真 4', selector:'[data-gallery-index="3"]', prop:'bgUrl', type:'url' },
-    { id:'wkd-g4', label:'写真 5', selector:'[data-gallery-index="4"]', prop:'bgUrl', type:'url' },
-    { id:'wkd-g5', label:'写真 6', selector:'[data-gallery-index="5"]', prop:'bgUrl', type:'url' },
-  ],
+ns1: newsDetailFields('ns1'),
+ns2: newsDetailFields('ns2'),
+ns3: newsDetailFields('ns3'),
 };
 
-// ── FOLDER OPEN ──
-async function openFolder() {
-  if (!window.showDirectoryPicker) {
-    alert('この機能は Chrome または Edge が必要です。\nInternet Explorer や Firefox では動作しません。');
+function evDetailFields(key) {
+  return [
+    {sec:'ヒーロー'},
+    {id:`${key}-vis`,    lbl:'ページ表示/非表示', type:'toggle',   sel:'.ev-hero'},
+    {id:`${key}-ttl`,    lbl:'タイトル',           type:'input',    sel:'.ev-hero-ttl'},
+    {id:`${key}-date`,   lbl:'日時・場所',         type:'input',    sel:'.ev-hero-date'},
+    {id:`${key}-hero-bg`,lbl:'ヒーロー画像',       type:'image',    sel:'.ev-hero-img', prop:'bg'},
+    {sec:'イベント情報'},
+    {id:`${key}-info1`,  lbl:'日時',     type:'input', sel:'.ev-info-row:nth-child(1) .ev-info-value'},
+    {id:`${key}-info2`,  lbl:'会場',     type:'input', sel:'.ev-info-row:nth-child(2) .ev-info-value'},
+    {id:`${key}-info3`,  lbl:'参加費',   type:'input', sel:'.ev-info-row:nth-child(3) .ev-info-value'},
+    {sec:'説明文'},
+    {id:`${key}-desc-ttl`,  lbl:'見出し', type:'input',    sel:'.ev-desc-ttl'},
+    {id:`${key}-desc-body`,  lbl:'本文',  type:'textarea', sel:'.ev-desc-body'},
+    {sec:'写真'},
+    {id:`${key}-photo1`, lbl:'写真①', type:'image', sel:'.ev-photos .ev-photo:nth-child(1)', prop:'bg'},
+    {id:`${key}-photo2`, lbl:'写真②', type:'image', sel:'.ev-photos .ev-photo:nth-child(2)', prop:'bg'},
+  ];
+}
+
+function newsDetailFields(key) {
+  return [
+    {sec:'ヘッダー'},
+    {id:`${key}-vis`,   lbl:'ページ表示/非表示', type:'toggle',   sel:'.news-hero'},
+    {id:`${key}-date`,  lbl:'日付',               type:'input',    sel:'.news-date'},
+    {id:`${key}-tag`,   lbl:'タグ',               type:'input',    sel:'.news-tag'},
+    {id:`${key}-ttl`,   lbl:'タイトル',           type:'textarea', sel:'.news-ttl'},
+    {id:`${key}-ttl-fs`,lbl:'タイトル文字サイズ', type:'fs',       sel:'.news-ttl'},
+    {id:`${key}-hero-bg`,lbl:'ヒーロー画像',      type:'image',    sel:'.news-hero-img', prop:'bg'},
+    {sec:'写真'},
+    {id:`${key}-img1`,  lbl:'写真①', type:'image', sel:'.news-img-row .news-img-slot:nth-child(1)', prop:'bg'},
+    {id:`${key}-img2`,  lbl:'写真②', type:'image', sel:'.news-img-row .news-img-slot:nth-child(2)', prop:'bg'},
+  ];
+}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let dirHandle = null;
+let curTab = 'index';
+let curDoc = null;       // parsed DOMParser document
+let curRaw = '';         // original file text
+let imgStore = {};       // fid → dataUrl
+let posStore = {};       // fid → 'top'|'center'|'bottom'
+let visStore = {};       // fid → bool (true=visible)
+let fsStore = {};        // fid → string e.g. "1.2rem"
+let worksData = null;    // parsed works array
+let worksImgs = {};      // "wi_N_M" → dataUrl (work N, photo M)
+
+// ── Open directory ─────────────────────────────────────────────────────────────
+async function openDir() {
+  try {
+    dirHandle = await window.showDirectoryPicker({mode:'readwrite'});
+    document.getElementById('dir-label').textContent = dirHandle.name;
+    document.getElementById('btn-save').disabled = false;
+    await loadTab(curTab);
+  } catch(e) {
+    if(e.name !== 'AbortError') showToast('フォルダを開けませんでした', true);
+  }
+}
+
+// ── Tab switching ──────────────────────────────────────────────────────────────
+function switchTab(key) {
+  curTab = key;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    const keys = ['index','nini','works','service','events','ev1','ev2','ev3','ev4','ev5','ev6','ns1','ns2','ns3'];
+    b.classList.toggle('active', keys[i] === key);
+  });
+  if(dirHandle) loadTab(key);
+  else renderFields(key);
+}
+
+async function loadTab(key) {
+  if(key === 'works') {
+    await loadWorks();
     return;
   }
+  const fname = FM[key];
+  if(!fname) return;
   try {
-    dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
-    document.getElementById('folder-name').textContent = dirHandle.name;
-
-    // Get file handles
-    for (const [tab, fname] of Object.entries(FILE_MAP)) {
-      try {
-        fileHandles[tab] = await dirHandle.getFileHandle(fname);
-      } catch {
-        fileHandles[tab] = null;
-      }
-    }
-
-    document.getElementById('welcome').style.display = 'none';
-    document.getElementById('app').classList.add('visible');
-
-    await loadTab('index');
-  } catch (e) {
-    if (e.name !== 'AbortError') alert('フォルダを開けませんでした: ' + e.message);
+    const fh = await dirHandle.getFileHandle(fname);
+    const file = await fh.getFile();
+    curRaw = await file.text();
+    const parser = new DOMParser();
+    curDoc = parser.parseFromString(curRaw, 'text/html');
+    imgStore = {};
+    posStore = {};
+    visStore = {};
+    fsStore = {};
+    renderFields(key);
+    updatePreview();
+  } catch(e) {
+    showToast('ファイルを読み込めませんでした: ' + e.message, true);
   }
 }
 
-// ── LOAD TAB ──
-async function loadTab(tab) {
-  currentTab = tab;
-  const fh = fileHandles[tab];
-  if (!fh) { showToast('ファイルが見つかりません', 'ng'); return; }
+// ── Render fields ─────────────────────────────────────────────────────────────
+function renderFields(key) {
+  const container = document.getElementById('fields-container');
+  if(key === 'works') return; // handled by loadWorks
+  const defs = FIELDS[key];
+  if(!defs) { container.innerHTML = '<div class="field"><p class="field-note">このページは対応していません。</p></div>'; return; }
 
-  const file = await fh.getFile();
-  const text = await file.text();
-  const parser = new DOMParser();
-  htmlDocs[tab] = parser.parseFromString(text, 'text/html');
-
-  renderForm(tab);
-  refreshPreview(tab);
-}
-
-// ── RENDER FORM ──
-function renderForm(tab) {
-  const fields = FIELDS[tab];
-  const doc = htmlDocs[tab];
   let html = '';
-
-  for (const f of fields) {
-    if (f.sec !== undefined) {
-      html += `<div class="sec-label">${f.sec}</div>`;
+  for(const f of defs) {
+    if(f.sec !== undefined) {
+      html += `<div class="section-hd">${f.sec}</div>`;
       continue;
     }
+    html += renderField(f);
+  }
+  container.innerHTML = html;
 
-    if (f.type === 'toggle') {
-      const elements = doc.querySelectorAll(f.cardSelector);
-      const el = (f.nth !== null && f.nth !== undefined) ? elements[f.nth] : elements[0];
-      const isHidden = el && el.style.display === 'none';
-      const activeCls = isHidden ? 'inactive' : '';
-      const btnText = isHidden ? '○ 非公開' : '● 公開中';
-      const nthVal = f.nth !== undefined ? f.nth : 'null';
-      const safeSelector = f.cardSelector.replace(/"/g, '&quot;');
-      html += `<div class="card-toggle-row">
-        <button class="btn-toggle ${activeCls}" id="toggle-${f.id}" onclick="toggleCard('${safeSelector}',${nthVal},'${f.id}')">${btnText}</button>
-        <span class="card-toggle-label">${f.label}</span>
-      </div>`;
-      continue;
-    }
+  // attach handlers after render
+  for(const f of defs) {
+    if(!f.id) continue;
+    if(f.type === 'input' || f.type === 'textarea') attachTextHandler(f);
+    else if(f.type === 'image') attachImageHandler(f);
+    else if(f.type === 'toggle') attachToggleHandler(f);
+    else if(f.type === 'fs') attachFsHandler(f);
+  }
+}
 
-    const elements = doc.querySelectorAll(f.selector);
-    const el = (f.nth !== undefined) ? elements[f.nth] : elements[0];
-    let val = '';
-    let missing = !el;
-
-    if (el) {
-      if (f.prop === 'bgUrl') {
-        const s = el.style.backgroundImage || '';
-        val = s.replace(/^url\(['"]?/, '').replace(/['"]?\)$/, '');
-      } else if (f.prop === 'src') {
-        val = el.getAttribute('src') || '';
-      } else {
-        val = el.textContent.trim();
-      }
-    }
-
-    const cls = missing ? ' style="opacity:0.45"' : '';
-    const missingNote = missing ? '<div style="font-size:0.68rem;color:#bbb;font-style:italic;margin-top:2px">※ 要素が見つかりません（保存時スキップ）</div>' : '';
-
-    const inputCls = f.type === 'url' ? 'field-url' : (f.type === 'textarea' ? 'field-textarea' : 'field-input');
-    const escaped = val.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-
-    // 文字サイズ取得
-    const isText = (f.type === 'textarea' || f.type === 'input') && f.prop === 'textContent';
-    let fsPx = '';
-    if (isText && el) {
-      const inlineFs = el.style.fontSize;
-      fsPx = inlineFs ? parseFloat(inlineFs) : '';
-    }
-    const fsDisplay = fsPx !== '' ? fsPx + 'px' : '—';
-    const fsSizeCtrl = isText && !missing ? `
-      <div class="font-size-ctrl">
-        <button class="btn-fs" onclick="changeFontSize('${f.id}','${f.selector}',${f.nth??'null'},-1)" title="小さく">A−</button>
-        <span id="fs-${f.id}">${fsDisplay}</span>
-        <button class="btn-fs" onclick="changeFontSize('${f.id}','${f.selector}',${f.nth??'null'},1)" title="大きく">A+</button>
-      </div>` : '';
-
-    html += `<div class="field-group">
-      <div class="field-label-row">
-        <label class="field-label"${cls}>${f.label}</label>
-        ${fsSizeCtrl}
-      </div>`;
-
-    if (f.type === 'textarea') {
-      const escapedTA = val.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      html += `<textarea class="${inputCls}" id="f-${f.id}" rows="3">${escapedTA}</textarea>`;
-    } else if (f.type === 'url') {
-      const thumbSrc = (val && !val.startsWith('linear-gradient')) ? val : '';
-      const thumbStyle = thumbSrc ? 'display:block' : 'display:none';
-      const posStyle = thumbSrc ? 'display:flex' : 'display:none';
-      const safeSelector = f.selector.replace(/"/g, '&quot;');
-      const nthVal = f.nth ?? 'null';
-      html += `<div class="url-row">
-        <input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}" oninput="onUrlInput('${f.id}')">
-        <button class="btn-pick-img" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" onclick="pickImage(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth)">📷 写真を選ぶ</button>
+function renderField(f) {
+  if(f.type === 'note') {
+    return `<div class="field"><p class="field-note">${f.text}</p></div>`;
+  }
+  const val = getFieldValue(f);
+  if(f.type === 'input') {
+    return `<div class="field"><div class="field-label">${f.lbl}</div>
+      <input type="text" id="${f.id}" value="${esc(val)}"></div>`;
+  }
+  if(f.type === 'textarea') {
+    return `<div class="field"><div class="field-label">${f.lbl}</div>
+      <textarea id="${f.id}">${esc(val)}</textarea></div>`;
+  }
+  if(f.type === 'fs') {
+    const fv = getFontSize(f);
+    return `<div class="field"><div class="field-label">${f.lbl}</div>
+      <div class="fs-row">
+        <input type="text" id="${f.id}" value="${esc(fv)}" placeholder="例: 1rem">
+        <button class="fs-btn" onclick="adjFs('${f.id}', ${f.sel ? `'${f.sel}'` : 'null'}, -0.05)">A-</button>
+        <button class="fs-btn" onclick="adjFs('${f.id}', ${f.sel ? `'${f.sel}'` : 'null'}, +0.05)">A+</button>
+      </div></div>`;
+  }
+  if(f.type === 'image') {
+    const pos = posStore[f.id] || 'center';
+    return `<div class="field"><div class="field-label">${f.lbl}</div>
+      <div class="img-upload-area" id="${f.id}-area" onclick="triggerImgUpload('${f.id}')">
+        <img id="${f.id}-preview" class="img-preview" style="display:none" src="">
+        <p class="img-hint" id="${f.id}-hint">クリックして画像を選択</p>
       </div>
-      <img id="thumb-${f.id}" class="img-preview-thumb" src="${thumbSrc}" style="${thumbStyle}" alt="">
-      <div id="pos-${f.id}" class="img-pos-ctrl" style="${posStyle}">
-        <span>表示位置：</span>
-        <button class="btn-pos" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" data-pos="top" onclick="setImgPos(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth,this.dataset.pos)">上</button>
-        <button class="btn-pos active" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" data-pos="center" onclick="setImgPos(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth,this.dataset.pos)">中央</button>
-        <button class="btn-pos" data-fid="${f.id}" data-sel="${safeSelector}" data-nth="${nthVal}" data-pos="bottom" onclick="setImgPos(this.dataset.fid,this.dataset.sel,this.dataset.nth==='null'?null:+this.dataset.nth,this.dataset.pos)">下</button>
-      </div>`;
-    } else {
-      html += `<input class="${inputCls}" id="f-${f.id}" type="text" value="${escaped}">`;
-    }
-    html += missingNote + '</div>';
+      <div class="img-pos">
+        <button class="pos-btn ${pos==='top'?'active':''}" id="${f.id}-pt" onclick="setPos('${f.id}','top')">上</button>
+        <button class="pos-btn ${pos==='center'?'active':''}" id="${f.id}-pc" onclick="setPos('${f.id}','center')">中央</button>
+        <button class="pos-btn ${pos==='bottom'?'active':''}" id="${f.id}-pb" onclick="setPos('${f.id}','bottom')">下</button>
+      </div></div>`;
   }
-
-  document.getElementById('form-area').innerHTML = html;
-}
-
-// ── APPLY FORM → DOM ──
-function applyForm(tab) {
-  const fields = FIELDS[tab];
-  const doc = htmlDocs[tab];
-
-  for (const f of fields) {
-    if (f.sec !== undefined) continue;
-    if (f.type === 'toggle') continue;
-    const input = document.getElementById('f-' + f.id);
-    if (!input) continue;
-    const val = input.value;
-
-    const elements = doc.querySelectorAll(f.selector);
-    const el = (f.nth !== undefined) ? elements[f.nth] : elements[0];
-    if (!el) continue;
-
-    if (f.prop === 'bgUrl') {
-      if (val.trim()) {
-        el.style.backgroundImage = `url('${val}')`;
-        el.style.backgroundSize = 'cover';
-        if (!el.style.backgroundPosition) el.style.backgroundPosition = 'center';
-      }
-    } else if (f.prop === 'src') {
-      el.setAttribute('src', val);
-    } else {
-      el.textContent = val;
-    }
+  if(f.type === 'toggle') {
+    const visible = getVisibility(f);
+    return `<div class="field"><div class="field-label">${f.lbl}</div>
+      <div class="toggle-row">
+        <label class="toggle"><input type="checkbox" id="${f.id}" ${visible?'checked':''}><span class="toggle-slider"></span></label>
+        <span class="toggle-label" id="${f.id}-lbl">${visible?'表示中':'非表示'}</span>
+      </div></div>`;
   }
+  return '';
 }
 
-// ── PREVIEW ──
-function refreshPreview(tab) {
-  const doc = htmlDocs[tab];
-  if (!doc) return;
-  const html = '<!DOCTYPE html>' + doc.documentElement.outerHTML;
-  if (blobUrl) URL.revokeObjectURL(blobUrl);
-  blobUrl = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-  document.getElementById('preview-frame').src = blobUrl;
-  document.getElementById('preview-label').textContent = FILE_MAP[tab] + ' — プレビュー';
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-function updatePreview() {
-  applyForm(currentTab);
-  refreshPreview(currentTab);
+// ── Get field value from parsed doc ──────────────────────────────────────────
+function getFieldValue(f) {
+  if(!curDoc) return '';
+  const el = curDoc.querySelector(f.sel);
+  if(!el) return '';
+  return el.textContent.trim();
 }
 
-// ── FONT SIZE ──
-function changeFontSize(fieldId, selector, nth, delta) {
-  const doc = htmlDocs[currentTab];
-  if (!doc) return;
-  const elements = doc.querySelectorAll(selector);
-  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
-  if (!el) return;
-
-  // 現在のフォントサイズを取得（inline style優先、なければ16px基準）
-  let cur = parseFloat(el.style.fontSize);
-  if (isNaN(cur)) {
-    // inline styleがなければ16pxから始める
-    cur = 16;
-  }
-  const next = Math.max(8, Math.min(120, cur + delta));
-  el.style.fontSize = next + 'px';
-
-  // 表示更新
-  const fsSpan = document.getElementById('fs-' + fieldId);
-  if (fsSpan) fsSpan.textContent = next + 'px';
-
-  // プレビュー自動更新
-  refreshPreview(currentTab);
+function getFontSize(f) {
+  if(!curDoc) return '';
+  const el = curDoc.querySelector(f.sel);
+  if(!el) return '';
+  return el.style.fontSize || '';
 }
 
-// ── IMAGE PICK ──
-function pickImage(fieldId, selector, nth) {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = (e) => {
+function getVisibility(f) {
+  if(!curDoc) return true;
+  const el = curDoc.querySelector(f.sel);
+  if(!el) return true;
+  return el.style.display !== 'none';
+}
+
+// ── Attach input handlers ─────────────────────────────────────────────────────
+function attachTextHandler(f) {
+  const el = document.getElementById(f.id);
+  if(!el) return;
+  el.addEventListener('input', () => {
+    if(!curDoc) return;
+    const target = curDoc.querySelector(f.sel);
+    if(target) target.textContent = el.value;
+    schedulePreview();
+  });
+}
+
+function attachToggleHandler(f) {
+  const el = document.getElementById(f.id);
+  if(!el) return;
+  el.addEventListener('change', () => {
+    if(!curDoc) return;
+    const target = curDoc.querySelector(f.sel);
+    if(target) target.style.display = el.checked ? '' : 'none';
+    document.getElementById(f.id+'-lbl').textContent = el.checked ? '表示中' : '非表示';
+    schedulePreview();
+  });
+}
+
+function attachFsHandler(f) {
+  const el = document.getElementById(f.id);
+  if(!el) return;
+  el.addEventListener('input', () => {
+    if(!curDoc) return;
+    const target = curDoc.querySelector(f.sel);
+    if(target) target.style.fontSize = el.value;
+    schedulePreview();
+  });
+}
+
+function attachImageHandler(f) {
+  // image handled via triggerImgUpload
+}
+
+// ── Font size adjust ──────────────────────────────────────────────────────────
+function adjFs(fid, sel, delta) {
+  const el = document.getElementById(fid);
+  if(!el) return;
+  let val = el.value.trim();
+  let unit = 'rem';
+  if(val.endsWith('px')) unit = 'px';
+  else if(val.endsWith('em')) unit = 'em';
+  let num = parseFloat(val) || 1;
+  num = Math.round((num + delta) * 100) / 100;
+  if(num < 0.1) num = 0.1;
+  el.value = num + unit;
+  el.dispatchEvent(new Event('input'));
+}
+
+// ── Image upload ──────────────────────────────────────────────────────────────
+function triggerImgUpload(fid) {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = e => {
     const file = e.target.files[0];
-    if (!file) return;
+    if(!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = ev => {
       const dataUrl = ev.target.result;
-      const urlInput = document.getElementById('f-' + fieldId);
-      if (urlInput) urlInput.value = dataUrl;
-      const thumb = document.getElementById('thumb-' + fieldId);
-      if (thumb) { thumb.src = dataUrl; thumb.style.display = 'block'; }
-      const posCtrl = document.getElementById('pos-' + fieldId);
-      if (posCtrl) posCtrl.style.display = 'flex';
-      // DOMに即反映
-      if (selector) applyImgToDom(dataUrl, selector, nth, 'center');
-      refreshPreview(currentTab);
+      imgStore[fid] = dataUrl;
+      const prev = document.getElementById(fid+'-preview');
+      const hint = document.getElementById(fid+'-hint');
+      const area = document.getElementById(fid+'-area');
+      if(prev){ prev.src = dataUrl; prev.style.display='block'; }
+      if(hint) hint.style.display='none';
+      if(area) area.classList.add('has-img');
+      applyImageToDoc(fid);
+      schedulePreview();
     };
     reader.readAsDataURL(file);
   };
-  input.click();
+  inp.click();
 }
 
-function applyImgToDom(val, selector, nth, pos) {
-  const doc = htmlDocs[currentTab];
-  if (!doc) return;
-  const elements = doc.querySelectorAll(selector);
-  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
-  if (!el) return;
-  if (el.tagName === 'IMG') {
-    el.setAttribute('src', val);
-  } else {
-    el.style.backgroundImage = val ? `url('${val}')` : '';
+function applyImageToDoc(fid) {
+  if(!curDoc) return;
+  const defs = FIELDS[curTab];
+  if(!defs) return;
+  const f = defs.find(d=>d.id===fid);
+  if(!f) return;
+  const dataUrl = imgStore[fid];
+  if(!dataUrl) return;
+  const el = curDoc.querySelector(f.sel);
+  if(!el) return;
+  const pos = posStore[fid] || 'center';
+  const posMap = {top:'top center', center:'center center', bottom:'bottom center'};
+  if(f.prop === 'bg') {
+    el.style.backgroundImage = `url(${dataUrl})`;
     el.style.backgroundSize = 'cover';
-    el.style.backgroundPosition = pos || 'center';
-  }
-}
-
-function setImgPos(fieldId, selector, nth, pos) {
-  const doc = htmlDocs[currentTab];
-  if (!doc) return;
-  const elements = doc.querySelectorAll(selector);
-  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
-  if (!el) return;
-  el.style.backgroundPosition = pos;
-  // ボタンのactive状態を更新
-  const posCtrl = document.getElementById('pos-' + fieldId);
-  if (posCtrl) {
-    posCtrl.querySelectorAll('.btn-pos').forEach(b => b.classList.remove('active'));
-    const labels = { top:'上', center:'中央', bottom:'下' };
-    [...posCtrl.querySelectorAll('.btn-pos')].find(b => b.textContent === labels[pos])?.classList.add('active');
-  }
-  refreshPreview(currentTab);
-}
-
-function onUrlInput(fieldId) {
-  const urlInput = document.getElementById('f-' + fieldId);
-  const thumb = document.getElementById('thumb-' + fieldId);
-  if (!thumb || !urlInput) return;
-  const val = urlInput.value.trim();
-  if (val && !val.startsWith('linear-gradient')) {
-    thumb.src = val;
-    thumb.style.display = 'block';
+    el.style.backgroundPosition = posMap[pos];
+    el.style.backgroundRepeat = 'no-repeat';
   } else {
-    thumb.style.display = 'none';
+    let img = el.querySelector('img');
+    if(!img) { img = curDoc.createElement('img'); el.appendChild(img); }
+    img.src = dataUrl;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.objectPosition = posMap[pos];
   }
 }
 
-// ── SAVE ──
+function setPos(fid, pos) {
+  posStore[fid] = pos;
+  ['top','center','bottom'].forEach(p => {
+    const btn = document.getElementById(`${fid}-p${p[0]}`);
+    if(btn) btn.classList.toggle('active', p===pos);
+  });
+  applyImageToDoc(fid);
+  schedulePreview();
+}
+
+// ── Preview ───────────────────────────────────────────────────────────────────
+let pvTimer = null;
+function schedulePreview() {
+  clearTimeout(pvTimer);
+  pvTimer = setTimeout(updatePreview, 300);
+}
+
+function updatePreview() {
+  if(!curDoc) return;
+  const serial = new XMLSerializer();
+  const html = serial.serializeToString(curDoc);
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const iframe = document.getElementById('preview-iframe');
+  iframe.src = url;
+  setTimeout(()=>URL.revokeObjectURL(url), 5000);
+}
+
+function setPv(mode) {
+  const iframe = document.getElementById('preview-iframe');
+  iframe.className = mode;
+  document.getElementById('pv-pc').classList.toggle('active', mode==='pc');
+  document.getElementById('pv-sp').classList.toggle('active', mode==='sp');
+}
+
+// ── Save file ─────────────────────────────────────────────────────────────────
 async function saveFile() {
-  const fh = fileHandles[currentTab];
-  if (!fh) { showToast('ファイルハンドルがありません', 'ng'); return; }
-
-  applyForm(currentTab);
-
+  if(!dirHandle) return;
+  if(curTab === 'works') { await saveWorks(); return; }
+  if(!curDoc) return;
+  const fname = FM[curTab];
+  if(!fname) return;
   try {
+    const serial = new XMLSerializer();
+    const html = serial.serializeToString(curDoc);
+    const fh = await dirHandle.getFileHandle(fname, {create:false});
     const writable = await fh.createWritable();
-    const doc = htmlDocs[currentTab];
-    const html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
     await writable.write(html);
     await writable.close();
-    showToast('✓ 保存しました — ' + FILE_MAP[currentTab], 'ok');
-  } catch (e) {
-    showToast('保存に失敗しました: ' + e.message, 'ng');
+    showToast('保存しました ✓');
+  } catch(e) {
+    showToast('保存に失敗: ' + e.message, true);
   }
 }
 
-// ── DOWNLOAD ──
-function downloadFile() {
-  applyForm(currentTab);
-  const doc = htmlDocs[currentTab];
-  if (!doc) return;
-  const html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-  a.download = FILE_MAP[currentTab];
-  a.click();
-}
-
-// ── TAB SWITCH ──
-async function switchTab(tab, btn) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (!htmlDocs[tab]) {
-    await loadTab(tab);
-  } else {
-    currentTab = tab;
-    renderForm(tab);
-    refreshPreview(tab);
-  }
-}
-
-// ── TOGGLE CARD ──
-function toggleCard(selector, nth, toggleId) {
-  const doc = htmlDocs[currentTab];
-  if (!doc) return;
-  const elements = doc.querySelectorAll(selector);
-  const el = (nth !== null && nth !== undefined) ? elements[nth] : elements[0];
-  if (!el) return;
-  const btn = document.getElementById('toggle-' + toggleId);
-  if (el.style.display === 'none') {
-    el.style.display = '';
-    btn.textContent = '● 公開中';
-    btn.classList.remove('inactive');
-  } else {
-    el.style.display = 'none';
-    btn.textContent = '○ 非公開';
-    btn.classList.add('inactive');
-  }
-  refreshPreview(currentTab);
-}
-
-// ── TOAST ──
+// ── Toast ─────────────────────────────────────────────────────────────────────
 let toastTimer;
-function showToast(msg, type = '') {
+function showToast(msg, isErr=false) {
   const t = document.getElementById('toast');
   t.textContent = msg;
-  t.className = 'show' + (type ? ' ' + type : '');
+  t.className = 'show' + (isErr?' err':'');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = ''; }, 2800);
+  toastTimer = setTimeout(()=>t.className='', 2500);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// WORKS SPECIAL HANDLING
+// ═══════════════════════════════════════════════════════════════════════════════
+
+async function loadWorks() {
+  const container = document.getElementById('fields-container');
+  try {
+    const fh = await dirHandle.getFileHandle('works.html');
+    const file = await fh.getFile();
+    curRaw = await file.text();
+    const parser = new DOMParser();
+    curDoc = parser.parseFromString(curRaw, 'text/html');
+    worksData = extractWorksArr();
+    worksImgs = {};
+    renderWorksUI();
+    updatePreview();
+  } catch(e) {
+    container.innerHTML = `<div class="field"><p class="field-note">works.htmlを読み込めませんでした: ${e.message}</p></div>`;
+  }
+}
+
+function extractWorksArr() {
+  const scripts = curDoc.querySelectorAll('script');
+  for(const s of scripts) {
+    const txt = s.textContent;
+    const idx = txt.indexOf('const works = [');
+    if(idx < 0) continue;
+    const ai = txt.indexOf('[', idx);
+    let depth=0, i=ai;
+    while(i<txt.length) {
+      if(txt[i]==='[') depth++;
+      else if(txt[i]===']') { depth--; if(!depth) break; }
+      i++;
+    }
+    const arrStr = txt.substring(ai, i+1);
+    try { return (new Function('return ' + arrStr))(); } catch(e) { return []; }
+  }
+  return [];
+}
+
+function renderWorksUI() {
+  const container = document.getElementById('fields-container');
+  if(!worksData || !worksData.length) {
+    container.innerHTML = '<div class="field"><p class="field-note">施工例データが見つかりませんでした。</p></div>';
+    return;
+  }
+  let html = '<div class="section-hd">施工例リスト</div>';
+  worksData.forEach((w,i) => {
+    html += `<div class="wk-accordion" id="wkacc-${i}">
+      <div class="wk-acc-hd" onclick="toggleWkAcc(${i})">
+        <span>${w.num || (i+1)}. ${w.ttl || '（タイトルなし）'}</span>
+        <span class="wk-acc-arrow" id="wkarrow-${i}">▶</span>
+      </div>
+      <div class="wk-acc-body" id="wkbody-${i}">
+        ${renderWorksEntry(w, i)}
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function renderWorksEntry(w, i) {
+  const specs = (w.specs||[]).map((s,si)=>`
+    <div class="spec-row" id="wkspec-${i}-${si}">
+      <input type="text" placeholder="ラベル" value="${esc(s.label||'')}" onchange="updSpec(${i},${si},'label',this.value)">
+      <input type="text" placeholder="値" value="${esc(s.val||'')}" onchange="updSpec(${i},${si},'val',this.value)">
+      <input type="text" placeholder="単位" style="width:50px" value="${esc(s.unit||'')}" onchange="updSpec(${i},${si},'unit',this.value)">
+      <button class="spec-del" onclick="delSpec(${i},${si})">×</button>
+    </div>`).join('');
+
+  const photos = (w.photos||[]).map((p,pi)=>`
+    <div class="wk-field" style="margin-bottom:8px;">
+      <label>写真${pi+1}</label>
+      <div class="wk-img-area ${worksImgs['wi_'+i+'_'+pi]?'has-img':''}" onclick="wkImgUpload(${i},${pi})">
+        <img id="wkimg-${i}-${pi}" class="wk-img-preview" style="display:${worksImgs['wi_'+i+'_'+pi]?'block':'none'}" src="${worksImgs['wi_'+i+'_'+pi]||''}">
+        <span class="img-hint" style="font-size:10px;color:var(--muted)">${worksImgs['wi_'+i+'_'+pi]?'変更':'クリックして画像を選択'}</span>
+      </div>
+    </div>`).join('');
+
+  return `
+    <div class="wk-field">
+      <label>タグ</label>
+      <input type="text" value="${esc(w.tag||'')}" onchange="updWk(${i},'tag',this.value)">
+    </div>
+    <div class="wk-field">
+      <label>エリア・場所</label>
+      <input type="text" value="${esc(w.location||'')}" onchange="updWk(${i},'location',this.value)">
+    </div>
+    <div class="wk-field">
+      <label>タイトル（和）</label>
+      <input type="text" value="${esc(w.ttl||'')}" onchange="updWk(${i},'ttl',this.value)">
+    </div>
+    <div class="wk-field">
+      <label>タイトル（英）</label>
+      <input type="text" value="${esc(w.sub||'')}" onchange="updWk(${i},'sub',this.value)">
+    </div>
+    <div class="wk-field">
+      <label>説明文</label>
+      <textarea onchange="updWk(${i},'desc',this.value)">${esc(w.desc||'')}</textarea>
+    </div>
+    <div class="wk-field">
+      <label>スペック</label>
+      <div id="wkspecs-${i}">${specs}</div>
+      <button class="spec-add" onclick="addSpec(${i})">+ スペック追加</button>
+    </div>
+    <div class="wk-field">
+      <label>写真</label>
+      ${photos}
+      <button class="spec-add" onclick="addWkPhoto(${i})">+ 写真を追加</button>
+    </div>`;
+}
+
+function toggleWkAcc(i) {
+  const body = document.getElementById('wkbody-'+i);
+  const arrow = document.getElementById('wkarrow-'+i);
+  const open = body.classList.toggle('open');
+  arrow.textContent = open ? '▼' : '▶';
+}
+
+function updWk(i, key, val) {
+  if(!worksData[i]) return;
+  worksData[i][key] = val;
+  scheduleWorksPreview();
+}
+
+function updSpec(i, si, key, val) {
+  if(!worksData[i] || !worksData[i].specs) return;
+  worksData[i].specs[si][key] = val;
+  scheduleWorksPreview();
+}
+
+function delSpec(i, si) {
+  if(!worksData[i] || !worksData[i].specs) return;
+  worksData[i].specs.splice(si, 1);
+  document.getElementById('wkspecs-'+i).innerHTML = worksData[i].specs.map((s,sj)=>`
+    <div class="spec-row" id="wkspec-${i}-${sj}">
+      <input type="text" placeholder="ラベル" value="${esc(s.label||'')}" onchange="updSpec(${i},${sj},'label',this.value)">
+      <input type="text" placeholder="値" value="${esc(s.val||'')}" onchange="updSpec(${i},${sj},'val',this.value)">
+      <input type="text" placeholder="単位" style="width:50px" value="${esc(s.unit||'')}" onchange="updSpec(${i},${sj},'unit',this.value)">
+      <button class="spec-del" onclick="delSpec(${i},${sj})">×</button>
+    </div>`).join('');
+  scheduleWorksPreview();
+}
+
+function addSpec(i) {
+  if(!worksData[i]) return;
+  if(!worksData[i].specs) worksData[i].specs = [];
+  worksData[i].specs.push({label:'', val:'', unit:''});
+  const si = worksData[i].specs.length - 1;
+  const cont = document.getElementById('wkspecs-'+i);
+  const div = document.createElement('div');
+  div.className = 'spec-row';
+  div.id = `wkspec-${i}-${si}`;
+  div.innerHTML = `
+    <input type="text" placeholder="ラベル" onchange="updSpec(${i},${si},'label',this.value)">
+    <input type="text" placeholder="値" onchange="updSpec(${i},${si},'val',this.value)">
+    <input type="text" placeholder="単位" style="width:50px" onchange="updSpec(${i},${si},'unit',this.value)">
+    <button class="spec-del" onclick="delSpec(${i},${si})">×</button>`;
+  cont.appendChild(div);
+}
+
+function wkImgUpload(i, pi) {
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const dataUrl = ev.target.result;
+      const key = 'wi_'+i+'_'+pi;
+      worksImgs[key] = dataUrl;
+      if(worksData[i] && worksData[i].photos && worksData[i].photos[pi]) {
+        worksData[i].photos[pi].src = dataUrl;
+      }
+      const img = document.getElementById(`wkimg-${i}-${pi}`);
+      if(img){ img.src=dataUrl; img.style.display='block'; }
+      scheduleWorksPreview();
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+}
+
+function addWkPhoto(i) {
+  if(!worksData[i]) return;
+  if(!worksData[i].photos) worksData[i].photos = [];
+  const pi = worksData[i].photos.length;
+  worksData[i].photos.push({src:'', alt:'', gradient:'linear-gradient(135deg,#6E7A88,#3C4855)'});
+  const key = 'wi_'+i+'_'+pi;
+  const parent = document.getElementById('wkbody-'+i);
+  const btn = parent.querySelector('.spec-add:last-child');
+  const div = document.createElement('div');
+  div.className = 'wk-field';
+  div.style.marginBottom = '8px';
+  div.innerHTML = `<label>写真${pi+1}</label>
+    <div class="wk-img-area" onclick="wkImgUpload(${i},${pi})">
+      <img id="wkimg-${i}-${pi}" class="wk-img-preview" style="display:none" src="">
+      <span class="img-hint" style="font-size:10px;color:var(--muted)">クリックして画像を選択</span>
+    </div>`;
+  btn.parentNode.insertBefore(div, btn);
+}
+
+let wkPvTimer = null;
+function scheduleWorksPreview() {
+  clearTimeout(wkPvTimer);
+  wkPvTimer = setTimeout(updateWorksPreview, 400);
+}
+
+function updateWorksPreview() {
+  if(!curDoc || !worksData) return;
+  const scripts = curDoc.querySelectorAll('script');
+  for(const s of scripts) {
+    if(s.textContent.indexOf('const works = [') >= 0) {
+      const txt = s.textContent;
+      const idx = txt.indexOf('const works = [');
+      const ai = txt.indexOf('[', idx);
+      let depth=0, i=ai;
+      while(i<txt.length) {
+        if(txt[i]==='[') depth++;
+        else if(txt[i]===']') { depth--; if(!depth) break; }
+        i++;
+      }
+      const newArr = JSON.stringify(worksData, null, 2);
+      s.textContent = txt.substring(0, ai) + newArr + txt.substring(i+1);
+      break;
+    }
+  }
+  updatePreview();
+}
+
+async function saveWorks() {
+  if(!dirHandle || !curDoc || !worksData) return;
+  updateWorksPreview();
+  try {
+    const serial = new XMLSerializer();
+    const html = serial.serializeToString(curDoc);
+    const fh = await dirHandle.getFileHandle('works.html', {create:false});
+    const writable = await fh.createWritable();
+    await writable.write(html);
+    await writable.close();
+    showToast('保存しました ✓');
+  } catch(e) {
+    showToast('保存に失敗: ' + e.message, true);
+  }
 }
 </script>
 </body>

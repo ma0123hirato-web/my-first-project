@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>施工例 | 株式会社ma</title>
+<title>施工事例 | 株式会社ma</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
 <style>
 :root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
@@ -12,275 +12,443 @@ html{scroll-behavior:smooth;}
 body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;overflow-x:hidden;}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:transparent;transition:background 0.5s;}
-nav.scrolled{background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;display:flex;align-items:baseline;gap:0.5rem;}
-.nav-logo-sub{font-size:0.58rem;letter-spacing:0.22em;color:rgba(255,255,255,0.7);font-family:'Noto Sans JP',sans-serif;font-weight:300;align-self:center;}
-.nav-right{display:flex;align-items:center;gap:2rem;}
-.nav-links{display:flex;gap:2rem;list-style:none;}
-.nav-links a{font-size:0.65rem;letter-spacing:0.2em;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.3s;}
-.nav-links a:hover{color:#fff;}
-.nav-cta{font-size:0.65rem;letter-spacing:0.18em;color:#fff;padding:0.5rem 1.3rem;border:1px solid rgba(255,255,255,0.45);text-decoration:none;transition:all 0.3s;}
-.nav-cta:hover{background:var(--mocha);border-color:var(--mocha);color:var(--dark);}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.3s;}
+.nav-back:hover{color:#fff;}
 
 /* PAGE HERO */
-.page-hero{background:var(--dark);padding:8rem 2.5rem 5rem;text-align:center;}
-.page-hero-en{font-family:'Cormorant Garamond',serif;font-size:0.65rem;font-style:italic;color:rgba(255,255,255,0.4);letter-spacing:0.45em;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:1.2rem;}
-.page-hero-en::before,.page-hero-en::after{content:'';display:block;width:22px;height:1px;background:rgba(184,151,126,0.5);}
-.page-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:200;color:#fff;letter-spacing:0.18em;}
+.page-hero{margin-top:70px;background:var(--dark-nav);padding:4.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+.page-hero::before{content:'WORKS';position:absolute;font-family:'Cormorant Garamond',serif;font-size:10rem;color:rgba(255,255,255,0.025);letter-spacing:0.1em;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.page-hero-ey{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.45em;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;}
+.page-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:200;color:#fff;letter-spacing:0.15em;}
 
-/* SECTION BASE */
-.sec-ey{font-size:0.6rem;letter-spacing:0.45em;color:var(--mocha);display:flex;align-items:center;gap:0.8rem;margin-bottom:0.7rem;}
-.sec-ey::before{content:'';display:block;width:22px;height:1px;background:var(--mocha);}
-.sec-ttl{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,3vw,2.6rem);font-weight:300;color:var(--dark);letter-spacing:0.03em;}
-.sec-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.2rem;}
+/* FILTER */
+.filter-wrap{max-width:1060px;margin:0 auto;padding:2rem 2.5rem 0;}
+.filter-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);}
+.ftab{font-family:'Noto Sans JP',sans-serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);padding:0.6rem 1.4rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s;background:none;border-top:none;border-left:none;border-right:none;}
+.ftab.active,.ftab:hover{color:var(--mocha-d);border-bottom-color:var(--mocha);}
 
-/* WORKS */
-#works-list{background:var(--white);padding:5rem 0 5rem;}
-.works-inner{max-width:1060px;margin:0 auto;padding:0 2.5rem;}
-.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:2rem;}
-.wk{overflow:hidden;cursor:pointer;text-decoration:none;color:inherit;display:block;}
-.wk-thumb{width:100%;aspect-ratio:4/3;overflow:hidden;}
-.wk-img{width:100%;height:100%;object-fit:cover;transition:transform 0.8s cubic-bezier(0.16,1,0.3,1);}
-.wk:hover .wk-img{transform:scale(1.06);}
-.wk-info{padding:1.3rem 1.8rem 1.8rem;background:var(--white);border-top:1px solid var(--line);}
-.wk-num{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.3em;color:var(--mocha);margin-bottom:0.4rem;}
-.wk-ttl{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--dark);margin-bottom:0.25rem;transition:color 0.3s;}
-.wk:hover .wk-ttl{color:var(--mocha-d);}
-.wk-sub{font-family:'Noto Serif JP',serif;font-size:0.72rem;color:var(--mid);font-weight:200;}
-.wk-tags{display:flex;gap:0.5rem;margin-top:0.6rem;flex-wrap:wrap;}
-.wk-tag{font-size:0.55rem;letter-spacing:0.1em;padding:0.12rem 0.55rem;border:1px solid rgba(184,151,126,0.4);color:var(--mid);}
+/* WORKS GRID */
+.works-wrap{max-width:1060px;margin:0 auto;padding:2.5rem 2.5rem 6rem;}
+.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+@media(max-width:768px){.works-grid{grid-template-columns:1fr;}}
+@media(min-width:769px) and (max-width:1024px){.works-grid{grid-template-columns:repeat(2,1fr);}}
 
-/* FOOTER */
-footer{background:var(--dark-nav);padding:3rem 2.5rem;}
-.ft-inner{max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:2rem;border-bottom:1px solid rgba(184,151,126,0.12);margin-bottom:1.5rem;}
-.ft-logo{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-style:italic;font-weight:300;color:var(--mocha);}
-.ft-logo-sub{font-size:0.58rem;letter-spacing:0.22em;color:rgba(255,255,255,0.3);margin-top:0.2rem;}
-.ft-address{font-size:0.63rem;color:rgba(255,255,255,0.25);letter-spacing:0.05em;margin-top:0.5rem;line-height:1.9;}
-.ft-nav{display:flex;gap:2rem;list-style:none;align-items:flex-start;padding-top:0.3rem;}
-.ft-nav a{font-size:0.63rem;letter-spacing:0.18em;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.3s;}
-.ft-nav a:hover{color:var(--mocha);}
-.ft-copy-row{max-width:960px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;}
-.ft-copy{font-size:0.6rem;color:rgba(255,255,255,0.18);letter-spacing:0.1em;}
-.ft-sns a{font-size:0.6rem;letter-spacing:0.18em;color:rgba(184,151,126,0.4);text-decoration:none;transition:color 0.3s;display:flex;align-items:center;gap:0.4rem;}
-.ft-sns a:hover{color:var(--mocha);}
-.ft-sns svg{width:14px;height:14px;fill:currentColor;}
+.wk{overflow:hidden;cursor:pointer;position:relative;}
+.wk-thumb{width:100%;aspect-ratio:4/3;overflow:hidden;position:relative;}
+.wk-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);}
+.wk:hover .wk-img{transform:scale(1.05);}
+.wk-img-placeholder{width:100%;height:100%;transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);}
+.wk:hover .wk-img-placeholder{transform:scale(1.05);}
+.wk-info{padding:1.3rem 1.6rem 1.8rem;border:1px solid var(--line);border-top:none;background:var(--white);}
+.wk-num{font-family:'Cormorant Garamond',serif;font-size:0.62rem;letter-spacing:0.35em;color:var(--mocha);margin-bottom:0.4rem;}
+.wk-ttl{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--dark);letter-spacing:0.06em;margin-bottom:0.3rem;}
+.wk-sub{font-size:0.68rem;color:var(--mid);}
+.wk-open-btn{font-size:0.58rem;letter-spacing:0.15em;color:var(--mocha-d);margin-top:0.6rem;display:flex;align-items:center;gap:0.4rem;}
+.wk-open-btn::after{content:'→';}
 
-/* ANIMATIONS */
-.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.85s ease,transform 0.85s ease;}
-.reveal.on{opacity:1;transform:translateY(0);}
-.reveal-d1{transition-delay:0.1s;}.reveal-d2{transition-delay:0.2s;}.reveal-d3{transition-delay:0.3s;}
+/* ====================================
+   WORKS DETAIL MODAL / DRAWER
+   ==================================== */
+.works-modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(20,14,10,0.7);opacity:0;pointer-events:none;transition:opacity 0.4s;backdrop-filter:blur(4px);}
+.works-modal-overlay.open{opacity:1;pointer-events:all;}
 
-@media(max-width:900px){
-  .nav-links{display:none;}
-  .works-grid{grid-template-columns:1fr 1fr;}
-}
-@media(max-width:560px){
-  .works-grid{grid-template-columns:1fr;}
-}
+.works-modal{position:fixed;top:0;right:0;bottom:0;width:min(680px,100vw);z-index:501;background:var(--bg);overflow-y:auto;transform:translateX(100%);transition:transform 0.45s cubic-bezier(0.16,1,0.3,1);}
+.works-modal.open{transform:none;}
+
+.wm-close{position:sticky;top:0;z-index:10;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--line);}
+.wm-close-btn{font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);cursor:pointer;background:none;border:none;font-family:'Noto Sans JP',sans-serif;transition:color 0.3s;}
+.wm-close-btn:hover{color:var(--dark);}
+.wm-close-num{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.35em;color:var(--mocha);}
+
+/* SLIDER */
+.wm-slider{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--soft);}
+.wm-slides{display:flex;height:100%;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);}
+.wm-slide{min-width:100%;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.wm-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.wm-slide-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.wm-slide-placeholder span{font-size:0.65rem;letter-spacing:0.2em;color:rgba(184,151,126,0.5);}
+
+/* slider controls */
+.wm-prev,.wm-next{position:absolute;top:50%;transform:translateY(-50%);z-index:5;background:rgba(20,14,10,0.45);border:none;color:#fff;width:40px;height:40px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background 0.3s;backdrop-filter:blur(4px);}
+.wm-prev{left:1rem;}
+.wm-next{right:1rem;}
+.wm-prev:hover,.wm-next:hover{background:rgba(184,151,126,0.7);}
+.wm-dots{position:absolute;bottom:0.8rem;left:50%;transform:translateX(-50%);display:flex;gap:0.4rem;}
+.wm-dot{width:20px;height:2px;background:rgba(255,255,255,0.3);cursor:pointer;transition:background 0.3s;}
+.wm-dot.active{background:var(--mocha);}
+
+/* MODAL CONTENT */
+.wm-body{padding:2rem 2.5rem 3rem;}
+.wm-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+.wm-tag{font-size:0.55rem;letter-spacing:0.15em;padding:0.2rem 0.7rem;border:1px solid var(--mocha);color:var(--mocha);}
+.wm-location{font-size:0.68rem;letter-spacing:0.12em;color:var(--mid);}
+.wm-ttl{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--dark);letter-spacing:0.06em;margin-bottom:0.5rem;}
+.wm-sub{font-size:0.78rem;color:var(--mid);letter-spacing:0.1em;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--line);}
+.wm-desc{font-family:'Noto Serif JP',serif;font-size:0.85rem;font-weight:200;color:var(--dark);line-height:2.7;letter-spacing:0.06em;margin-bottom:2rem;}
+.wm-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-bottom:2rem;}
+.wm-spec{background:var(--white);padding:1.2rem 1rem;}
+.ws-label{font-size:0.55rem;letter-spacing:0.2em;color:var(--mocha-d);margin-bottom:0.4rem;}
+.ws-val{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--dark);}
+.ws-unit{font-size:0.65rem;color:var(--mid);}
+
+/* Upload hint for photos */
+.upload-notice{font-size:0.62rem;letter-spacing:0.15em;color:rgba(184,151,126,0.6);text-align:center;padding:0.5rem;background:rgba(184,151,126,0.06);margin:0.5rem 0;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.6s,transform 0.6s;}
+.reveal.on{opacity:1;transform:none;}
 </style>
 </head>
 <body>
 
-<nav id="nav">
+<nav>
   <a href="index.html" class="nav-logo">株式会社ma</a>
-  <div class="nav-right">
-    <ul class="nav-links">
-      <li><a href="index.html#news">NEWS</a></li>
-      <li><a href="index.html#event">EVENT</a></li>
-      <li><a href="nini.html">ni-ni</a></li>
-      <li><a href="index.html#works">WORKS</a></li>
-      <li><a href="index.html#service">SERVICE</a></li>
-    </ul>
-    <a href="index.html#contact" class="nav-cta">CONTACT</a>
-  </div>
+  <a href="index.html#works" class="nav-back">← TOPに戻る</a>
 </nav>
 
 <div class="page-hero">
-  <p class="page-hero-en">Works</p>
-  <h1 class="page-hero-ttl">施工例</h1>
+  <p class="page-hero-ey">Works</p>
+  <h1 class="page-hero-ttl">施工事例</h1>
 </div>
 
-<section id="works-list">
-  <div class="works-inner">
-    <div class="sec-head reveal">
-      <div>
-        <p class="sec-ey">Works</p>
-        <h2 class="sec-ttl">施工事例一覧</h2>
+<div class="filter-wrap">
+  <div class="filter-tabs">
+    <button class="ftab active" data-filter="all">すべて</button>
+    <button class="ftab" data-filter="shinchiku">新築</button>
+    <button class="ftab" data-filter="reform">リフォーム</button>
+    <button class="ftab" data-filter="nini">ni-ni</button>
+  </div>
+</div>
+
+<div class="works-wrap">
+  <div class="works-grid" id="worksGrid">
+
+    <!-- WORK 001 -->
+    <div class="wk reveal" data-cat="shinchiku" data-id="0" onclick="openWork(0)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-001-01.jpg" alt="Light and Wind house"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#9B8472,#7A6352,#5A4A3A);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 001</p>
+        <h3 class="wk-ttl">Light &amp; Wind house</h3>
+        <p class="wk-sub">光と風の平屋 ― 那珂市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
       </div>
     </div>
 
-    <div class="works-grid">
-
-      <a class="wk reveal" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#D4C4B4 0%,#B89880 55%,#9A7A63 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 01</p>
-          <p class="wk-ttl">光と風の家</p>
-          <p class="wk-sub">水戸市 / 木造2階建 · 延床32坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">注文住宅</span>
-            <span class="wk-tag">平屋</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal reveal-d1" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#C8B8A8 0%,#A09080 55%,#7A6858 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 02</p>
-          <p class="wk-ttl">土間のある暮らし</p>
-          <p class="wk-sub">笠間市 / 木造2階建 · 延床34坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">注文住宅</span>
-            <span class="wk-tag">土間</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal reveal-d2" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#E4D8CC 0%,#C4AA94 55%,#A08878 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 03</p>
-          <p class="wk-ttl">中庭と縁側の家</p>
-          <p class="wk-sub">ひたちなか市 / 木造平屋 · 延床28坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">注文住宅</span>
-            <span class="wk-tag">中庭</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#B8A898 0%,#90786A 55%,#685850 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 04</p>
-          <p class="wk-ttl">ni-ni / White</p>
-          <p class="wk-sub">水戸市 / 木造2階建 · 延床27坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">規格住宅</span>
-            <span class="wk-tag">ni-ni</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal reveal-d1" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#D0C4B8 0%,#B0A090 55%,#908070 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 05</p>
-          <p class="wk-ttl">書斎と書庫の家</p>
-          <p class="wk-sub">つくば市 / 木造2階建 · 延床38坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">注文住宅</span>
-            <span class="wk-tag">書斎</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal reveal-d2" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#E0D4C8 0%,#C0ACA0 55%,#A09088 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 06</p>
-          <p class="wk-ttl">古民家リノベーション</p>
-          <p class="wk-sub">常陸太田市 / 木造平屋 · 延床22坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">リノベーション</span>
-            <span class="wk-tag">古民家</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#CCC0B0 0%,#ACA09090 55%,#8C8070 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 07</p>
-          <p class="wk-ttl">白と木目の家</p>
-          <p class="wk-sub">水戸市 / 木造2階建 · 延床31坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">注文住宅</span>
-            <span class="wk-tag">シンプル</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal reveal-d1" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#D8CCB8 0%,#B8A890 55%,#987868 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 08</p>
-          <p class="wk-ttl">ni-ni / Earth</p>
-          <p class="wk-sub">笠間市 / 木造2階建 · 延床27坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">規格住宅</span>
-            <span class="wk-tag">ni-ni</span>
-          </div>
-        </div>
-      </a>
-
-      <a class="wk reveal reveal-d2" href="works-detail.html">
-        <div class="wk-thumb">
-          <div class="wk-img" style="background:linear-gradient(145deg,#E8E0D8 0%,#C8C0B4 55%,#A8A098 100%);"></div>
-        </div>
-        <div class="wk-info">
-          <p class="wk-num">No. 09</p>
-          <p class="wk-ttl">大屋根と薪ストーブの家</p>
-          <p class="wk-sub">大洗町 / 木造2階建 · 延床36坪</p>
-          <div class="wk-tags">
-            <span class="wk-tag">注文住宅</span>
-            <span class="wk-tag">薪ストーブ</span>
-          </div>
-        </div>
-      </a>
-
+    <!-- WORK 002 -->
+    <div class="wk reveal" data-cat="shinchiku" data-id="1" onclick="openWork(1)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-002-01.jpg" alt="Silent courtyard"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#7A8070,#5E6558,#44503F);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 002</p>
+        <h3 class="wk-ttl">Silent courtyard</h3>
+        <p class="wk-sub">静かな中庭の家 ― 水戸市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
     </div>
-  </div>
-</section>
 
-<footer>
-  <div class="ft-inner">
-    <div>
-      <div class="ft-logo">ma</div>
-      <p class="ft-logo-sub">株式会社ma</p>
-      <p class="ft-address">〒310-0913 茨城県水戸市見川町2564-4<br>営業時間 9:00〜18:00</p>
+    <!-- WORK 003 -->
+    <div class="wk reveal" data-cat="reform" data-id="2" onclick="openWork(2)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-003-01.jpg" alt="Doma living"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#6E7A88,#545F6B,#3C4855);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 003</p>
+        <h3 class="wk-ttl">Doma living</h3>
+        <p class="wk-sub">土間のある暮らし ― 日立市 ／ リフォーム</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
     </div>
-    <ul class="ft-nav">
-      <li><a href="index.html#news">NEWS</a></li><li><a href="index.html#event">EVENT</a></li>
-      <li><a href="nini.html">ni-ni</a></li>
-      <li><a href="index.html#service">SERVICE</a></li><li><a href="index.html#works">WORKS</a></li>
-      <li><a href="index.html#contact">CONTACT</a></li>
-    </ul>
-  </div>
-  <div class="ft-copy-row">
-    <p class="ft-copy">© 2026 株式会社ma. All rights reserved.</p>
-    <div class="ft-sns">
-      <a href="https://www.instagram.com/manoie0123?igsh=czE0OTN1YTlqYTY1&utm_source=qr" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        INSTAGRAM
-      </a>
+
+    <!-- WORK 004 -->
+    <div class="wk reveal" data-cat="nini" data-id="3" onclick="openWork(3)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-004-01.jpg" alt="ni-ni MOCHA"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#C4B09A,#A8957E,#8B7B68);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 004</p>
+        <h3 class="wk-ttl">ni-ni MOCHA</h3>
+        <p class="wk-sub">和モダンの22坪 ― ひたちなか市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
     </div>
+
+    <!-- WORK 005 -->
+    <div class="wk reveal" data-cat="shinchiku" data-id="4" onclick="openWork(4)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-005-01.jpg" alt="Engawa house"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#8A9070,#6A7060,#4A5040);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 005</p>
+        <h3 class="wk-ttl">Engawa house</h3>
+        <p class="wk-sub">縁側と庭の家 ― つくば市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+    <!-- WORK 006 -->
+    <div class="wk reveal" data-cat="reform" data-id="5" onclick="openWork(5)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-006-01.jpg" alt="古民家再生"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#7A7068,#5A5050,#3A3840);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 006</p>
+        <h3 class="wk-ttl">Old house rebirth</h3>
+        <p class="wk-sub">古民家リノベーション ― 常陸大宮市 ／ リノベーション</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
   </div>
-</footer>
+</div>
+
+<!-- MODAL OVERLAY -->
+<div class="works-modal-overlay" id="modalOverlay" onclick="closeWork()"></div>
+
+<!-- MODAL DRAWER -->
+<div class="works-modal" id="worksModal">
+  <div class="wm-close">
+    <span class="wm-close-num" id="wm-num">WORKS 001</span>
+    <button class="wm-close-btn" onclick="closeWork()">✕ 閉じる</button>
+  </div>
+
+  <!-- SLIDER -->
+  <div class="wm-slider">
+    <div class="wm-slides" id="wmSlides">
+      <!-- slides inserted by JS -->
+    </div>
+    <button class="wm-prev" onclick="slideMove(-1)">‹</button>
+    <button class="wm-next" onclick="slideMove(1)">›</button>
+    <div class="wm-dots" id="wmDots"></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="wm-body">
+    <div class="wm-meta">
+      <span class="wm-tag" id="wm-tag">新築</span>
+      <span class="wm-location" id="wm-location">那珂市</span>
+    </div>
+    <h2 class="wm-ttl" id="wm-ttl">Light &amp; Wind house</h2>
+    <p class="wm-sub" id="wm-sub">光と風の平屋 ― 那珂市 ／ 新築</p>
+    <p class="wm-desc" id="wm-desc">ここに施工事例の説明文が入ります。</p>
+    <div class="wm-specs" id="wm-specs"></div>
+  </div>
+</div>
 
 <script>
-const nav=document.getElementById('nav');
-window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
+// ===================== WORKS DATA =====================
+// 写真はsrc属性にファイルパスを入れてください
+// photos: [{src:'', alt:''}, ...] — 後でアップする場合は gradient を使用
+const works = [
+  {
+    num:'WORKS 001',
+    tag:'新築',
+    location:'那珂市',
+    ttl:'Light &amp; Wind house',
+    sub:'光と風の平屋 ― 那珂市 ／ 新築',
+    desc:'南北に風の通り道を作り、大開口から柔らかな光を取り込む設計。自然素材（無垢材・漆喰）を多用し、経年変化も楽しめる住まいに仕上げました。広い土間玄関から続くリビングは、外と内の境界を曖昧にするような空間体積を持っています。茨城建築賞2025 住宅部門 優秀賞受賞作品。',
+    specs:[
+      {label:'延床面積', val:'72.5', unit:'㎡（約22坪）'},
+      {label:'構造', val:'木造', unit:'在来工法'},
+      {label:'竣工', val:'2024', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#9B8472,#7A6352,#5A4A3A)'},
+      {src:'', alt:'リビング', gradient:'linear-gradient(145deg,#B09080,#907060)'},
+      {src:'', alt:'外観夜景', gradient:'linear-gradient(145deg,#4A3A2A,#3A2A1A)'},
+    ]
+  },
+  {
+    num:'WORKS 002',
+    tag:'新築',
+    location:'水戸市',
+    ttl:'Silent courtyard',
+    sub:'静かな中庭の家 ― 水戸市 ／ 新築',
+    desc:'コの字型のプランで中庭を囲む。室内のどこにいても緑が視界に入る設計です。プライバシーを確保しながら開放感あふれる暮らしを実現しました。',
+    specs:[
+      {label:'延床面積', val:'98.2', unit:'㎡（約29坪）'},
+      {label:'構造', val:'木造', unit:'在来工法'},
+      {label:'竣工', val:'2024', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#7A8070,#5E6558,#44503F)'},
+      {src:'', alt:'中庭', gradient:'linear-gradient(145deg,#6A7060,#4A5040)'},
+      {src:'', alt:'リビング', gradient:'linear-gradient(145deg,#8A9080,#6A7060)'},
+    ]
+  },
+  {
+    num:'WORKS 003',
+    tag:'リフォーム',
+    location:'日立市',
+    ttl:'Doma living',
+    sub:'土間のある暮らし ― 日立市 ／ リフォーム',
+    desc:'築35年の戸建てを全面リノベーション。玄関を取り払い土間リビングへと変える大胆な間取り変更。構造を補強しながら、使い勝手と開放感を両立しました。',
+    specs:[
+      {label:'延床面積', val:'85.4', unit:'㎡'},
+      {label:'種別', val:'全面', unit:'リノベーション'},
+      {label:'竣工', val:'2023', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'土間', gradient:'linear-gradient(145deg,#6E7A88,#545F6B,#3C4855)'},
+      {src:'', alt:'after', gradient:'linear-gradient(145deg,#5E6A78,#445060)'},
+    ]
+  },
+  {
+    num:'WORKS 004',
+    tag:'ni-ni',
+    location:'ひたちなか市',
+    ttl:'ni-ni MOCHA',
+    sub:'和モダンの22坪 ― ひたちなか市 ／ 新築',
+    desc:'ni-ni MOCHAプランを採用した規格住宅。自然素材と柔らかな光が調和し、22坪ながら豊かな空間を実現。夫婦+子ども2人にちょうどいい間取り。',
+    specs:[
+      {label:'延床面積', val:'72.5', unit:'㎡（約22坪）'},
+      {label:'プラン', val:'MOCHA', unit:'ni-ni series'},
+      {label:'竣工', val:'2025', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#C4B09A,#A8957E,#8B7B68)'},
+      {src:'', alt:'リビング', gradient:'linear-gradient(145deg,#D4C0AA,#B8A08E)'},
+    ]
+  },
+  {
+    num:'WORKS 005',
+    tag:'新築',
+    location:'つくば市',
+    ttl:'Engawa house',
+    sub:'縁側と庭の家 ― つくば市 ／ 新築',
+    desc:'縁側を介して庭と室内がゆるやかにつながる住まい。家族が自然と集まる「縁側」を現代の生活に溶け込む形でデザインしました。',
+    specs:[
+      {label:'延床面積', val:'104.3', unit:'㎡（約31坪）'},
+      {label:'構造', val:'木造', unit:'在来工法'},
+      {label:'竣工', val:'2025', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#8A9070,#6A7060,#4A5040)'},
+      {src:'', alt:'縁側', gradient:'linear-gradient(145deg,#9AA080,#7A8060)'},
+      {src:'', alt:'庭', gradient:'linear-gradient(145deg,#6A7858,#4A5840)'},
+    ]
+  },
+  {
+    num:'WORKS 006',
+    tag:'リノベーション',
+    location:'常陸大宮市',
+    ttl:'Old house rebirth',
+    sub:'古民家リノベーション ― 常陸大宮市',
+    desc:'築80年の古民家を現代の住まいに再生。既存の梁・柱・土壁を最大限に残しながら、断熱・設備を現代基準にアップデートしました。',
+    specs:[
+      {label:'築年数', val:'80', unit:'年以上'},
+      {label:'種別', val:'古民家', unit:'再生'},
+      {label:'竣工', val:'2023', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#7A7068,#5A5050,#3A3840)'},
+      {src:'', alt:'梁', gradient:'linear-gradient(145deg,#6A6058,#4A4040)'},
+    ]
+  },
+];
+
+// ===================== MODAL LOGIC =====================
+let currentSlide = 0;
+let currentWork = null;
+
+function openWork(idx){
+  const w = works[idx];
+  currentWork = w;
+  currentSlide = 0;
+
+  document.getElementById('wm-num').textContent = w.num;
+  document.getElementById('wm-tag').textContent = w.tag;
+  document.getElementById('wm-location').textContent = w.location;
+  document.getElementById('wm-ttl').innerHTML = w.ttl;
+  document.getElementById('wm-sub').textContent = w.sub;
+  document.getElementById('wm-desc').textContent = w.desc.replace(/&amp;/g,'&');
+
+  // specs
+  const specsEl = document.getElementById('wm-specs');
+  specsEl.innerHTML = w.specs.map(s=>`
+    <div class="wm-spec">
+      <p class="ws-label">${s.label}</p>
+      <p class="ws-val">${s.val} <span class="ws-unit">${s.unit}</span></p>
+    </div>
+  `).join('');
+
+  // slides
+  const slidesEl = document.getElementById('wmSlides');
+  slidesEl.innerHTML = w.photos.map((p,i)=>`
+    <div class="wm-slide">
+      ${p.src
+        ? `<img src="${p.src}" alt="${p.alt}">`
+        : `<div class="wm-slide-placeholder" style="background:${p.gradient};width:100%;height:100%;"><span>${p.alt}（写真をアップ）</span></div>`
+      }
+    </div>
+  `).join('');
+
+  // dots
+  const dotsEl = document.getElementById('wmDots');
+  dotsEl.innerHTML = w.photos.map((_,i)=>`<div class="wm-dot${i===0?' active':''}" onclick="goSlide(${i})"></div>`).join('');
+
+  updateSlider();
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('worksModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeWork(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('worksModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function slideMove(dir){
+  if(!currentWork) return;
+  const n = currentWork.photos.length;
+  currentSlide = (currentSlide + dir + n) % n;
+  updateSlider();
+}
+function goSlide(i){
+  currentSlide = i;
+  updateSlider();
+}
+function updateSlider(){
+  document.getElementById('wmSlides').style.transform = `translateX(-${currentSlide*100}%)`;
+  document.querySelectorAll('.wm-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===currentSlide);
+  });
+}
+
+// ===================== FILTER =====================
+document.querySelectorAll('.ftab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const f = tab.dataset.filter;
+    document.querySelectorAll('.wk').forEach(wk=>{
+      if(f==='all' || wk.dataset.cat===f){
+        wk.style.display='';
+      } else {
+        wk.style.display='none';
+      }
+    });
+  });
+});
+
+// ===================== REVEAL =====================
 const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('on');io.unobserve(el.target);}});},{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Keyboard close
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWork();});
 </script>
 </body>
 </html>

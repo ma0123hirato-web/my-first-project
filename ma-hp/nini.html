@@ -57,7 +57,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:64px;display:flex;ali
 .plan-inner{max-width:900px;margin:0 auto;display:grid;grid-template-columns:180px 1fr;gap:4rem;align-items:start;}
 .plan-block:nth-child(even) .plan-inner{grid-template-columns:1fr 180px;}
 .plan-block:nth-child(even) .plan-l{order:2;}
-.plan-block:nth-child(even) .plan-r{order:1;}
+.plan-block:nth-child(even) .plan-r{order:1;grid-template-columns:0.55fr 1fr;}
+.plan-block:nth-child(even) .plan-visual{order:2;}
+.plan-block:nth-child(even) .plan-photos{order:1;}
 .plan-style-num{font-family:'Cormorant Garamond',serif;font-size:0.62rem;letter-spacing:0.4em;color:var(--mid);margin-bottom:0.8rem;}
 .plan-name{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:400;line-height:1;letter-spacing:0.06em;margin-bottom:0.6rem;}
 .plan-block.mocha .plan-name{color:var(--c-mocha);}
@@ -134,7 +136,33 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
 @media(max-width:480px){
   .spec-grid{grid-template-columns:1fr;}
   .spec-hl{grid-column:span 1;}
+  .plan-photos{grid-template-columns:1fr 1fr;}
 }
+
+/* Photo pair - 2 side-by-side upload slots */
+.plan-r{display:block;}
+.plan-photos{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
+.plan-photo-slot{aspect-ratio:3/2;overflow:hidden;background:var(--bg);border:1px dashed rgba(42,37,32,0.15);display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer;}
+.plan-photo-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.plan-photo-slot .ph-hint{font-size:0.52rem;letter-spacing:0.12em;color:rgba(42,37,32,0.3);text-align:center;line-height:1.8;}
+.plan-photo-slot:hover{border-color:rgba(42,37,32,0.3);}
+
+/* Photo upload slot interactive */
+.plan-photo-slot{position:relative;cursor:pointer;}
+.ph-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;transition:background 0.3s;}
+.plan-photo-slot:not(.has-photo) .ph-overlay{background:transparent;}
+.plan-photo-slot:not(.has-photo):hover .ph-overlay{background:rgba(42,37,32,0.04);}
+.plan-photo-slot.has-photo .ph-overlay{background:rgba(20,14,10,0);opacity:0;transition:opacity 0.3s;}
+.plan-photo-slot.has-photo:hover .ph-overlay{opacity:1;background:rgba(20,14,10,0.35);}
+.plan-photo-slot.has-photo:hover .ph-icon{color:#fff;}
+.plan-photo-slot.has-photo:hover .ph-hint{color:rgba(255,255,255,0.8);}
+.ph-icon{font-size:1.2rem;color:rgba(42,37,32,0.25);line-height:1;transition:color 0.3s;}
+.ph-hint{font-size:0.52rem;letter-spacing:0.12em;color:rgba(42,37,32,0.3);text-align:center;line-height:1.8;transition:color 0.3s;}
+.ph-remove{position:absolute;top:6px;right:6px;z-index:10;background:rgba(20,14,10,0.6);border:none;color:#fff;font-size:0.6rem;padding:3px 7px;cursor:pointer;opacity:0;transition:opacity 0.3s;backdrop-filter:blur(4px);}
+.plan-photo-slot.has-photo:hover .ph-remove{opacity:1;}
+.plan-photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+
+
 </style>
 </head>
 <body>
@@ -189,7 +217,7 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
 <section id="plans">
   <div class="plans-head reveal"><p class="sec-ey">Style</p></div>
 
-  <div class="plan-block mocha">
+  <div class="plan-block mocha" id="mocha">
     <div class="plan-inner reveal">
       <div class="plan-l">
         <p class="plan-style-num">STYLE 01</p>
@@ -198,7 +226,26 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
         <p class="plan-concept-ja">和モダン・穏やかで<br>優しい暮らし</p>
       </div>
       <div class="plan-r">
-        <div class="plan-visual"><div class="plan-visual-bg"></div><span class="plan-visual-lbl">MOCHA</span></div>
+        <div class="plan-photos">
+          <div class="plan-photo-slot" data-key="nini-mocha-01" onclick="triggerUpload(this)">
+            <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+            <img style="display:none">
+            <div class="ph-overlay">
+              <span class="ph-icon">＋</span>
+              <span class="ph-hint">写真をアップ</span>
+            </div>
+            <button class="ph-remove" onclick="removePhoto(event,this)" style="display:none">✕</button>
+          </div>
+          <div class="plan-photo-slot" data-key="nini-mocha-02" onclick="triggerUpload(this)">
+            <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+            <img style="display:none">
+            <div class="ph-overlay">
+              <span class="ph-icon">＋</span>
+              <span class="ph-hint">写真をアップ</span>
+            </div>
+            <button class="ph-remove" onclick="removePhoto(event,this)" style="display:none">✕</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="plan-desc-area reveal reveal-d1" style="max-width:900px;margin:2rem auto 0;padding:0;">
@@ -208,7 +255,7 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
     </div>
   </div>
 
-  <div class="plan-block gray">
+  <div class="plan-block gray" id="gray">
     <div class="plan-inner reveal">
       <div class="plan-l">
         <p class="plan-style-num">STYLE 02</p>
@@ -217,7 +264,26 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
         <p class="plan-concept-ja">シンプル・モダンな<br>洗練された暮らし</p>
       </div>
       <div class="plan-r">
-        <div class="plan-visual"><div class="plan-visual-bg"></div><span class="plan-visual-lbl">GRAY</span></div>
+        <div class="plan-photos">
+          <div class="plan-photo-slot" data-key="nini-gray-01" onclick="triggerUpload(this)">
+            <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+            <img style="display:none">
+            <div class="ph-overlay">
+              <span class="ph-icon">＋</span>
+              <span class="ph-hint">写真をアップ</span>
+            </div>
+            <button class="ph-remove" onclick="removePhoto(event,this)" style="display:none">✕</button>
+          </div>
+          <div class="plan-photo-slot" data-key="nini-gray-02" onclick="triggerUpload(this)">
+            <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+            <img style="display:none">
+            <div class="ph-overlay">
+              <span class="ph-icon">＋</span>
+              <span class="ph-hint">写真をアップ</span>
+            </div>
+            <button class="ph-remove" onclick="removePhoto(event,this)" style="display:none">✕</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="plan-desc-area reveal reveal-d1" style="max-width:900px;margin:2rem auto 0;padding:0;">
@@ -227,7 +293,7 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
     </div>
   </div>
 
-  <div class="plan-block pop">
+  <div class="plan-block pop" id="pop">
     <div class="plan-inner reveal">
       <div class="plan-l">
         <p class="plan-style-num">STYLE 03</p>
@@ -236,7 +302,26 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
         <p class="plan-concept-ja">自分らしく、好きな色で<br>暮らす</p>
       </div>
       <div class="plan-r">
-        <div class="plan-visual"><div class="plan-visual-bg"></div><span class="plan-visual-lbl">POP</span></div>
+        <div class="plan-photos">
+          <div class="plan-photo-slot" data-key="nini-pop-01" onclick="triggerUpload(this)">
+            <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+            <img style="display:none">
+            <div class="ph-overlay">
+              <span class="ph-icon">＋</span>
+              <span class="ph-hint">写真をアップ</span>
+            </div>
+            <button class="ph-remove" onclick="removePhoto(event,this)" style="display:none">✕</button>
+          </div>
+          <div class="plan-photo-slot" data-key="nini-pop-02" onclick="triggerUpload(this)">
+            <input type="file" accept="image/*" style="display:none" onchange="handlePhoto(this)">
+            <img style="display:none">
+            <div class="ph-overlay">
+              <span class="ph-icon">＋</span>
+              <span class="ph-hint">写真をアップ</span>
+            </div>
+            <button class="ph-remove" onclick="removePhoto(event,this)" style="display:none">✕</button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="plan-desc-area reveal reveal-d1" style="max-width:900px;margin:2rem auto 0;padding:0;">
@@ -279,13 +364,11 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
     <h2 class="cta-ttl">気になるプランがありましたか？</h2>
     <p class="cta-copy">「どのスタイルが合うかわからない」でも大歓迎です。<br>まずはお気軽にご相談ください。</p>
     <div class="cta-btns">
-      <a href="https://line.me/R/ti/p/@manoie" class="btn-line" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
-        LINEで相談する
-      </a>
+      
       <a href="index.html#contact" class="btn-form">お問い合わせフォーム →</a>
+      <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-form">ご予約はこちら →</a>
     </div>
-  </div>
+</div>
 </section>
 
 <footer>
@@ -294,8 +377,67 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
 </footer>
 
 <script>
+// Reveal animation
 const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('on');io.unobserve(el.target);}});},{threshold:0.06});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// ===== PHOTO UPLOAD =====
+function triggerUpload(slot){
+  slot.querySelector('input[type=file]').click();
+}
+
+function handlePhoto(input){
+  const slot = input.closest('.plan-photo-slot');
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = slot.querySelector('img');
+    img.src = e.target.result;
+    img.style.display = 'block';
+    slot.classList.add('has-photo');
+    // Persist to localStorage
+    const key = slot.dataset.key;
+    if(key){
+      try { localStorage.setItem('nini_photo_' + key, e.target.result); } catch(err){}
+    }
+    // Update overlay text
+    const hint = slot.querySelector('.ph-hint');
+    if(hint) hint.textContent = '写真を変更';
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto(e, btn){
+  e.stopPropagation();
+  const slot = btn.closest('.plan-photo-slot');
+  const img = slot.querySelector('img');
+  img.src = '';
+  img.style.display = 'none';
+  slot.classList.remove('has-photo');
+  const input = slot.querySelector('input[type=file]');
+  if(input) input.value = '';
+  const key = slot.dataset.key;
+  if(key){ try { localStorage.removeItem('nini_photo_' + key); } catch(err){} }
+  const hint = slot.querySelector('.ph-hint');
+  if(hint) hint.textContent = '写真をアップ';
+}
+
+// Restore from localStorage on load
+document.querySelectorAll('.plan-photo-slot[data-key]').forEach(slot => {
+  const key = slot.dataset.key;
+  try {
+    const saved = localStorage.getItem('nini_photo_' + key);
+    if(saved){
+      const img = slot.querySelector('img');
+      img.src = saved;
+      img.style.display = 'block';
+      slot.classList.add('has-photo');
+      const hint = slot.querySelector('.ph-hint');
+      if(hint) hint.textContent = '写真を変更';
+    }
+  } catch(err){}
+});
 </script>
 </body>
 </html>
