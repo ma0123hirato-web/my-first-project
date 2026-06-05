@@ -79,6 +79,12 @@ body{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;background:var(--bg);
 /* note field */
 .field-note{font-size:11px;color:var(--muted);line-height:1.6;padding:8px 12px;background:var(--card);border-radius:2px;border-left:2px solid var(--mocha-d);}
 
+/* inline font size mini buttons */
+.fs-mini{margin-left:auto;display:flex;gap:3px;}
+.fs-mini-btn{padding:1px 6px;background:var(--card);color:var(--mocha-l);border:1px solid var(--border);cursor:pointer;font-size:10px;font-weight:600;border-radius:2px;line-height:1.4;}
+.fs-mini-btn:hover{background:var(--mocha);color:#1A1714;}
+.field-label{display:flex;align-items:center;gap:4px;}
+
 /* save button */
 #save-bar{padding:12px 16px;border-top:1px solid var(--border);flex-shrink:0;}
 #btn-save{width:100%;padding:10px;background:var(--mocha);color:#1A1714;border:none;cursor:pointer;font-size:12px;font-weight:700;letter-spacing:0.15em;border-radius:2px;transition:background 0.2s;}
@@ -302,11 +308,20 @@ nini: [
   {id:'nini-p3-name',  lbl:'プラン名',  type:'input',    sel:'.plan-block.pop .plan-concept-ja'},
   {id:'nini-p3-desc',  lbl:'説明文',    type:'textarea', sel:'.plan-block.pop .plan-desc'},
   {sec:'スペック表'},
-  {id:'nini-s1', lbl:'スペック①値', type:'input', sel:'.spec-item:nth-child(1) .s-val'},
-  {id:'nini-s2', lbl:'スペック②値', type:'input', sel:'.spec-item:nth-child(2) .s-val'},
-  {id:'nini-s3', lbl:'スペック③値', type:'input', sel:'.spec-item:nth-child(3) .s-val'},
-  {id:'nini-s4', lbl:'スペック④値', type:'input', sel:'.spec-item:nth-child(4) .s-val'},
-  {id:'nini-s5', lbl:'スペック⑤値', type:'input', sel:'.spec-item:nth-child(5) .s-val'},
+  {id:'nini-s-hl-lbl',  lbl:'価格 ラベル',       type:'input', sel:'.spec-hl .s-label'},
+  {id:'nini-s-hl-val',  lbl:'価格 値',           type:'input', sel:'.spec-hl .s-val'},
+  {id:'nini-s1-lbl', lbl:'スペック① ラベル', type:'input', sel:'.spec-item:nth-child(2) .s-label'},
+  {id:'nini-s1-val', lbl:'スペック① 値',    type:'input', sel:'.spec-item:nth-child(2) .s-val'},
+  {id:'nini-s2-lbl', lbl:'スペック② ラベル', type:'input', sel:'.spec-item:nth-child(3) .s-label'},
+  {id:'nini-s2-val', lbl:'スペック② 値',    type:'input', sel:'.spec-item:nth-child(3) .s-val'},
+  {id:'nini-s3-lbl', lbl:'スペック③ ラベル', type:'input', sel:'.spec-item:nth-child(4) .s-label'},
+  {id:'nini-s3-val', lbl:'スペック③ 値',    type:'input', sel:'.spec-item:nth-child(4) .s-val'},
+  {id:'nini-s4-lbl', lbl:'スペック④ ラベル', type:'input', sel:'.spec-item:nth-child(5) .s-label'},
+  {id:'nini-s4-val', lbl:'スペック④ 値',    type:'input', sel:'.spec-item:nth-child(5) .s-val'},
+  {id:'nini-s5-lbl', lbl:'スペック⑤ ラベル', type:'input', sel:'.spec-item:nth-child(6) .s-label'},
+  {id:'nini-s5-val', lbl:'スペック⑤ 値',    type:'input', sel:'.spec-item:nth-child(6) .s-val'},
+  {id:'nini-s6-lbl', lbl:'スペック⑥ ラベル', type:'input', sel:'.spec-item:nth-child(7) .s-label'},
+  {id:'nini-s6-val', lbl:'スペック⑥ 値',    type:'input', sel:'.spec-item:nth-child(7) .s-val'},
   {sec:'CTA'},
   {id:'nini-cta-ttl', lbl:'CTAタイトル', type:'input', sel:'.cta-ttl'},
   {sec:'ギャラリー写真'},
@@ -407,7 +422,25 @@ events: [
   {id:'ev-p3-badge',  lbl:'カード③ バッジ（タイトル下）', type:'input',  sel:'.events-section:last-child .event-card:nth-child(3) .ec-badge'},
 ],
 
-ev1: evDetailFields('ev1'),
+ev1: [
+  {sec:'ヒーロー'},
+  {id:'ev1-vis',    lbl:'ページ表示/非表示', type:'toggle',   sel:'.ev-hero'},
+  {id:'ev1-ttl',    lbl:'タイトル',           type:'input',    sel:'.ev-hero-ttl'},
+  {id:'ev1-date',   lbl:'日時・場所',         type:'input',    sel:'.ev-hero-date'},
+  {id:'ev1-hero-bg',lbl:'ヒーロー画像',       type:'image',    sel:'.ev-hero-img', prop:'bg'},
+  {sec:'イベント情報'},
+  {id:'ev1-info1',  lbl:'日時',   type:'input', sel:'.ev-info-row:nth-child(1) .ev-info-value'},
+  {id:'ev1-info2',  lbl:'会場',   type:'input', sel:'.ev-info-row:nth-child(2) .ev-info-value'},
+  {id:'ev1-info3',  lbl:'参加費', type:'input', sel:'.ev-info-row:nth-child(3) .ev-info-value'},
+  {sec:'説明文'},
+  {id:'ev1-desc-ttl',  lbl:'見出し', type:'input',    sel:'.ev-desc-ttl'},
+  {id:'ev1-desc-body', lbl:'本文',   type:'textarea', sel:'.ev-desc-body'},
+  {sec:'写真（4枚）'},
+  {id:'ev1-photo1', lbl:'写真①', type:'image', sel:'.ev-photos .ev-photo:nth-child(1) img'},
+  {id:'ev1-photo2', lbl:'写真②', type:'image', sel:'.ev-photos .ev-photo:nth-child(2) img'},
+  {id:'ev1-photo3', lbl:'写真③', type:'image', sel:'.ev-photos .ev-photo:nth-child(3) img'},
+  {id:'ev1-photo4', lbl:'写真④', type:'image', sel:'.ev-photos .ev-photo:nth-child(4) img'},
+],
 ev2: evDetailFields('ev2'),
 ev3: evDetailFields('ev3'),
 ev4: evDetailFields('ev4'),
@@ -433,9 +466,9 @@ function evDetailFields(key) {
     {sec:'説明文'},
     {id:`${key}-desc-ttl`,  lbl:'見出し', type:'input',    sel:'.ev-desc-ttl'},
     {id:`${key}-desc-body`,  lbl:'本文',  type:'textarea', sel:'.ev-desc-body'},
-    {sec:'写真'},
-    {id:`${key}-photo1`, lbl:'写真①', type:'image', sel:'.ev-photos .ev-photo:nth-child(1)', prop:'bg'},
-    {id:`${key}-photo2`, lbl:'写真②', type:'image', sel:'.ev-photos .ev-photo:nth-child(2)', prop:'bg'},
+    {sec:'写真（2枚）'},
+    {id:`${key}-photo1`, lbl:'写真①', type:'image', sel:'.ev-photos .ev-photo:nth-child(1)'},
+    {id:`${key}-photo2`, lbl:'写真②', type:'image', sel:'.ev-photos .ev-photo:nth-child(2)'},
   ];
 }
 
@@ -545,12 +578,14 @@ function renderField(f) {
     return `<div class="field"><p class="field-note">${f.text}</p></div>`;
   }
   const val = getFieldValue(f);
+  const selQ = f.sel ? f.sel.replace(/\\/g,'\\\\').replace(/'/g,"\\'") : '';
+  const fsBtn = selQ ? `<span class="fs-mini"><button class="fs-mini-btn" onclick="adjFsDirect('${selQ}',-0.05)">A-</button><button class="fs-mini-btn" onclick="adjFsDirect('${selQ}',+0.05)">A+</button></span>` : '';
   if(f.type === 'input') {
-    return `<div class="field"><div class="field-label">${f.lbl}</div>
+    return `<div class="field"><div class="field-label">${f.lbl}${fsBtn}</div>
       <input type="text" id="${f.id}" value="${esc(val)}"></div>`;
   }
   if(f.type === 'textarea') {
-    return `<div class="field"><div class="field-label">${f.lbl}</div>
+    return `<div class="field"><div class="field-label">${f.lbl}${fsBtn}</div>
       <textarea id="${f.id}">${esc(val)}</textarea></div>`;
   }
   if(f.type === 'fs') {
@@ -664,6 +699,25 @@ function adjFs(fid, sel, delta) {
   if(num < 0.1) num = 0.1;
   el.value = num + unit;
   el.dispatchEvent(new Event('input'));
+}
+
+function adjFsDirect(sel, delta) {
+  if(!curDoc) return;
+  const el = curDoc.querySelector(sel);
+  if(!el) return;
+  let fs = el.style.fontSize;
+  if(!fs) {
+    // default: read from computed or assume 1rem
+    fs = '1rem';
+  }
+  let unit = 'rem';
+  if(fs.endsWith('px')) unit = 'px';
+  else if(fs.endsWith('em')) unit = 'em';
+  let num = parseFloat(fs) || 1;
+  num = Math.round((num + delta) * 100) / 100;
+  if(num < 0.1) num = 0.1;
+  el.style.fontSize = num + unit;
+  schedulePreview();
 }
 
 // ── Image upload ──────────────────────────────────────────────────────────────
