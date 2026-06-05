@@ -1032,7 +1032,9 @@ function wkImgUpload(i, pi) {
       const dataUrl = ev.target.result;
       const key = 'wi_'+i+'_'+pi;
       worksImgs[key] = dataUrl;
-      if(worksData[i] && worksData[i].photos && worksData[i].photos[pi]) {
+      if(worksData[i]) {
+        if(!worksData[i].photos) worksData[i].photos = [];
+        if(!worksData[i].photos[pi]) worksData[i].photos[pi] = {src:'', alt:'', gradient:'linear-gradient(135deg,#888,#555)'};
         worksData[i].photos[pi].src = dataUrl;
       }
       const img = document.getElementById(`wkimg-${i}-${pi}`);
@@ -1071,6 +1073,8 @@ function scheduleWorksPreview() {
 
 function updateWorksPreview() {
   if(!curDoc || !worksData) return;
+
+  // Update JS array in script tag
   const scripts = curDoc.querySelectorAll('script');
   for(const s of scripts) {
     if(s.textContent.indexOf('const works = [') >= 0) {
@@ -1088,6 +1092,23 @@ function updateWorksPreview() {
       break;
     }
   }
+
+  // Patch card thumbnails: show photos[0] as the card thumbnail image
+  worksData.forEach((w, i) => {
+    const thumb = curDoc.querySelector(`.wk[data-id="${i}"] .wk-thumb`);
+    if(!thumb) return;
+    const src = w.photos && w.photos[0] && w.photos[0].src;
+    if(src) {
+      thumb.innerHTML = `<img class="wk-img" src="${src}" alt="${(w.photos[0].alt)||''}" style="width:100%;height:100%;object-fit:cover;display:block;">`;
+    } else {
+      // Restore gradient placeholder if no photo
+      const grad = w.photos && w.photos[0] && w.photos[0].gradient || 'linear-gradient(145deg,#888,#555)';
+      if(!thumb.querySelector('.wk-img-placeholder')) {
+        thumb.innerHTML = `<div class="wk-img-placeholder" style="background:${grad};"></div>`;
+      }
+    }
+  });
+
   updatePreview();
 }
 
