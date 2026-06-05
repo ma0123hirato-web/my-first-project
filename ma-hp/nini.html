@@ -140,11 +140,10 @@ footer{background:var(--bg2);padding:2.2rem 2.5rem;border-top:1px solid var(--li
 }
 
 /* Photo pair - 2 side-by-side upload slots */
-.plan-r{display:block;overflow:hidden;}
-.plan-photos{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;}
-.plan-photo-slot{position:relative;overflow:hidden;background:var(--bg);border:1px dashed rgba(42,37,32,0.15);cursor:pointer;}
-.plan-photo-slot::before{content:'';display:block;padding-top:66.67%;}
-.plan-photo-slot img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;}
+.plan-r{display:block;overflow:hidden;width:100%;}
+.plan-photos{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;width:100%;}
+.plan-photo-slot{position:relative;overflow:hidden;background:var(--bg);border:1px dashed rgba(42,37,32,0.15);cursor:pointer;width:100%;aspect-ratio:3/2;}
+.plan-photo-slot img{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;max-width:none;max-height:none;}
 .plan-photo-slot:hover{border-color:rgba(42,37,32,0.3);}
 
 /* Photo upload slot interactive */
@@ -380,6 +379,21 @@ const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.ta
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
 // ===== PHOTO UPLOAD =====
+function applyImgStyles(img){
+  img.style.position = 'absolute';
+  img.style.top = '0';
+  img.style.left = '0';
+  img.style.right = '0';
+  img.style.bottom = '0';
+  img.style.width = '100%';
+  img.style.height = '100%';
+  img.style.objectFit = 'cover';
+  img.style.objectPosition = 'center';
+  img.style.display = 'block';
+  img.style.maxWidth = 'none';
+  img.style.maxHeight = 'none';
+}
+
 function triggerUpload(slot){
   slot.querySelector('input[type=file]').click();
 }
@@ -392,7 +406,7 @@ function handlePhoto(input){
   reader.onload = e => {
     const img = slot.querySelector('img');
     img.src = e.target.result;
-    img.style.display = 'block';
+    applyImgStyles(img);
     slot.classList.add('has-photo');
     // Persist to localStorage
     const key = slot.dataset.key;
@@ -411,7 +425,7 @@ function removePhoto(e, btn){
   const slot = btn.closest('.plan-photo-slot');
   const img = slot.querySelector('img');
   img.src = '';
-  img.style.display = 'none';
+  img.style.cssText = 'display:none;';
   slot.classList.remove('has-photo');
   const input = slot.querySelector('input[type=file]');
   if(input) input.value = '';
@@ -429,7 +443,7 @@ document.querySelectorAll('.plan-photo-slot[data-key]').forEach(slot => {
     if(saved){
       const img = slot.querySelector('img');
       img.src = saved;
-      img.style.display = 'block';
+      applyImgStyles(img);
       slot.classList.add('has-photo');
       const hint = slot.querySelector('.ph-hint');
       if(hint) hint.textContent = '写真を変更';
