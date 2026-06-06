@@ -473,18 +473,68 @@ function evDetailFields(key) {
 }
 
 function newsDetailFields(key) {
-  return [
+  const common = [
     {sec:'ヘッダー'},
-    {id:`${key}-vis`,   lbl:'ページ表示/非表示', type:'toggle',   sel:'.news-hero'},
-    {id:`${key}-date`,  lbl:'日付',               type:'input',    sel:'.news-date'},
-    {id:`${key}-tag`,   lbl:'タグ',               type:'input',    sel:'.news-tag'},
-    {id:`${key}-ttl`,   lbl:'タイトル',           type:'textarea', sel:'.news-ttl'},
-    {id:`${key}-ttl-fs`,lbl:'タイトル文字サイズ', type:'fs',       sel:'.news-ttl'},
-    {id:`${key}-hero-bg`,lbl:'ヒーロー画像',      type:'image',    sel:'.news-hero-img', prop:'bg'},
-    {sec:'写真'},
-    {id:`${key}-img1`,  lbl:'写真①', type:'image', sel:'.news-img-row .news-img-slot:nth-child(1)', prop:'bg'},
-    {id:`${key}-img2`,  lbl:'写真②', type:'image', sel:'.news-img-row .news-img-slot:nth-child(2)', prop:'bg'},
+    {id:`${key}-vis`,    lbl:'ページ表示/非表示', type:'toggle',   sel:'.news-hero'},
+    {id:`${key}-date`,   lbl:'日付',               type:'input',    sel:'.news-date'},
+    {id:`${key}-tag`,    lbl:'タグ',               type:'input',    sel:'.news-tag'},
+    {id:`${key}-ttl`,    lbl:'タイトル',           type:'textarea', sel:'.news-ttl'},
+    {id:`${key}-ttl-fs`, lbl:'タイトル文字サイズ', type:'fs',       sel:'.news-ttl'},
+    {id:`${key}-hero-bg`,lbl:'ヒーロー画像',       type:'image',    sel:'.news-hero-img', prop:'bg'},
   ];
+
+  const photos = [
+    {sec:'写真'},
+    {id:`${key}-img1`, lbl:'写真①', type:'image', sel:'.news-img-row .news-img-slot:nth-child(1)', prop:'bg'},
+    {id:`${key}-img2`, lbl:'写真②', type:'image', sel:'.news-img-row .news-img-slot:nth-child(2)', prop:'bg'},
+  ];
+
+  const body = {
+    ns1: [
+      {sec:'本文'},
+      {id:'ns1-p1',  lbl:'冒頭文',        type:'textarea', sel:'.news-body > p:first-child'},
+      {sec:'イベント詳細'},
+      {id:'ns1-h3a', lbl:'見出し①',       type:'input',    sel:'.news-body h3:nth-of-type(1)'},
+      {id:'ns1-dt1', lbl:'項目① ラベル',  type:'input',    sel:'.info-box dt:nth-child(1)'},
+      {id:'ns1-dd1', lbl:'項目① 内容',    type:'input',    sel:'.info-box dd:nth-child(2)'},
+      {id:'ns1-dt2', lbl:'項目② ラベル',  type:'input',    sel:'.info-box dt:nth-child(3)'},
+      {id:'ns1-dd2', lbl:'項目② 内容',    type:'input',    sel:'.info-box dd:nth-child(4)'},
+      {id:'ns1-dt3', lbl:'項目③ ラベル',  type:'input',    sel:'.info-box dt:nth-child(5)'},
+      {id:'ns1-dd3', lbl:'項目③ 内容',    type:'input',    sel:'.info-box dd:nth-child(6)'},
+      {id:'ns1-dt4', lbl:'項目④ ラベル',  type:'input',    sel:'.info-box dt:nth-child(7)'},
+      {id:'ns1-dd4', lbl:'項目④ 内容',    type:'input',    sel:'.info-box dd:nth-child(8)'},
+      {sec:'説明・リスト'},
+      {id:'ns1-p2',  lbl:'説明文',         type:'textarea', sel:'.news-body > p:nth-child(4)'},
+      {id:'ns1-h3b', lbl:'見出し②',       type:'input',    sel:'.news-body h3:nth-of-type(2)'},
+      {id:'ns1-li1', lbl:'リスト①',       type:'input',    sel:'.news-body li:nth-child(1)'},
+      {id:'ns1-li2', lbl:'リスト②',       type:'input',    sel:'.news-body li:nth-child(2)'},
+      {id:'ns1-li3', lbl:'リスト③',       type:'input',    sel:'.news-body li:nth-child(3)'},
+      {id:'ns1-p3',  lbl:'締めの文',       type:'textarea', sel:'.news-body > p:last-child'},
+    ],
+    ns2: [
+      {sec:'本文'},
+      {id:'ns2-p1', lbl:'冒頭文',   type:'textarea', sel:'.news-body > p:first-child'},
+      {id:'ns2-h3', lbl:'見出し',   type:'input',    sel:'.news-body h3'},
+      {id:'ns2-p2', lbl:'説明文',   type:'textarea', sel:'.news-body > p:nth-child(3)'},
+      {id:'ns2-p3', lbl:'締めの文', type:'textarea', sel:'.news-body > p:last-child'},
+    ],
+    ns3: [
+      {sec:'本文'},
+      {id:'ns3-p1',  lbl:'冒頭文',        type:'textarea', sel:'.news-body > p:first-child'},
+      {sec:'受賞情報'},
+      {id:'ns3-dt1', lbl:'項目① ラベル',  type:'input',    sel:'.award-box dt:nth-child(1)'},
+      {id:'ns3-dd1', lbl:'項目① 内容',    type:'input',    sel:'.award-box dd:nth-child(2)'},
+      {id:'ns3-dt2', lbl:'項目② ラベル',  type:'input',    sel:'.award-box dt:nth-child(3)'},
+      {id:'ns3-dd2', lbl:'項目② 内容',    type:'input',    sel:'.award-box dd:nth-child(4)'},
+      {id:'ns3-dt3', lbl:'項目③ ラベル',  type:'input',    sel:'.award-box dt:nth-child(5)'},
+      {id:'ns3-dd3', lbl:'項目③ 内容',    type:'input',    sel:'.award-box dd:nth-child(6)'},
+      {sec:'説明文'},
+      {id:'ns3-p2',  lbl:'説明文',         type:'textarea', sel:'.news-body > p:nth-child(3)'},
+      {id:'ns3-p3',  lbl:'締めの文',       type:'textarea', sel:'.news-body > p:last-child'},
+    ],
+  };
+
+  return [...common, ...(body[key]||[]), ...photos];
 }
 
 // ── State ─────────────────────────────────────────────────────────────────────
