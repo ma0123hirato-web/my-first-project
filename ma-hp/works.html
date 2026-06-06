@@ -449,6 +449,17 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
 // Keyboard close
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWork();});
+
+// ===================== CARD THUMBNAILS =====================
+// works配列にsrcがあればカードサムネイルを写真で表示
+works.forEach((w, idx) => {
+  if(w.photos && w.photos[0] && w.photos[0].src) {
+    const thumb = document.querySelector('.wk[data-id="' + idx + '"] .wk-thumb');
+    if(thumb) {
+      thumb.innerHTML = '<img class="wk-img" src="' + w.photos[0].src + '" alt="' + (w.photos[0].alt||'') + '">';
+    }
+  }
+});
 </script>
 </body>
 </html>
