@@ -829,8 +829,8 @@ function applyImageToDoc(fid) {
     }
     img.style.objectFit = 'cover';
     img.style.objectPosition = posMap[pos];
-    // Hide any placeholder child elements
-    el.querySelectorAll('[class*="placeholder"],[class*="hint"]').forEach(p => { p.style.display = 'none'; });
+    // Hide all sibling elements (placeholder divs, hint spans, etc.)
+    Array.from(el.children).forEach(child => { if(child !== img) child.style.display = 'none'; });
   }
 }
 
