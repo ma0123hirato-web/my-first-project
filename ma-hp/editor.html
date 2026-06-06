@@ -480,7 +480,7 @@ function newsDetailFields(key) {
     {id:`${key}-tag`,    lbl:'タグ',               type:'input',    sel:'.news-tag'},
     {id:`${key}-ttl`,    lbl:'タイトル',           type:'textarea', sel:'.news-ttl'},
     {id:`${key}-ttl-fs`, lbl:'タイトル文字サイズ', type:'fs',       sel:'.news-ttl'},
-    {id:`${key}-hero-bg`,lbl:'ヒーロー画像',       type:'image',    sel:'.news-hero-img', prop:'bg'},
+    {id:`${key}-hero-bg`,lbl:'ヒーロー画像',       type:'image',    sel:'.news-hero-img'},
   ];
 
   const photos = [
@@ -825,9 +825,15 @@ function applyImageToDoc(fid) {
     if(el !== img) {
       img.style.width = '100%';
       img.style.height = '100%';
+      img.style.display = 'block';
+      img.style.position = 'absolute';
+      img.style.top = '0';
+      img.style.left = '0';
     }
     img.style.objectFit = 'cover';
     img.style.objectPosition = posMap[pos];
+    // Hide any placeholder child elements
+    el.querySelectorAll('[class*="placeholder"],[class*="hint"]').forEach(p => { p.style.display = 'none'; });
   }
 }
 
