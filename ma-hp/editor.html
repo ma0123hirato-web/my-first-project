@@ -883,6 +883,18 @@ function setPv(mode) {
   document.getElementById('pv-sp').classList.toggle('active', mode==='sp');
 }
 
+// ── Mobile CSS injection ───────────────────────────────────────────────────────
+function ensureMobileCss(html, fname) {
+  const worksExtra = '@media(max-width:768px){.wm-slider{aspect-ratio:16/9;}.wm-body{padding:1.5rem 1.2rem 2.5rem;}.wm-specs{grid-template-columns:1fr 1fr;}.nav-logo{font-size:1.1rem;}}';
+  const navLogoOnly = '@media(max-width:768px){.nav-logo{font-size:1.1rem;}}';
+  const needed = (fname === 'works.html') ? worksExtra : navLogoOnly;
+  const marker = (fname === 'works.html') ? '.wm-slider{aspect-ratio' : '.nav-logo{font-size:1.1rem';
+  if(html.includes(marker)) return html;
+  const idx = html.lastIndexOf('</style>');
+  if(idx === -1) return html;
+  return html.slice(0, idx) + needed + '\n' + html.slice(idx);
+}
+
 // ── Save file ─────────────────────────────────────────────────────────────────
 async function saveFile() {
   if(!dirHandle) return;
@@ -891,7 +903,7 @@ async function saveFile() {
   const fname = FM[curTab];
   if(!fname) return;
   try {
-    const html = serializeDoc(curDoc);
+    const html = ensureMobileCss(serializeDoc(curDoc), fname);
     const fh = await dirHandle.getFileHandle(fname, {create:false});
     const writable = await fh.createWritable();
     await writable.write(html);
@@ -1169,7 +1181,7 @@ async function saveWorks() {
   if(!dirHandle || !curDoc || !worksData) return;
   updateWorksPreview();
   try {
-    const html = serializeDoc(curDoc);
+    const html = ensureMobileCss(serializeDoc(curDoc), 'works.html');
     const fh = await dirHandle.getFileHandle('works.html', {create:false});
     const writable = await fh.createWritable();
     await writable.write(html);
