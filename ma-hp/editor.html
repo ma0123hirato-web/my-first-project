@@ -883,16 +883,23 @@ function setPv(mode) {
   document.getElementById('pv-sp').classList.toggle('active', mode==='sp');
 }
 
-// ── Mobile CSS injection ───────────────────────────────────────────────────────
+// ── Page fixes injection (CSS + JS) ───────────────────────────────────────────
 function ensureMobileCss(html, fname) {
   const worksExtra = '@media(max-width:768px){.wm-slider{aspect-ratio:16/9;}.wm-body{padding:1.5rem 1.2rem 2.5rem;}.wm-specs{grid-template-columns:1fr 1fr;}.nav-logo{font-size:1.1rem;}}';
   const navLogoOnly = '@media(max-width:768px){.nav-logo{font-size:1.1rem;}}';
   const needed = (fname === 'works.html') ? worksExtra : navLogoOnly;
   const marker = (fname === 'works.html') ? '.wm-slider{aspect-ratio' : '.nav-logo{font-size:1.1rem';
-  if(html.includes(marker)) return html;
-  const idx = html.lastIndexOf('</style>');
-  if(idx === -1) return html;
-  return html.slice(0, idx) + needed + '\n' + html.slice(idx);
+  if(!html.includes(marker)) {
+    const idx = html.lastIndexOf('</style>');
+    if(idx !== -1) html = html.slice(0, idx) + needed + '\n' + html.slice(idx);
+  }
+  // index.html: works cards click → works.html?id=N
+  if(fname === 'index.html' && !html.includes("works.html?id=")) {
+    const jsSnippet = `document.querySelectorAll('#works .wk').forEach(function(el,i){el.addEventListener('click',function(){location.href='works.html?id='+i;});});`;
+    const closing = html.lastIndexOf('</script>');
+    if(closing !== -1) html = html.slice(0, closing) + jsSnippet + '\n' + html.slice(closing);
+  }
+  return html;
 }
 
 // ── Save file ─────────────────────────────────────────────────────────────────

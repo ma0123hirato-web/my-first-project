@@ -466,6 +466,20 @@ works.forEach((w, idx) => {
     }
   }
 });
+
+// ===================== URL PARAM AUTO-OPEN =====================
+// TOPページから works.html?id=N でリンクされた場合、該当事例を自動展開
+(function(){
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if(id !== null && id !== '') {
+    const idx = parseInt(id, 10);
+    if(!isNaN(idx)) {
+      // サムネイル生成後に展開するため少し待つ
+      setTimeout(function(){ openWork(idx); }, 80);
+    }
+  }
+})();
 </script>
 </body>
 </html>

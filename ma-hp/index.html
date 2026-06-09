@@ -395,7 +395,7 @@ const nav=document.getElementById('nav');
 window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>20));
 const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('on');io.unobserve(el.target);}});},{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
+document.querySelectorAll('#works .wk').forEach(function(el,i){el.addEventListener('click',function(){location.href='works.html?id='+i;});});
 </script>
 </body>
 </html>
