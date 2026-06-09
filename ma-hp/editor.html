@@ -1167,7 +1167,19 @@ function updateWorksPreview() {
 
   // Patch card thumbnails: show photos[0] as the card thumbnail image
   worksData.forEach((w, i) => {
-    const thumb = curDoc.querySelector(`.wk[data-id="${i}"] .wk-thumb`);
+    const card = curDoc.querySelector(`.wk[data-id="${i}"]`);
+    if(!card) return;
+
+    // Update card text fields
+    const ttlEl = card.querySelector('.wk-ttl');
+    const subEl = card.querySelector('.wk-sub');
+    const numEl = card.querySelector('.wk-num');
+    if(ttlEl && w.ttl != null) ttlEl.textContent = w.ttl;
+    if(subEl && w.sub != null) subEl.textContent = w.sub;
+    if(numEl && w.num != null) numEl.textContent = w.num;
+
+    // Update card thumbnail
+    const thumb = card.querySelector('.wk-thumb');
     if(!thumb) return;
     const src = w.photos && w.photos[0] && w.photos[0].src;
     if(src) {
