@@ -890,13 +890,13 @@ function ensureMobileCss(html, fname) {
   const needed = (fname === 'works.html') ? worksExtra : navLogoOnly;
   const marker = (fname === 'works.html') ? '.wm-slider{aspect-ratio' : '.nav-logo{font-size:1.1rem';
   if(!html.includes(marker)) {
-    const idx = html.lastIndexOf('</style>');
+    const idx = html.lastIndexOf('<\/style>');
     if(idx !== -1) html = html.slice(0, idx) + needed + '\n' + html.slice(idx);
   }
   // index.html: works cards click → works.html?id=N
   if(fname === 'index.html' && !html.includes("works.html?id=")) {
     const jsSnippet = `document.querySelectorAll('#works .wk').forEach(function(el,i){el.addEventListener('click',function(){location.href='works.html?id='+i;});});`;
-    const closing = html.lastIndexOf('</script>');
+    const closing = html.lastIndexOf('<\/script>');
     if(closing !== -1) html = html.slice(0, closing) + jsSnippet + '\n' + html.slice(closing);
   }
   return html;
