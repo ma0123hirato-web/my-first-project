@@ -35,8 +35,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;ali
 @media(max-width:768px){.works-grid{grid-template-columns:1fr;}}
 @media(min-width:769px) and (max-width:1024px){.works-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:768px){
-  .wm-slider{height:56vw;overflow:hidden;}
-  .wm-slides{height:56vw;}
+  .wm-slider{height:56vw !important;overflow:hidden !important;}
+  .wm-slides{height:56vw !important;max-height:56vw !important;}
+  .wm-slide{height:56vw !important;min-height:0 !important;}
+  .wm-slide img{height:56vw !important;width:100% !important;object-fit:cover !important;}
   .wm-body{padding:1.5rem 1.2rem 2.5rem;}
   .wm-specs{grid-template-columns:1fr 1fr;}
   .nav-logo{font-size:1.1rem;}
