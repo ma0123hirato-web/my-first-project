@@ -471,17 +471,34 @@ works.forEach((w, idx) => {
 });
 
 // ===================== URL PARAM AUTO-OPEN =====================
-// TOPページから works.html?id=N でリンクされた場合、該当事例を自動展開
 (function(){
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
   if(id !== null && id !== '') {
     const idx = parseInt(id, 10);
     if(!isNaN(idx)) {
-      // サムネイル生成後に展開するため少し待つ
       setTimeout(function(){ openWork(idx); }, 80);
     }
   }
+})();
+
+// ===================== MOBILE SLIDER FIX =====================
+(function(){
+  if(window.innerWidth > 768) return;
+  var _open = window.openWork;
+  window.openWork = function(idx){
+    _open(idx);
+    setTimeout(function(){
+      var h = Math.round(window.innerWidth * 0.56) + 'px';
+      var sl = document.querySelector('.wm-slider');
+      var ss = document.getElementById('wmSlides');
+      if(sl){ sl.style.height = h; sl.style.overflow = 'hidden'; }
+      if(ss){ ss.style.height = h; ss.style.maxHeight = h; }
+      document.querySelectorAll('.wm-slide, .wm-slide img').forEach(function(el){
+        el.style.height = h;
+      });
+    }, 20);
+  };
 })();
 </script>
 </body>

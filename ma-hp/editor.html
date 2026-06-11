@@ -893,6 +893,12 @@ function ensureMobileCss(html, fname) {
     const idx = html.lastIndexOf('<\/style>');
     if(idx !== -1) html = html.slice(0, idx) + needed + '\n' + html.slice(idx);
   }
+  // works.html: JS-based mobile slider height fix
+  if(fname === 'works.html' && !html.includes('_mobileSliderFixed')) {
+    const jsBlock = `<script>(function(){if(window.innerWidth>768)return;var _o=window.openWork;window.openWork=function(i){_o(i);setTimeout(function(){var h=Math.round(window.innerWidth*0.56)+'px';var sl=document.querySelector('.wm-slider');var ss=document.getElementById('wmSlides');if(sl){sl.style.height=h;sl.style.overflow='hidden';}if(ss){ss.style.height=h;ss.style.maxHeight=h;}document.querySelectorAll('.wm-slide,.wm-slide img').forEach(function(e){e.style.height=h;});},20);};window._mobileSliderFixed=true;})();<\/script>`;
+    const bodyClose = html.lastIndexOf('<\/body>');
+    if(bodyClose !== -1) html = html.slice(0, bodyClose) + jsBlock + '\n' + html.slice(bodyClose);
+  }
   // index.html: works cards click → works.html?id=N
   if(fname === 'index.html' && !html.includes("works.html?id=")) {
     const jsSnippet = `document.querySelectorAll('#works .wk').forEach(function(el,i){el.addEventListener('click',function(){location.href='works.html?id='+i;});});`;
