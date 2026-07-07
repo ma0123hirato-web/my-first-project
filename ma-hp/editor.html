@@ -1368,6 +1368,9 @@ function updateWorksPreview() {
     if(subEl && w.sub != null) subEl.textContent = w.sub;
     if(numEl && w.num != null) numEl.textContent = w.num;
 
+    // Show/hide card based on published status
+    card.style.display = (w.published === false) ? 'none' : '';
+
     // Update card thumbnail
     const thumb = card.querySelector('.wk-thumb');
     if(!thumb) return;
