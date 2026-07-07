@@ -285,6 +285,7 @@ index: [
   {id:'idx-ct-ttl',    lbl:'見出し',                 type:'textarea', sel:'#contact .contact-ttl'},
   {id:'idx-ct-ttl-fs', lbl:'見出し文字サイズ',       type:'fs',       sel:'#contact .contact-ttl'},
   {id:'idx-ct-copy',   lbl:'説明文',                 type:'textarea', sel:'#contact .contact-copy'},
+  {id:'idx-ct-phone',  lbl:'電話番号',               type:'input',    sel:'#contact .ci-tel'},
   {id:'idx-ct-addr',   lbl:'所在地',                 type:'input',    sel:'#contact .ci-item:last-child .ci-val'},
   {id:'idx-ft-addr',   lbl:'フッター住所',           type:'input',    sel:'footer .ft-addr-line'},
 ],
@@ -707,7 +708,12 @@ function attachTextHandler(f) {
   el.addEventListener('input', () => {
     if(!curDoc) return;
     const target = curDoc.querySelector(f.sel);
-    if(target) target.textContent = el.value;
+    if(target) {
+      target.textContent = el.value;
+      if(target.tagName === 'A' && (target.getAttribute('href')||'').startsWith('tel:')) {
+        target.setAttribute('href', 'tel:' + el.value.replace(/[^0-9\-]/g,''));
+      }
+    }
     schedulePreview();
   });
 }
@@ -907,6 +913,29 @@ function ensureMobileCss(html, fname) {
     const jsSnippet = `document.querySelectorAll('#works .wk').forEach(function(el,i){el.addEventListener('click',function(){location.href='works.html?id='+i;});});`;
     const closing = html.lastIndexOf('<\/script>');
     if(closing !== -1) html = html.slice(0, closing) + jsSnippet + '\n' + html.slice(closing);
+  }
+  // index.html: fix event cards with href="#"
+  if(fname === 'index.html' && !html.includes('_evCardFixed')) {
+    const evFix = `<script>(function(){document.querySelectorAll('#event .event-card').forEach(function(el,i){if(!el.getAttribute('href')||el.getAttribute('href')==='#'){el.addEventListener('click',function(e){e.preventDefault();location.href='event-detail-'+(i<9?'00'+(i+1):'0'+(i+1))+'.html';});}});window._evCardFixed=true;})();<\/script>`;
+    const bodyClose = html.lastIndexOf('<\/body>');
+    if(bodyClose !== -1) html = html.slice(0, bodyClose) + evFix + '\n' + html.slice(bodyClose);
+  }
+  // index.html: phone number CSS + HTML injection
+  if(fname === 'index.html' && !html.includes('a.ci-tel')) {
+    const css = 'a.ci-tel{color:inherit;text-decoration:none;}a.ci-tel:hover{text-decoration:underline;}';
+    const si = html.lastIndexOf('<\/style>');
+    if(si !== -1) html = html.slice(0, si) + css + '\n' + html.slice(si);
+  }
+  if(fname === 'index.html' && !html.includes('class="ci-tel"')) {
+    const phoneItem = '<div class="ci-item"><span class="ci-label">電話番号<\/span><a href="tel:029-357-4470" class="ci-val ci-tel">029-357-4470<\/a><\/div>';
+    const ci = html.indexOf('class="contact-info"');
+    if(ci !== -1) { const gt=html.indexOf('>',ci)+1; html=html.slice(0,gt)+'\n        '+phoneItem+html.slice(gt); }
+  }
+  // works.html: hide unpublished works on page load
+  if(fname === 'works.html' && !html.includes('_publishedFilter')) {
+    const pubFix = `<script>(function(){if(typeof works==='undefined')return;works.forEach(function(w,i){if(w.published===false){var el=document.querySelector('.wk[data-id="'+i+'"]');if(el)el.style.display='none';}});window._publishedFilter=true;})();<\/script>`;
+    const bodyClose = html.lastIndexOf('<\/body>');
+    if(bodyClose !== -1) html = html.slice(0, bodyClose) + pubFix + '\n' + html.slice(bodyClose);
   }
   return html;
 }
@@ -1120,7 +1149,7 @@ function renderWorksUI() {
   worksData.forEach((w,i) => {
     html += `<div class="wk-accordion" id="wkacc-${i}">
       <div class="wk-acc-hd" onclick="toggleWkAcc(${i})">
-        <span>${w.num || (i+1)}. ${w.ttl || '（タイトルなし）'}</span>
+        <span>${w.num || (i+1)}. ${w.ttl || '（タイトルなし）'}${w.published===false?' <span style="font-size:10px;background:#888;color:#fff;padding:1px 6px;border-radius:2px;">非公開</span>':''}</span>
         <span class="wk-acc-arrow" id="wkarrow-${i}">▶</span>
       </div>
       <div class="wk-acc-body" id="wkbody-${i}">
@@ -1150,6 +1179,19 @@ function renderWorksEntry(w, i) {
     </div>`).join('');
 
   return `
+    <div class="wk-field" style="background:#f5f0eb;padding:10px;border-radius:4px;margin-bottom:4px;">
+      <label style="font-weight:bold;margin-bottom:6px;display:block;">公開設定</label>
+      <div style="display:flex;gap:16px;">
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;">
+          <input type="radio" name="wkpub-${i}" value="1" ${w.published!==false?'checked':''} onchange="updWk(${i},'published',true)">
+          <span style="color:#5a3e2b;font-weight:bold;">公開</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:5px;cursor:pointer;font-size:13px;">
+          <input type="radio" name="wkpub-${i}" value="0" ${w.published===false?'checked':''} onchange="updWk(${i},'published',false)">
+          <span style="color:#888;">非公開（TOPページ・施工例ページから非表示）</span>
+        </label>
+      </div>
+    </div>
     <div class="wk-field">
       <label>タグ</label>
       <input type="text" value="${esc(w.tag||'')}" onchange="updWk(${i},'tag',this.value)">
@@ -1192,6 +1234,15 @@ function toggleWkAcc(i) {
 function updWk(i, key, val) {
   if(!worksData[i]) return;
   worksData[i][key] = val;
+  // Update accordion header badge for published status
+  if(key === 'published') {
+    const hd = document.querySelector(`#wkacc-${i} .wk-acc-hd span:first-child`);
+    if(hd) {
+      const w = worksData[i];
+      const badge = val === false ? ' <span style="font-size:10px;background:#888;color:#fff;padding:1px 6px;border-radius:2px;">非公開</span>' : '';
+      hd.innerHTML = (w.num || (i+1)) + '. ' + (w.ttl || '（タイトルなし）') + badge;
+    }
+  }
   scheduleWorksPreview();
 }
 
