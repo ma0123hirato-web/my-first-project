@@ -931,6 +931,12 @@ function ensureMobileCss(html, fname) {
     const ci = html.indexOf('class="contact-info"');
     if(ci !== -1) { const gt=html.indexOf('>',ci)+1; html=html.slice(0,gt)+'\n        '+phoneItem+html.slice(gt); }
   }
+  // works.html: fix card height alignment
+  if(fname === 'works.html' && !html.includes('.wk-info{flex:1}') && !html.includes('.wk-info{flex: 1')) {
+    const fixCss = '.wk{display:flex;flex-direction:column;}.wk-info{flex:1;}';
+    const si = html.lastIndexOf('<\/style>');
+    if(si !== -1) html = html.slice(0, si) + fixCss + '\n' + html.slice(si);
+  }
   // works.html: hide unpublished works on page load
   if(fname === 'works.html' && !html.includes('_publishedFilter')) {
     const pubFix = `<script>(function(){if(typeof works==='undefined')return;works.forEach(function(w,i){if(w.published===false){var el=document.querySelector('.wk[data-id="'+i+'"]');if(el)el.style.display='none';}});window._publishedFilter=true;})();<\/script>`;
