@@ -175,6 +175,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(
       <div class="form-group"><label>電話番号</label><input id="f-phone" type="tel" placeholder="029-000-0000"></div>
       <div class="form-group"><label>メールアドレス</label><input id="f-email" type="email" placeholder="example@email.com"></div>
       <div class="form-group full"><label>住所 *</label><input id="f-address" placeholder="〒310-0913 茨城県水戸市見川町2462-2"></div>
+      <div class="form-group full"><label>GoogleマップURL（住所が合わない場合に貼り付け）</label><input id="f-mapurl" placeholder="https://maps.google.com/..."></div>
       <div class="form-group"><label>工事種別</label>
         <select id="f-type">
           <option value="新築">新築</option>
@@ -211,6 +212,7 @@ function save() { localStorage.setItem(STORE, JSON.stringify(clients)); }
 
 // ── Inspection utils ──────────────────────────────────────────────────────────
 const INSP_OFFSETS = [
+  {label:'半年点検',  months:6},
   {label:'1年点検',  months:12},
   {label:'2年点検',  months:24},
   {label:'5年点検',  months:60},
@@ -319,7 +321,7 @@ function renderDetail() {
   const c = clients.find(x=>x.id===selectedId);
   if(!c) { renderDash(); return; }
 
-  const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.address||'');
+  const mapUrl = c.mapUrl || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.address||''));
   const routeUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(c.address||'');
 
   const insps = (c.inspections||[]).map((insp,i) => {
@@ -513,6 +515,7 @@ function openModal(id) {
   document.getElementById('f-phone').value   = c ? c.phone||'' : '';
   document.getElementById('f-email').value   = c ? c.email||'' : '';
   document.getElementById('f-address').value = c ? c.address||'' : '';
+  document.getElementById('f-mapurl').value  = c ? c.mapUrl||'' : '';
   document.getElementById('f-type').value    = c ? c.type||'新築' : '新築';
   document.getElementById('f-handover').value= c ? c.handoverDate||'' : '';
   document.getElementById('f-staff').value   = c ? c.staff||'' : '';
@@ -543,6 +546,7 @@ function saveClient() {
     c.phone   = document.getElementById('f-phone').value.trim();
     c.email   = document.getElementById('f-email').value.trim();
     c.address = document.getElementById('f-address').value.trim();
+    c.mapUrl  = document.getElementById('f-mapurl').value.trim();
     c.type    = document.getElementById('f-type').value;
     c.handoverDate = handoverDate;
     c.staff   = document.getElementById('f-staff').value.trim();
@@ -560,6 +564,7 @@ function saveClient() {
       phone:   document.getElementById('f-phone').value.trim(),
       email:   document.getElementById('f-email').value.trim(),
       address: document.getElementById('f-address').value.trim(),
+      mapUrl:  document.getElementById('f-mapurl').value.trim(),
       type:    document.getElementById('f-type').value,
       handoverDate,
       staff:   document.getElementById('f-staff').value.trim(),
@@ -625,6 +630,18 @@ function showToast(msg,err=false) {
 
 // ── Escape ────────────────────────────────────────────────────────────────────
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Migration: add 半年点検 to existing clients ──────────────────────────────
+(function migrate() {
+  let changed = false;
+  clients.forEach(c => {
+    if(!c.inspections || c.inspections[0]?.label === '半年点検') return;
+    const halfYear = {label:'半年点検', date: c.handoverDate ? addMonths(c.handoverDate, 6) : '', done:false, doneDate:'', memo:''};
+    c.inspections.unshift(halfYear);
+    changed = true;
+  });
+  if(changed) save();
+})();
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 showTab('dash');
