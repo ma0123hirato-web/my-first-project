@@ -241,6 +241,17 @@ function inspLabel(status) {
   return {done:'完了',due:'期限超過',near:'もうすぐ',future:'予定'}[status];
 }
 
+function gcalUrl(insp, c) {
+  if(!insp.date) return null;
+  const d = insp.date.replace(/-/g,'');
+  const next = new Date(insp.date); next.setDate(next.getDate()+1);
+  const d2 = next.toISOString().slice(0,10).replace(/-/g,'');
+  const text = encodeURIComponent('【MA】'+c.name+'様 '+insp.label);
+  const detail = encodeURIComponent('お客様: '+c.name+'\n電話: '+(c.phone||'—')+'\n住所: '+(c.address||'—')+'\n担当: '+(c.staff||'—')+(insp.memo?'\n\nメモ: '+insp.memo:''));
+  const loc = encodeURIComponent(c.address||'');
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+text+'&dates='+d+'/'+d2+'&details='+detail+'&location='+loc;
+}
+
 function nextInsp(client) {
   if(!client.inspections) return null;
   return client.inspections.find(i => !i.done && i.date);
@@ -331,6 +342,7 @@ function renderDetail() {
           value="${esc(insp.memo||'')}" placeholder="メモ"
           onchange="updInspMemo('${c.id}',${i},this.value)">
       </td>
+      <td>${!insp.done && insp.date ? `<a href="${gcalUrl(insp,c)}" target="_blank" title="Googleカレンダーに追加" style="display:inline-flex;align-items:center;gap:3px;background:#4285f4;color:#fff;border-radius:3px;padding:3px 8px;font-size:10px;text-decoration:none;white-space:nowrap;">📅 追加</a>` : ''}</td>
     </tr>`;
   }).join('');
 
@@ -382,7 +394,7 @@ function renderDetail() {
     <div style="overflow-x:auto;margin-bottom:20px;">
       <table class="insp-table">
         <thead><tr>
-          <th></th><th>点検</th><th>予定日</th><th>ステータス</th><th>実施日</th><th>メモ</th>
+          <th></th><th>点検</th><th>予定日</th><th>ステータス</th><th>実施日</th><th>メモ</th><th></th>
         </tr></thead>
         <tbody>${insps}</tbody>
       </table>
