@@ -593,6 +593,7 @@ async function loadTab(key) {
     fsStore = {};
     renderFields(key);
     updatePreview();
+    await checkPhotoRestore(fname);
   } catch(e) {
     showToast('ファイルを読み込めませんでした: ' + e.message, true);
   }
@@ -923,10 +924,139 @@ async function saveFile() {
     const writable = await fh.createWritable();
     await writable.write(html);
     await writable.close();
+    await backupHtml(fname, html);
     showToast('保存しました ✓');
   } catch(e) {
     showToast('保存に失敗: ' + e.message, true);
   }
+}
+
+// ── Photo Backup / Restore (IndexedDB) ───────────────────────────────────────
+function openBackupDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('ma-editor-photos', 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore('files', {keyPath:'name'});
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function backupHtml(fname, html) {
+  try {
+    const db = await openBackupDB();
+    const tx = db.transaction('files', 'readwrite');
+    tx.objectStore('files').put({name:fname, html, ts:Date.now()});
+    await new Promise((res,rej) => { tx.oncomplete=res; tx.onerror=rej; });
+  } catch(e) { console.warn('バックアップ失敗:', e); }
+}
+async function getHtmlBackup(fname) {
+  try {
+    const db = await openBackupDB();
+    const tx = db.transaction('files', 'readonly');
+    const req = tx.objectStore('files').get(fname);
+    return await new Promise((res,rej) => { req.onsuccess=e=>res(e.target.result); req.onerror=rej; });
+  } catch(e) { return null; }
+}
+function countBase64Imgs(html) { return (html.match(/data:image\//g)||[]).length; }
+
+async function checkPhotoRestore(fname) {
+  const backup = await getHtmlBackup(fname);
+  if(!backup) return;
+  const curCount = countBase64Imgs(curRaw);
+  const bkCount  = countBase64Imgs(backup.html);
+  if(bkCount > curCount) showRestoreBar(backup, bkCount, curCount);
+}
+
+function showRestoreBar(backup, bkCount, curCount) {
+  let bar = document.getElementById('restore-bar');
+  if(!bar) { bar=document.createElement('div'); bar.id='restore-bar'; document.body.prepend(bar); }
+  Object.assign(bar.style, {
+    position:'fixed',top:'0',left:'0',right:'0',background:'#e67e22',
+    color:'#fff',padding:'10px 16px',zIndex:'9999',display:'flex',
+    alignItems:'center',gap:'12px',fontSize:'13px',boxSizing:'border-box'
+  });
+  bar.innerHTML = `<span>📸 バックアップに写真が${bkCount}枚あります（現在: ${curCount}枚）。復元しますか？</span>
+    <button onclick="doRestorePhotos()" style="background:#fff;color:#e67e22;border:none;padding:4px 14px;border-radius:4px;cursor:pointer;font-weight:bold;">復元する</button>
+    <button onclick="document.getElementById('restore-bar').remove()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.5);padding:4px 12px;border-radius:4px;cursor:pointer;">閉じる</button>`;
+  bar._backup = backup;
+}
+
+async function doRestorePhotos() {
+  const bar = document.getElementById('restore-bar');
+  if(!bar || !bar._backup) return;
+  const backup = bar._backup;
+  const parser = new DOMParser();
+  const bDoc = parser.parseFromString(backup.html, 'text/html');
+  let restored = 0;
+
+  // Restore image fields from all tabs
+  for(const tabKey of Object.keys(FIELDS)) {
+    for(const f of FIELDS[tabKey]) {
+      if(f.type !== 'image') continue;
+      const bEl = bDoc.querySelector(f.sel);
+      const cEl = curDoc ? curDoc.querySelector(f.sel) : null;
+      if(!bEl || !cEl) continue;
+      if(f.prop === 'bg') {
+        const bg = bEl.style.backgroundImage;
+        if(bg && bg.includes('data:image/')) {
+          cEl.style.backgroundImage = bg;
+          cEl.style.backgroundSize = bEl.style.backgroundSize || 'cover';
+          cEl.style.backgroundPosition = bEl.style.backgroundPosition || 'center center';
+          cEl.style.backgroundRepeat = 'no-repeat';
+          restored++;
+        }
+      } else {
+        const bImg = bEl.tagName==='IMG' ? bEl : bEl.querySelector('img');
+        const cImg = cEl.tagName==='IMG' ? cEl : cEl.querySelector('img');
+        if(bImg && bImg.src && bImg.src.startsWith('data:image/')) {
+          if(cImg) {
+            cImg.src = bImg.src;
+            if(bImg.style.objectFit) cImg.style.objectFit = bImg.style.objectFit;
+            if(bImg.style.objectPosition) cImg.style.objectPosition = bImg.style.objectPosition;
+          } else {
+            const img = curDoc.createElement('img');
+            img.src = bImg.src; img.style.cssText = bImg.style.cssText;
+            cEl.appendChild(img);
+          }
+          Array.from(cEl.children).forEach(ch => { const ci=cEl.tagName==='IMG'?cEl:cEl.querySelector('img'); if(ch!==ci) ch.style.display='none'; });
+          restored++;
+        }
+      }
+    }
+  }
+
+  // Restore works photos in JS array (for works.html)
+  if(backup.name === 'works.html' && worksData) {
+    const bScripts = bDoc.querySelectorAll('script');
+    let bWorks = null;
+    for(const s of bScripts) {
+      const txt = s.textContent;
+      const idx = txt.indexOf('const works = [');
+      if(idx < 0) continue;
+      const ai = txt.indexOf('[', idx);
+      let depth=0, i=ai;
+      while(i<txt.length) {
+        if(txt[i]==='[') depth++;
+        else if(txt[i]===']') { depth--; if(!depth) break; }
+        i++;
+      }
+      try { bWorks = (new Function('return ' + txt.substring(ai, i+1)))(); } catch(e) {}
+      break;
+    }
+    if(bWorks) {
+      bWorks.forEach((bw, i) => {
+        if(!worksData[i]) return;
+        if(bw.photos && bw.photos.length) {
+          const hasPhotos = worksData[i].photos && worksData[i].photos.some(p => p.src && p.src.startsWith('data:'));
+          if(!hasPhotos) { worksData[i].photos = bw.photos; restored += bw.photos.length; }
+        }
+      });
+      updateWorksPreview();
+    }
+  }
+
+  bar.remove();
+  updatePreview();
+  showToast(`写真を${restored}枚復元しました ✓`);
 }
 
 // ── Toast ─────────────────────────────────────────────────────────────────────
@@ -955,6 +1085,7 @@ async function loadWorks() {
     worksImgs = {};
     renderWorksUI();
     updatePreview();
+    await checkPhotoRestore('works.html');
   } catch(e) {
     container.innerHTML = `<div class="field"><p class="field-note">works.htmlを読み込めませんでした: ${e.message}</p></div>`;
   }
@@ -1213,6 +1344,7 @@ async function saveWorks() {
     const writable = await fh.createWritable();
     await writable.write(html);
     await writable.close();
+    await backupHtml('works.html', html);
     showToast('保存しました ✓');
   } catch(e) {
     showToast('保存に失敗: ' + e.message, true);
