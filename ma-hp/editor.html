@@ -427,7 +427,8 @@ events: [
 
 ev1: [
   {sec:'ヒーロー'},
-  {id:'ev1-vis',    lbl:'ページ表示/非表示', type:'toggle',   sel:'.ev-hero'},
+  {id:'ev1-vis',      lbl:'ページ表示/非表示', type:'toggle', sel:'.ev-hero'},
+  {id:'ev1-finished', lbl:'終了フラグ',       type:'toggle', sels:['.done-badge','.done-notice'], labelOn:'終了済み', labelOff:'開催中'},
   {id:'ev1-ttl',    lbl:'タイトル',           type:'input',    sel:'.ev-hero-ttl'},
   {id:'ev1-date',   lbl:'日時・場所',         type:'input',    sel:'.ev-hero-date'},
   {id:'ev1-hero-bg',lbl:'ヒーロー画像',       type:'image',    sel:'.ev-hero-img', prop:'bg'},
@@ -458,7 +459,8 @@ ns3: newsDetailFields('ns3'),
 function evDetailFields(key) {
   return [
     {sec:'ヒーロー'},
-    {id:`${key}-vis`,    lbl:'ページ表示/非表示', type:'toggle',   sel:'.ev-hero'},
+    {id:`${key}-vis`,      lbl:'ページ表示/非表示', type:'toggle', sel:'.ev-hero'},
+    {id:`${key}-finished`, lbl:'終了フラグ',       type:'toggle', sels:['.done-badge','.done-notice'], labelOn:'終了済み', labelOff:'開催中'},
     {id:`${key}-ttl`,    lbl:'タイトル',           type:'input',    sel:'.ev-hero-ttl'},
     {id:`${key}-date`,   lbl:'日時・場所',         type:'input',    sel:'.ev-hero-date'},
     {id:`${key}-hero-bg`,lbl:'ヒーロー画像',       type:'image',    sel:'.ev-hero-img', prop:'bg'},
@@ -666,10 +668,12 @@ function renderField(f) {
   }
   if(f.type === 'toggle') {
     const visible = getVisibility(f);
+    const onLbl  = f.labelOn  || '表示中';
+    const offLbl = f.labelOff || '非表示';
     return `<div class="field"><div class="field-label">${f.lbl}</div>
       <div class="toggle-row">
         <label class="toggle"><input type="checkbox" id="${f.id}" ${visible?'checked':''}><span class="toggle-slider"></span></label>
-        <span class="toggle-label" id="${f.id}-lbl">${visible?'表示中':'非表示'}</span>
+        <span class="toggle-label" id="${f.id}-lbl">${visible?onLbl:offLbl}</span>
       </div></div>`;
   }
   return '';
@@ -696,7 +700,8 @@ function getFontSize(f) {
 
 function getVisibility(f) {
   if(!curDoc) return true;
-  const el = curDoc.querySelector(f.sel);
+  const sel = (f.sels && f.sels[0]) || f.sel;
+  const el = curDoc.querySelector(sel);
   if(!el) return true;
   return el.style.display !== 'none';
 }
@@ -723,9 +728,14 @@ function attachToggleHandler(f) {
   if(!el) return;
   el.addEventListener('change', () => {
     if(!curDoc) return;
-    const target = curDoc.querySelector(f.sel);
-    if(target) target.style.display = el.checked ? '' : 'none';
-    document.getElementById(f.id+'-lbl').textContent = el.checked ? '表示中' : '非表示';
+    const selectors = f.sels || [f.sel];
+    selectors.forEach(sel => {
+      const target = curDoc.querySelector(sel);
+      if(target) target.style.display = el.checked ? '' : 'none';
+    });
+    const onLbl  = f.labelOn  || '表示中';
+    const offLbl = f.labelOff || '非表示';
+    document.getElementById(f.id+'-lbl').textContent = el.checked ? onLbl : offLbl;
     schedulePreview();
   });
 }
