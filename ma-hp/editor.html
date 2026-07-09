@@ -956,19 +956,29 @@ function ensureMobileCss(html, fname) {
   }
   // event-detail-*.html: replace Formspree form with Timerex button
   if(/^event-detail-\d+\.html$/.test(fname)) {
-    if(html.includes('formspree')) {
-      html = html.replace(/<section[^>]*class="ev-form-section"[\s\S]*?<\/section>\s*/g, '');
-      html = html.replace(/<form[^>]*formspree[\s\S]*?<\/form>\s*/g, '');
+    // Remove ev-form-section block (formspree form) — try section and div variants
+    if(html.includes('ev-form-section') || html.includes('formspree')) {
+      ['section','div'].forEach(function(tag) {
+        var marker = '<' + tag + ' class="ev-form-section"';
+        var si = html.indexOf(marker);
+        if(si !== -1) {
+          var closeTag = '<\/' + tag + '>';
+          var ei = html.indexOf(closeTag, si);
+          if(ei !== -1) html = html.slice(0, si) + html.slice(ei + closeTag.length).replace(/^\s*\n/, '');
+        }
+      });
+      // Also remove any remaining bare <form> elements
+      html = html.replace(/<form[\s\S]*?<\/form>\s*/g, '');
     }
     if(!html.includes('btn-reserve')) {
-      const css = '.timerex-wrap{margin:2.5rem 0 3rem;text-align:center;}.btn-reserve{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.72rem;letter-spacing:0.22em;font-family:"Noto Sans JP",sans-serif;transition:background 0.3s;}.btn-reserve:hover{background:var(--mocha-l);}';
-      const si = html.lastIndexOf('<\/style>');
-      if(si !== -1) html = html.slice(0, si) + css + '\n' + html.slice(si);
+      var css001 = '.timerex-wrap{margin:2.5rem 0 3rem;text-align:center;}.btn-reserve{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.72rem;letter-spacing:0.22em;font-family:"Noto Sans JP",sans-serif;transition:background 0.3s;}.btn-reserve:hover{background:var(--mocha-l);}';
+      var si001 = html.lastIndexOf('<\/style>');
+      if(si001 !== -1) html = html.slice(0, si001) + css001 + '\n' + html.slice(si001);
     }
     if(!html.includes('timerex-wrap')) {
-      const timerexBtn = '<div class="timerex-wrap">\n    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →<\/a>\n  <\/div>';
-      const backLink = html.indexOf('class="back-link"');
-      if(backLink !== -1) { const dl=html.lastIndexOf('<',backLink); html=html.slice(0,dl)+timerexBtn+'\n'+html.slice(dl); }
+      var timerexBtn = '<div class="timerex-wrap">\n    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →<\/a>\n  <\/div>';
+      var blIdx = html.indexOf('class="back-link"');
+      if(blIdx !== -1) { var dlIdx=html.lastIndexOf('<',blIdx); html=html.slice(0,dlIdx)+timerexBtn+'\n'+html.slice(dlIdx); }
     }
   }
   // works.html: fix card height alignment
