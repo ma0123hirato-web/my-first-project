@@ -931,6 +931,10 @@ function ensureMobileCss(html, fname) {
     const bodyClose = html.lastIndexOf('<\/body>');
     if(bodyClose !== -1) html = html.slice(0, bodyClose) + evFix + '\n' + html.slice(bodyClose);
   }
+  // index.html: remove duplicate phone entries
+  if(fname === 'index.html' && (html.match(/class="ci-tel"/g)||[]).length > 1) {
+    html = html.replace(/<div class="ci-item"><span class="ci-label">電話番号<\/span><a href="tel:[^"]*" class="ci-val ci-tel">[^<]*<\/a><\/div>\s*/,'');
+  }
   // index.html: phone number CSS + HTML injection
   if(fname === 'index.html' && !html.includes('a.ci-tel')) {
     const css = 'a.ci-tel{color:inherit;text-decoration:none;}a.ci-tel:hover{text-decoration:underline;}';
