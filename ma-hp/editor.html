@@ -1020,6 +1020,22 @@ async function saveFile() {
   if(!curDoc) return;
   const fname = FM[curTab];
   if(!fname) return;
+  // nini.html: embed localStorage photos into curDoc before serializing
+  // (curDoc is a DOMParser document — JS doesn't run, so localStorage photos must be injected manually)
+  if(fname === 'nini.html') {
+    curDoc.querySelectorAll('.plan-photo-slot[data-key]').forEach(function(slot) {
+      var key = slot.dataset.key;
+      var data = localStorage.getItem('nini_photo_' + key);
+      if(data) {
+        var img = slot.querySelector('img');
+        if(img) {
+          img.src = data;
+          img.style.cssText = 'position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;max-width:none;max-height:none;';
+          slot.classList.add('has-photo');
+        }
+      }
+    });
+  }
   try {
     const html = ensureMobileCss(serializeDoc(curDoc), fname);
     const fh = await dirHandle.getFileHandle(fname, {create:false});
