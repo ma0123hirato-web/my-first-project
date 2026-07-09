@@ -975,7 +975,7 @@ function ensureMobileCss(html, fname) {
       var si001 = html.lastIndexOf('<\/style>');
       if(si001 !== -1) html = html.slice(0, si001) + css001 + '\n' + html.slice(si001);
     }
-    if(!html.includes('timerex-wrap')) {
+    if(!html.includes('timerex.net')) {
       var timerexBtn = '<div class="timerex-wrap">\n    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →<\/a>\n  <\/div>';
       var insAt = -1;
       var blIdx2 = html.indexOf('class="back-link"');
