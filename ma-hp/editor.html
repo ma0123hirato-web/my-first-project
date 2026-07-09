@@ -1024,24 +1024,36 @@ async function checkPhotoRestore(fname) {
   if(bkCount > curCount) showRestoreBar(backup, bkCount, curCount);
 }
 
+let _restoreBackup = null;
+
 function showRestoreBar(backup, bkCount, curCount) {
+  _restoreBackup = backup;
   let bar = document.getElementById('restore-bar');
   if(!bar) { bar=document.createElement('div'); bar.id='restore-bar'; document.body.prepend(bar); }
   Object.assign(bar.style, {
     position:'fixed',top:'0',left:'0',right:'0',background:'#e67e22',
-    color:'#fff',padding:'10px 16px',zIndex:'9999',display:'flex',
-    alignItems:'center',gap:'12px',fontSize:'13px',boxSizing:'border-box'
+    color:'#fff',padding:'10px 16px',zIndex:'99999',display:'flex',
+    alignItems:'center',gap:'12px',fontSize:'13px',boxSizing:'border-box',
+    pointerEvents:'all'
   });
-  bar.innerHTML = `<span>📸 バックアップに写真が${bkCount}枚あります（現在: ${curCount}枚）。復元しますか？</span>
-    <button onclick="doRestorePhotos()" style="background:#fff;color:#e67e22;border:none;padding:4px 14px;border-radius:4px;cursor:pointer;font-weight:bold;">復元する</button>
-    <button onclick="document.getElementById('restore-bar').remove()" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.5);padding:4px 12px;border-radius:4px;cursor:pointer;">閉じる</button>`;
-  bar._backup = backup;
+  bar.innerHTML = '';
+  const msg = document.createElement('span');
+  msg.textContent = '📸 バックアップに写真が' + bkCount + '枚あります（現在: ' + curCount + '枚）。復元しますか？';
+  const btnOk = document.createElement('button');
+  btnOk.textContent = '復元する';
+  Object.assign(btnOk.style, {background:'#fff',color:'#e67e22',border:'none',padding:'4px 14px',borderRadius:'4px',cursor:'pointer',fontWeight:'bold'});
+  btnOk.addEventListener('click', doRestorePhotos);
+  const btnClose = document.createElement('button');
+  btnClose.textContent = '閉じる';
+  Object.assign(btnClose.style, {background:'transparent',color:'#fff',border:'1px solid rgba(255,255,255,0.5)',padding:'4px 12px',borderRadius:'4px',cursor:'pointer'});
+  btnClose.addEventListener('click', () => bar.remove());
+  bar.append(msg, btnOk, btnClose);
 }
 
 async function doRestorePhotos() {
+  if(!_restoreBackup) return;
+  const backup = _restoreBackup;
   const bar = document.getElementById('restore-bar');
-  if(!bar || !bar._backup) return;
-  const backup = bar._backup;
   const parser = new DOMParser();
   const bDoc = parser.parseFromString(backup.html, 'text/html');
   let restored = 0;
