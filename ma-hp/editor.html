@@ -946,6 +946,14 @@ function ensureMobileCss(html, fname) {
     if(ci !== -1) { const gt=cleaned.indexOf('>',ci)+1; html=cleaned.slice(0,gt)+'\n        '+phoneDiv+cleaned.slice(gt); }
     else { html = cleaned; }
   }
+  // index.html: fix event card issues — done-txt gray text and missing ev-card-badge span
+  if(fname === 'index.html') {
+    html = html.replace(/(<div class="event-card-body">)([\s\S]*?)(<\/div>)/g, function(m, open, content, close) {
+      content = content.replace(/ done-txt/g, '');
+      if(!content.includes('ev-card-badge')) content += '<span class="ev-card-badge"></span>';
+      return open + content + close;
+    });
+  }
   // works.html: fix card height alignment
   if(fname === 'works.html' && !html.includes('.wk-info{flex:1}') && !html.includes('.wk-info{flex: 1')) {
     const fixCss = '.wk{display:flex;flex-direction:column;}.wk-info{flex:1;}';
