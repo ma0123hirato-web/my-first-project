@@ -977,8 +977,13 @@ function ensureMobileCss(html, fname) {
     }
     if(!html.includes('timerex-wrap')) {
       var timerexBtn = '<div class="timerex-wrap">\n    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →<\/a>\n  <\/div>';
-      var blIdx = html.indexOf('class="back-link"');
-      if(blIdx !== -1) { var dlIdx=html.lastIndexOf('<',blIdx); html=html.slice(0,dlIdx)+timerexBtn+'\n'+html.slice(dlIdx); }
+      var insAt = -1;
+      var blIdx2 = html.indexOf('class="back-link"');
+      if(blIdx2 !== -1) { insAt = html.lastIndexOf('<', blIdx2); }
+      if(insAt === -1) { var lcIdx = html.indexOf('<!-- LINE CTA -->'); if(lcIdx !== -1) insAt = lcIdx; }
+      if(insAt === -1) { var ftIdx = html.indexOf('<footer'); if(ftIdx !== -1) insAt = ftIdx; }
+      if(insAt === -1) { var bdIdx = html.lastIndexOf('<\/body>'); if(bdIdx !== -1) insAt = bdIdx; }
+      if(insAt !== -1) html = html.slice(0, insAt) + timerexBtn + '\n' + html.slice(insAt);
     }
   }
   // works.html: fix card height alignment
