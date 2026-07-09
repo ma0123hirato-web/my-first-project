@@ -483,7 +483,7 @@ function newsDetailFields(key) {
     {id:`${key}-vis`,    lbl:'ページ表示/非表示', type:'toggle',   sel:'.news-hero'},
     {id:`${key}-date`,   lbl:'日付',               type:'input',    sel:'.news-date'},
     {id:`${key}-tag`,    lbl:'タグ',               type:'input',    sel:'.news-tag'},
-    {id:`${key}-ttl`,    lbl:'タイトル',           type:'textarea', sel:'.news-ttl'},
+    {id:`${key}-ttl`,    lbl:'タイトル',           type:'textarea', sel:'.news-ttl', also:['.breadcrumb span:last-child']},
     {id:`${key}-ttl-fs`, lbl:'タイトル文字サイズ', type:'fs',       sel:'.news-ttl'},
     {id:`${key}-hero-bg`,lbl:'ヒーロー画像',       type:'image',    sel:'.news-hero-img'},
   ];
@@ -719,6 +719,7 @@ function attachTextHandler(f) {
         target.setAttribute('href', 'tel:' + el.value.replace(/[^0-9\-]/g,''));
       }
     }
+    if(f.also) f.also.forEach(s => { const t2 = curDoc.querySelector(s); if(t2) t2.textContent = el.value; });
     schedulePreview();
   });
 }
@@ -952,6 +953,18 @@ function ensureMobileCss(html, fname) {
     const pubFix = `<script>(function(){if(typeof works==='undefined')return;works.forEach(function(w,i){if(w.published===false){var el=document.querySelector('.wk[data-id="'+i+'"]');if(el)el.style.display='none';}});window._publishedFilter=true;})();<\/script>`;
     const bodyClose = html.lastIndexOf('<\/body>');
     if(bodyClose !== -1) html = html.slice(0, bodyClose) + pubFix + '\n' + html.slice(bodyClose);
+  }
+  // index.html: fix footer overlap on mobile
+  if(fname === 'index.html' && !html.includes('ft-inner{flex-direction')) {
+    const css = '@media(max-width:768px){.ft-inner{flex-direction:column;gap:1.5rem;}.ft-nav{flex-wrap:wrap;gap:0.8rem 1rem;}}';
+    const si = html.lastIndexOf('<\/style>');
+    if(si !== -1) html = html.slice(0, si) + css + '\n' + html.slice(si);
+  }
+  // event-detail: hide placeholder span text when photo is loaded
+  if(fname && fname.startsWith('event-detail-') && !html.includes('.ev-photo img~span')) {
+    const css = '.ev-photo img~span{display:none;}.ev-photo img+span{display:none;}';
+    const si = html.lastIndexOf('<\/style>');
+    if(si !== -1) html = html.slice(0, si) + css + '\n' + html.slice(si);
   }
   return html;
 }

@@ -395,7 +395,9 @@ function applyImgStyles(img){
   img.style.maxHeight = 'none';
 }
 
+const _editMode = new URLSearchParams(location.search).has('edit');
 function triggerUpload(slot){
+  if(!_editMode) return;
   slot.querySelector('input[type=file]').click();
 }
 
@@ -434,6 +436,11 @@ function removePhoto(e, btn){
   if(key){ try { localStorage.removeItem('nini_photo_' + key); } catch(err){} }
   const hint = slot.querySelector('.ph-hint');
   if(hint) hint.textContent = '写真をアップ';
+}
+
+// Hide upload UI for non-staff visitors
+if(!_editMode) {
+  document.querySelectorAll('.ph-overlay').forEach(el => el.style.display = 'none');
 }
 
 // Restore from localStorage on load
