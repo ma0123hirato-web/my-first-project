@@ -992,15 +992,14 @@ function ensureMobileCss(html, fname) {
     const si = html.lastIndexOf('<\/style>');
     if(si !== -1) html = html.slice(0, si) + fixCss + '\n' + html.slice(si);
   }
-  // works.html: sync data-cat from works[] tag AND hide unpublished
+  // works.html: sync data-cat + hide unpublished + replace filter to respect published status
   if(fname === 'works.html') {
-    // Remove old _publishedFilter script (replaced by _worksSync below)
+    // Remove old scripts (replaced by _worksSync2 below)
     html = html.replace(/<script>[^<]*_publishedFilter[\s\S]*?<\/script>\s*/g, '');
-    if(!html.includes('_worksSync')) {
-      const syncFix = `<script>(function(){if(typeof works==='undefined')return;var T={'新築':'shinchiku','リフォーム':'reform','リノベーション':'reform','ni-ni':'nini','nini':'nini'};works.forEach(function(w,i){var el=document.querySelector('.wk[data-id="'+i+'"]');if(!el)return;if(w.published===false){el.style.display='none';return;}var cat=T[w.tag]||'shinchiku';el.dataset.cat=cat;});window._worksSync=true;})();<\/script>`;
-      const bodyClose = html.lastIndexOf('<\/body>');
-      if(bodyClose !== -1) html = html.slice(0, bodyClose) + syncFix + '\n' + html.slice(bodyClose);
-    }
+    html = html.replace(/<script>[^<]*_worksSync[\s\S]*?<\/script>\s*/g, '');
+    const syncFix = `<script>(function(){if(typeof works==='undefined')return;var T={'新築':'shinchiku','リフォーム':'reform','リノベーション':'reform','ni-ni':'nini','nini':'nini'};works.forEach(function(w,i){var el=document.querySelector('.wk[data-id="'+i+'"]');if(!el)return;if(w.published===false){el.style.display='none';el.dataset.published='false';return;}el.dataset.cat=T[w.tag]||'shinchiku';});document.querySelectorAll('.ftab').forEach(function(tab){var c=tab.cloneNode(true);tab.parentNode.replaceChild(c,tab);c.addEventListener('click',function(){document.querySelectorAll('.ftab').forEach(function(t){t.classList.remove('active');});c.classList.add('active');var f=c.dataset.filter;document.querySelectorAll('.wk').forEach(function(wk){if(wk.dataset.published==='false'){wk.style.display='none';return;}wk.style.display=(f==='all'||wk.dataset.cat===f)?'':'none';});});});window._worksSync2=true;})();<\/script>`;
+    const bodyClose = html.lastIndexOf('<\/body>');
+    if(bodyClose !== -1) html = html.slice(0, bodyClose) + syncFix + '\n' + html.slice(bodyClose);
   }
   // index.html: fix footer overlap on mobile
   if(fname === 'index.html' && !html.includes('ft-inner{flex-direction')) {
