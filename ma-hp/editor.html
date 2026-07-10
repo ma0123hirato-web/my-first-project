@@ -992,11 +992,15 @@ function ensureMobileCss(html, fname) {
     const si = html.lastIndexOf('<\/style>');
     if(si !== -1) html = html.slice(0, si) + fixCss + '\n' + html.slice(si);
   }
-  // works.html: hide unpublished works on page load
-  if(fname === 'works.html' && !html.includes('_publishedFilter')) {
-    const pubFix = `<script>(function(){if(typeof works==='undefined')return;works.forEach(function(w,i){if(w.published===false){var el=document.querySelector('.wk[data-id="'+i+'"]');if(el)el.style.display='none';}});window._publishedFilter=true;})();<\/script>`;
-    const bodyClose = html.lastIndexOf('<\/body>');
-    if(bodyClose !== -1) html = html.slice(0, bodyClose) + pubFix + '\n' + html.slice(bodyClose);
+  // works.html: sync data-cat from works[] tag AND hide unpublished
+  if(fname === 'works.html') {
+    // Remove old _publishedFilter script (replaced by _worksSync below)
+    html = html.replace(/<script>[^<]*_publishedFilter[\s\S]*?<\/script>\s*/g, '');
+    if(!html.includes('_worksSync')) {
+      const syncFix = `<script>(function(){if(typeof works==='undefined')return;var T={'新築':'shinchiku','リフォーム':'reform','リノベーション':'reform','ni-ni':'nini','nini':'nini'};works.forEach(function(w,i){var el=document.querySelector('.wk[data-id="'+i+'"]');if(!el)return;if(w.published===false){el.style.display='none';return;}var cat=T[w.tag]||'shinchiku';el.dataset.cat=cat;});window._worksSync=true;})();<\/script>`;
+      const bodyClose = html.lastIndexOf('<\/body>');
+      if(bodyClose !== -1) html = html.slice(0, bodyClose) + syncFix + '\n' + html.slice(bodyClose);
+    }
   }
   // index.html: fix footer overlap on mobile
   if(fname === 'index.html' && !html.includes('ft-inner{flex-direction')) {
