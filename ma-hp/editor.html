@@ -347,8 +347,8 @@ service: [
   {id:'svc-nc-p3t',   lbl:'ポイント③タイトル', type:'input',    sel:'#shinchiku .svc-point:nth-child(3) .sp-ttl'},
   {id:'svc-nc-p3d',   lbl:'ポイント③説明',     type:'textarea', sel:'#shinchiku .svc-point:nth-child(3) .sp-desc'},
   {sec:'新築 画像'},
-  {id:'svc-nc-img',   lbl:'メイン画像',   type:'image', sel:'#shinchiku .svc-img', prop:'bg'},
-  {id:'svc-nc-imgs',  lbl:'サブ画像',     type:'image', sel:'#shinchiku .svc-img-small', prop:'bg'},
+  {id:'svc-nc-img',   lbl:'メイン画像',   type:'image', sel:'#shinchiku .svc-img', prop:'bg', bgSize:'contain'},
+  {id:'svc-nc-imgs',  lbl:'サブ画像',     type:'image', sel:'#shinchiku .svc-img-small', prop:'bg', bgSize:'contain'},
   {sec:'リフォーム テキスト'},
   {id:'svc-rf-ttl',   lbl:'タイトル', type:'input',    sel:'#reform .svc-ttl'},
   {id:'svc-rf-lead',  lbl:'リード文', type:'textarea', sel:'#reform .svc-lead'},
@@ -359,8 +359,8 @@ service: [
   {id:'svc-rf-p3t',   lbl:'ポイント③タイトル', type:'input',    sel:'#reform .svc-point:nth-child(3) .sp-ttl'},
   {id:'svc-rf-p3d',   lbl:'ポイント③説明',     type:'textarea', sel:'#reform .svc-point:nth-child(3) .sp-desc'},
   {sec:'リフォーム 画像'},
-  {id:'svc-rf-img',   lbl:'メイン画像',   type:'image', sel:'#reform .svc-img', prop:'bg'},
-  {id:'svc-rf-imgs',  lbl:'サブ画像',     type:'image', sel:'#reform .svc-img-small', prop:'bg'},
+  {id:'svc-rf-img',   lbl:'メイン画像',   type:'image', sel:'#reform .svc-img', prop:'bg', bgSize:'contain'},
+  {id:'svc-rf-imgs',  lbl:'サブ画像',     type:'image', sel:'#reform .svc-img-small', prop:'bg', bgSize:'contain'},
   {sec:'アフターサポート テキスト'},
   {id:'svc-af-ttl',   lbl:'タイトル', type:'input',    sel:'#after .svc-ttl'},
   {id:'svc-af-lead',  lbl:'リード文', type:'textarea', sel:'#after .svc-lead'},
@@ -371,8 +371,8 @@ service: [
   {id:'svc-af-p3t',   lbl:'ポイント③タイトル', type:'input',    sel:'#after .svc-point:nth-child(3) .sp-ttl'},
   {id:'svc-af-p3d',   lbl:'ポイント③説明',     type:'textarea', sel:'#after .svc-point:nth-child(3) .sp-desc'},
   {sec:'アフターサポート 画像'},
-  {id:'svc-af-img',   lbl:'メイン画像',   type:'image', sel:'#after .svc-img', prop:'bg'},
-  {id:'svc-af-imgs',  lbl:'サブ画像',     type:'image', sel:'#after .svc-img-small', prop:'bg'},
+  {id:'svc-af-img',   lbl:'メイン画像',   type:'image', sel:'#after .svc-img', prop:'bg', bgSize:'contain'},
+  {id:'svc-af-imgs',  lbl:'サブ画像',     type:'image', sel:'#after .svc-img-small', prop:'bg', bgSize:'contain'},
   {sec:'CTA'},
   {id:'svc-cta-ttl', lbl:'CTAタイトル', type:'input',    sel:'.svc-cta-ttl'},
   {id:'svc-cta-sub', lbl:'CTAサブ',     type:'textarea', sel:'.svc-cta-sub'},
@@ -830,7 +830,7 @@ function applyImageToDoc(fid) {
   const posMap = {top:'top center', center:'center center', bottom:'bottom center'};
   if(f.prop === 'bg') {
     el.style.backgroundImage = `url(${dataUrl})`;
-    el.style.backgroundSize = 'cover';
+    el.style.backgroundSize = f.bgSize || 'cover';
     el.style.backgroundPosition = posMap[pos];
     el.style.backgroundRepeat = 'no-repeat';
     // Hide hint text children when background image is set
@@ -1003,9 +1003,9 @@ function ensureMobileCss(html, fname) {
     const bodyClose = html.lastIndexOf('<\/body>');
     if(bodyClose !== -1) html = html.slice(0, bodyClose) + syncFix + '\n' + html.slice(bodyClose);
   }
-  // service.html: hide hint text when background image is set on svc-img containers
+  // service.html: contain images + hide hint text
   if(fname === 'service.html' && !html.includes('svc-img-bg-hide')) {
-    const css = '.svc-img[style*="background-image"] .svc-img-hint,.svc-img[style*="background-image"]>p,.svc-img[style*="background-image"]>span,.svc-img-small[style*="background-image"]>span,.svc-img-small[style*="background-image"]>p{display:none!important;}/* svc-img-bg-hide */';
+    const css = '.svc-img[style*="background-image"],.svc-img-small[style*="background-image"]{background-size:contain!important;background-repeat:no-repeat!important;}.svc-img[style*="background-image"] .svc-img-hint,.svc-img[style*="background-image"]>p,.svc-img[style*="background-image"]>span,.svc-img-small[style*="background-image"]>span,.svc-img-small[style*="background-image"]>p{display:none!important;}/* svc-img-bg-hide */';
     const si = html.lastIndexOf('<\/style>');
     if(si !== -1) html = html.slice(0, si) + css + '\n' + html.slice(si);
   }
