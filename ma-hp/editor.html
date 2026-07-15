@@ -833,6 +833,8 @@ function applyImageToDoc(fid) {
     el.style.backgroundSize = 'cover';
     el.style.backgroundPosition = posMap[pos];
     el.style.backgroundRepeat = 'no-repeat';
+    // Hide hint text children when background image is set
+    Array.from(el.children).forEach(child => { child.style.display = 'none'; });
   } else {
     let img;
     if(el.tagName && el.tagName.toLowerCase() === 'img') {
@@ -1000,6 +1002,12 @@ function ensureMobileCss(html, fname) {
     const syncFix = `<script>(function(){if(typeof works==='undefined')return;var T={'新築':'shinchiku','リフォーム':'reform','リノベーション':'reform','ni-ni':'nini','nini':'nini'};works.forEach(function(w,i){var el=document.querySelector('.wk[data-id="'+i+'"]');if(!el)return;if(w.published===false){el.style.display='none';el.dataset.published='false';return;}el.dataset.cat=T[w.tag]||'shinchiku';});document.querySelectorAll('.ftab').forEach(function(tab){var c=tab.cloneNode(true);tab.parentNode.replaceChild(c,tab);c.addEventListener('click',function(){document.querySelectorAll('.ftab').forEach(function(t){t.classList.remove('active');});c.classList.add('active');var f=c.dataset.filter;document.querySelectorAll('.wk').forEach(function(wk){if(wk.dataset.published==='false'){wk.style.display='none';return;}wk.style.display=(f==='all'||wk.dataset.cat===f)?'':'none';});});});window._worksSync2=true;})();<\/script>`;
     const bodyClose = html.lastIndexOf('<\/body>');
     if(bodyClose !== -1) html = html.slice(0, bodyClose) + syncFix + '\n' + html.slice(bodyClose);
+  }
+  // service.html: hide hint text when background image is set on svc-img containers
+  if(fname === 'service.html' && !html.includes('svc-img-bg-hide')) {
+    const css = '.svc-img[style*="background-image"] .svc-img-hint,.svc-img[style*="background-image"]>p,.svc-img[style*="background-image"]>span,.svc-img-small[style*="background-image"]>span,.svc-img-small[style*="background-image"]>p{display:none!important;}/* svc-img-bg-hide */';
+    const si = html.lastIndexOf('<\/style>');
+    if(si !== -1) html = html.slice(0, si) + css + '\n' + html.slice(si);
   }
   // index.html: fix footer overlap on mobile
   if(fname === 'index.html' && !html.includes('ft-inner{flex-direction')) {
