@@ -152,6 +152,7 @@ body{font-family:'Hiragino Sans','Noto Sans JP',sans-serif;background:var(--bg);
   <button class="tab-btn" onclick="switchTab('ns1')">お知らせ①</button>
   <button class="tab-btn" onclick="switchTab('ns2')">お知らせ②</button>
   <button class="tab-btn" onclick="switchTab('ns3')">お知らせ③</button>
+  <button class="tab-btn" onclick="switchTab('company')">会社案内</button>
 </div>
 
 <div id="main">
@@ -187,6 +188,7 @@ const FM = {
   ns1: 'news-detail-001.html',
   ns2: 'news-detail-002.html',
   ns3: 'news-detail-003.html',
+  company: 'company.html',
 };
 
 // ── Field definitions ─────────────────────────────────────────────────────────
@@ -454,6 +456,12 @@ ev6: evDetailFields('ev6'),
 ns1: newsDetailFields('ns1'),
 ns2: newsDetailFields('ns2'),
 ns3: newsDetailFields('ns3'),
+
+company: [
+  {sec:'代表挨拶'},
+  {id:'company-rep-photo', lbl:'代表者写真', type:'image', sel:'#greeting-photo-wrap'},
+  {id:'company-greeting',  lbl:'代表挨拶文', type:'textarea', sel:'#greeting-body'},
+],
 };
 
 function evDetailFields(key) {
@@ -570,7 +578,7 @@ async function openDir() {
 function switchTab(key) {
   curTab = key;
   document.querySelectorAll('.tab-btn').forEach((b,i) => {
-    const keys = ['index','nini','works','service','events','ev1','ev2','ev3','ev4','ev5','ev6','ns1','ns2','ns3'];
+    const keys = ['index','nini','works','service','events','ev1','ev2','ev3','ev4','ev5','ev6','ns1','ns2','ns3','company'];
     b.classList.toggle('active', keys[i] === key);
   });
   if(dirHandle) loadTab(key);
@@ -1031,6 +1039,19 @@ async function saveFile() {
   if(!curDoc) return;
   const fname = FM[curTab];
   if(!fname) return;
+  // company.html: embed rep photo from localStorage into curDoc before serializing
+  if(fname === 'company.html') {
+    var repPhoto = imgStore['company-rep-photo'];
+    if(repPhoto) {
+      var repWrap = curDoc.getElementById('greeting-photo-wrap');
+      if(repWrap) {
+        var repImg = repWrap.querySelector('img');
+        var repPh  = curDoc.getElementById('greeting-photo-placeholder');
+        if(repImg) { repImg.src = repPhoto; repImg.style.display = 'block'; repImg.style.width='100%'; repImg.style.height='100%'; repImg.style.objectFit='cover'; }
+        if(repPh)  { repPh.style.display = 'none'; }
+      }
+    }
+  }
   // nini.html: embed localStorage photos into curDoc before serializing
   // (curDoc is a DOMParser document — JS doesn't run, so localStorage photos must be injected manually)
   if(fname === 'nini.html') {
