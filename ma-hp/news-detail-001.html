@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【水戸市】完成見学会 | 株式会社ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;display:flex;align-items:center;gap:0.5rem;transition:color 0.3s;}
+.nav-back:hover{color:#fff;}
+.nav-back::before{content:'←';}
+
+/* PAGE */
+.page-wrap{max-width:760px;margin:0 auto;padding:120px 2.5rem 6rem;}
+
+/* BREADCRUMB */
+.breadcrumb{font-size:0.6rem;letter-spacing:0.2em;color:var(--mocha-d);margin-bottom:2.5rem;display:flex;align-items:center;gap:0.6rem;}
+.breadcrumb a{color:var(--mocha-d);text-decoration:none;}
+.breadcrumb a:hover{color:var(--mocha);}
+.breadcrumb span{color:var(--mid);}
+
+/* META */
+.news-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.news-date{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--mid);}
+.news-tag{font-size:0.56rem;letter-spacing:0.13em;padding:0.18rem 0.7rem;border:1px solid var(--mocha);color:var(--mocha);}
+
+/* TITLE */
+.news-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:300;color:var(--dark);letter-spacing:0.08em;line-height:1.7;margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid var(--line);}
+
+/* HERO IMAGE */
+.news-hero-img{width:100%;aspect-ratio:16/9;overflow:hidden;margin-bottom:3rem;background:linear-gradient(145deg,#9B8472,#7A6352);position:relative;}
+.news-hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.news-hero-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#9B8472,#7A6352);}
+.news-hero-placeholder span{font-size:0.65rem;letter-spacing:0.2em;color:rgba(255,255,255,0.5);}
+
+/* BODY TEXT */
+.news-body{font-family:'Noto Serif JP',serif;font-size:0.88rem;font-weight:300;color:var(--dark);line-height:2.6;letter-spacing:0.06em;margin-bottom:3rem;}
+.news-body p{margin-bottom:1.4em;}
+.news-body h3{font-family:'Noto Serif JP',serif;font-size:1rem;font-weight:400;color:var(--dark);letter-spacing:0.1em;margin:2em 0 0.8em;padding-left:1em;border-left:2px solid var(--mocha);}
+.news-body ul{padding-left:1.5em;margin-bottom:1.4em;}
+.news-body ul li{margin-bottom:0.4em;}
+.news-body .info-box{background:var(--soft);border-left:3px solid var(--mocha);padding:1.4rem 1.8rem;margin:2em 0;font-size:0.82rem;line-height:2.2;}
+.news-body .info-box dt{font-weight:400;color:var(--mocha-d);margin-bottom:0.2em;font-size:0.75rem;letter-spacing:0.15em;}
+.news-body .info-box dd{margin-bottom:0.8em;padding-left:0.5em;}
+
+/* INLINE IMAGES */
+.news-img-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2em 0;}
+.news-img-slot{aspect-ratio:4/3;overflow:hidden;background:var(--soft);border:1px dashed rgba(184,151,126,0.4);display:flex;align-items:center;justify-content:center;position:relative;}
+.news-img-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.news-img-slot .img-hint{font-size:0.58rem;letter-spacing:0.12em;color:rgba(184,151,126,0.5);}
+
+/* BACK LINK */
+.back-link{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.65rem;letter-spacing:0.2em;color:var(--mocha-d);text-decoration:none;border-bottom:1px solid rgba(155,122,99,0.3);padding-bottom:2px;transition:all 0.3s;}
+.back-link:hover{color:var(--mocha);gap:0.9rem;}
+.back-link::before{content:'←';}
+
+
+/* Reserve button */
+.timerex-wrap{margin:2.5rem 0 3rem;text-align:center;}
+.btn-reserve{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.72rem;letter-spacing:0.22em;font-family:"Noto Sans JP",sans-serif;transition:background 0.3s;}
+.btn-reserve:hover{background:var(--mocha-l);}
+@media(max-width:768px){.nav-logo{font-size:1.1rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="index.html#news" class="nav-back">お知らせ一覧に戻る</a>
+</nav>
+
+<div class="page-wrap">
+  <nav class="breadcrumb">
+    <a href="index.html">TOP</a>
+    <span>/</span>
+    <span>お知らせ</span>
+    <span>/</span>
+    <span>【水戸市】完成見学会 ― 光と風が主役の平屋モデルハウス</span>
+  </nav>
+
+  <div class="news-meta">
+    <span class="news-date">2026.04.15</span>
+    <span class="news-tag">EVENT</span>
+  </div>
+
+  <h1 class="news-ttl">【水戸市】完成見学会 ― 光と風が主役の平屋モデルハウス</h1>
+
+  <div class="news-hero-img">
+    <!-- 写真をここに追加: <img src="news-001-main.jpg" alt="完成見学会"> -->
+    <div class="news-hero-placeholder"><span>メイン画像</span></div>
+  </div>
+
+  <div class="news-body">
+    <p>この度、水戸市にて完成見学会を開催いたします。光と風を最大限に取り込んだ平屋の住まいを、ぜひ実際にご覧ください。</p>
+
+    <h3>イベント詳細</h3>
+
+    <div class="info-box">
+      <dl>
+        <dt>日時</dt>
+        <dd>2026年4月15日（火）10:00〜16:00</dd>
+        <dt>場所</dt>
+        <dd>茨城県水戸市（詳細はご予約後にお知らせします）</dd>
+        <dt>参加費</dt>
+        <dd>無料</dd>
+        <dt>予約</dt>
+        <dd>事前予約制（LINEまたはお電話にて）</dd>
+      </dl>
+    </div>
+
+    <p>南向きの大きな開口部から差し込む光、そして風が通り抜けるよう設計された動線。22坪ながら豊かな空間体積を感じていただけます。</p>
+
+    <h3>見どころ</h3>
+    <ul>
+      <li>土間リビングと外部との連続性</li>
+      <li>自然素材（無垢材・漆喰）の質感</li>
+      <li>収納計画と家具配置のご提案</li>
+    </ul>
+
+    <!-- 2枚並び写真 -->
+    <div class="news-img-row">
+      <div class="news-img-slot">
+        <!-- <img src="news-001-sub1.jpg" alt="内観"> -->
+        <span class="img-hint">写真①</span>
+      </div>
+      <div class="news-img-slot">
+        <!-- <img src="news-001-sub2.jpg" alt="外観"> -->
+        <span class="img-hint">写真②</span>
+      </div>
+    </div>
+
+    <p>ご予約・お問い合わせは下記LINEまたはお電話にて承っております。お気軽にどうぞ。</p>
+  </div>
+  <div class="timerex-wrap">
+    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →</a>
+  </div>
+<a href="index.html#news" class="back-link">お知らせ一覧に戻る</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMPANY | 株式会社ma</title>
+<meta name="description" content="株式会社maの会社案内。代表挨拶・会社概要・アクセスをご案内します。茨城県水戸市の住宅建築・リフォーム会社です。">
+<meta name="keywords" content="株式会社ma,会社案内,代表挨拶,会社概要,アクセス,茨城,水戸">
+<link rel="canonical" href="https://leafy-klepon-2e7ba3.netlify.app/company.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="COMPANY | 株式会社ma">
+<meta property="og:description" content="株式会社maの会社案内。代表挨拶・会社概要・アクセスをご案内します。">
+<meta property="og:url" content="https://leafy-klepon-2e7ba3.netlify.app/company.html">
+<meta property="og:site_name" content="株式会社ma">
+<meta property="og:locale" content="ja_JP">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+.nav-back::before{content:'←';}
+.nav-back:hover{color:#fff;}
+
+.page-hero{margin-top:70px;background:var(--dark-nav);padding:4rem 2.5rem;text-align:center;}
+.page-hero-ey{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.45em;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;}
+.page-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:200;color:#fff;letter-spacing:0.15em;}
+
+.section-label{font-family:'Cormorant Garamond',serif;font-size:0.72rem;letter-spacing:0.4em;color:var(--mocha-d);margin-bottom:1.8rem;display:flex;align-items:center;gap:0.8rem;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+
+/* 代表挨拶 */
+.greeting-section{max-width:900px;margin:0 auto;padding:5rem 2.5rem;}
+.greeting-inner{display:grid;grid-template-columns:280px 1fr;gap:4rem;align-items:start;}
+.greeting-photo{width:100%;aspect-ratio:3/4;object-fit:cover;background:var(--soft);display:block;position:relative;overflow:hidden;}
+.greeting-photo img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.greeting-photo-placeholder{width:100%;aspect-ratio:3/4;background:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.6rem;}
+.greeting-photo-placeholder span{font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);}
+.greeting-text{}
+.greeting-name-en{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.35em;color:var(--mocha);margin-bottom:0.4rem;}
+.greeting-name{font-family:'Noto Serif JP',serif;font-size:1.4rem;font-weight:300;letter-spacing:0.1em;margin-bottom:0.3rem;}
+.greeting-title{font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);margin-bottom:2rem;}
+.greeting-body{font-size:0.82rem;line-height:2;color:var(--mid);white-space:pre-wrap;}
+
+/* 会社概要 */
+.company-section{background:var(--white);padding:5rem 2.5rem;}
+.company-inner{max-width:900px;margin:0 auto;}
+.company-table{width:100%;border-collapse:collapse;}
+.company-table tr{border-bottom:1px solid var(--line);}
+.company-table tr:first-child{border-top:1px solid var(--line);}
+.company-table th{width:180px;padding:1.2rem 0;font-size:0.7rem;letter-spacing:0.15em;color:var(--mocha-d);font-weight:400;vertical-align:top;white-space:nowrap;}
+.company-table td{padding:1.2rem 0 1.2rem 2rem;font-size:0.78rem;line-height:1.9;color:var(--mid);}
+
+/* アクセス */
+.access-section{max-width:900px;margin:0 auto;padding:5rem 2.5rem 7rem;}
+.access-info{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-bottom:2.5rem;}
+.access-item-label{font-size:0.62rem;letter-spacing:0.2em;color:var(--mocha-d);margin-bottom:0.4rem;}
+.access-item-val{font-size:0.78rem;line-height:1.9;color:var(--mid);}
+.access-map{width:100%;height:380px;border:none;filter:grayscale(0.2);}
+
+/* FOOTER */
+footer{background:var(--dark-nav);padding:2.5rem;text-align:center;}
+footer p{font-size:0.6rem;letter-spacing:0.18em;color:rgba(255,255,255,0.35);}
+
+@media(max-width:768px){
+  .greeting-inner{grid-template-columns:1fr;gap:2rem;}
+  .greeting-photo-placeholder{aspect-ratio:1/1;max-width:240px;margin:0 auto;}
+  .company-table th{width:120px;font-size:0.65rem;}
+  .company-table td{padding-left:1rem;font-size:0.73rem;}
+  .access-info{grid-template-columns:1fr;}
+  .access-map{height:260px;}
+  nav{padding:0 1.2rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="index.html" class="nav-back">TOPに戻る</a>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-ey">COMPANY</div>
+  <h1 class="page-hero-ttl">COMPANY</h1>
+</div>
+
+<!-- 代表挨拶 -->
+<section class="greeting-section">
+  <div class="section-label">Greeting</div>
+  <div class="greeting-inner">
+    <div id="greeting-photo-wrap">
+      <div class="greeting-photo-placeholder" id="greeting-photo-placeholder">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(176,151,126,0.4)" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span>代表者写真</span>
+      </div>
+      <img id="greeting-photo-img" src="" alt="代表 間中健太" style="display:none;width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center;display:none;">
+    </div>
+    <div class="greeting-text">
+      <div class="greeting-name-en">Representative</div>
+      <div class="greeting-name">間中 健太</div>
+      <div class="greeting-title">代表取締役</div>
+      <div class="greeting-body" id="greeting-body">ここに代表挨拶文が入ります。エディターから編集してください。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 会社概要 -->
+<section class="company-section">
+  <div class="company-inner">
+    <div class="section-label">About Us</div>
+    <table class="company-table">
+      <tr><th>商号</th><td>株式会社ma</td></tr>
+      <tr><th>代表取締役</th><td>間中 健太</td></tr>
+      <tr><th>所在地</th><td>〒310-0913<br>茨城県水戸市見川町2462-2</td></tr>
+      <tr><th>電話番号</th><td><a href="tel:029-357-4470" style="color:inherit;text-decoration:none;">029-357-4470</a></td></tr>
+      <tr><th>設計事務所</th><td>茨城県知事登録　第B5756号（0804）</td></tr>
+      <tr><th>管理建築士</th><td>二級建築士登録　第31791号</td></tr>
+      <tr><th>建設業許可</th><td>茨城県知事許可（般-08）第39313号</td></tr>
+      <tr><th>事業内容</th><td>新築住宅の設計・施工<br>リフォーム・リノベーション<br>ni-niシリーズの企画・販売</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- アクセス -->
+<section class="access-section">
+  <div class="section-label">Access</div>
+  <div class="access-info">
+    <div>
+      <div class="access-item-label">所在地</div>
+      <div class="access-item-val">〒310-0913<br>茨城県水戸市見川町2462-2</div>
+    </div>
+    <div>
+      <div class="access-item-label">営業時間</div>
+      <div class="access-item-val">9:00〜18:00<br>定休日：火曜・水曜</div>
+    </div>
+  </div>
+  <iframe class="access-map"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3213.6372402744014!2d140.4361716756016!3d36.345340772380354!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x602225b2d85b507f%3A0xf800b4c2f4ae684c!2z5qCq5byP5Lya56S-bWE!5e0!3m2!1sja!2sjp!4v1788141915273!5m2!1sja!2sjp"
+    allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</section>
+
+<footer>
+  <p>© 2024 株式会社ma. All Rights Reserved.</p>
+</footer>
+
+<script>
+(function(){
+  var photo = localStorage.getItem('company_rep_photo');
+  if(photo){
+    var img = document.getElementById('greeting-photo-img');
+    var ph = document.getElementById('greeting-photo-placeholder');
+    if(img && ph){ img.src = photo; img.style.display='block'; ph.style.display='none'; }
+  }
+  var body = localStorage.getItem('company_greeting');
+  if(body){
+    var el = document.getElementById('greeting-body');
+    if(el) el.textContent = body;
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>施工事例 | 株式会社ma</title>
+<meta name="description" content="株式会社maの施工事例一覧。新築・リフォーム・リノベーションの実例をご覧いただけます。茨城県で家づくりをお考えの方はぜひご参考に。">
+<meta name="keywords" content="株式会社ma,施工事例,新築,リフォーム,リノベーション,茨城">
+<link rel="canonical" href="https://leafy-klepon-2e7ba3.netlify.app/works.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="施工事例 | 株式会社ma">
+<meta property="og:description" content="新築・リフォーム・リノベーションの施工事例。茨城県の家づくりの実例をご覧ください。">
+<meta property="og:url" content="https://leafy-klepon-2e7ba3.netlify.app/works.html">
+<meta property="og:site_name" content="株式会社ma">
+<meta property="og:locale" content="ja_JP">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.3s;}
+.nav-back:hover{color:#fff;}
+
+/* PAGE HERO */
+.page-hero{margin-top:70px;background:var(--dark-nav);padding:4.5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+.page-hero::before{content:'WORKS';position:absolute;font-family:'Cormorant Garamond',serif;font-size:10rem;color:rgba(255,255,255,0.025);letter-spacing:0.1em;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.page-hero-ey{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.45em;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;}
+.page-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:200;color:#fff;letter-spacing:0.15em;}
+
+/* FILTER */
+.filter-wrap{max-width:1060px;margin:0 auto;padding:2rem 2.5rem 0;}
+.filter-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);}
+.ftab{font-family:'Noto Sans JP',sans-serif;font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);padding:0.6rem 1.4rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s;background:none;border-top:none;border-left:none;border-right:none;}
+.ftab.active,.ftab:hover{color:var(--mocha-d);border-bottom-color:var(--mocha);}
+
+/* WORKS GRID */
+.works-wrap{max-width:1060px;margin:0 auto;padding:2.5rem 2.5rem 6rem;}
+.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;}
+@media(max-width:768px){.works-grid{grid-template-columns:1fr;}}
+@media(min-width:769px) and (max-width:1024px){.works-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){
+  .wm-slider{height:56vw !important;overflow:hidden !important;}
+  .wm-slides{height:56vw !important;max-height:56vw !important;}
+  .wm-slide{height:56vw !important;min-height:0 !important;}
+  .wm-slide img{height:56vw !important;width:100% !important;object-fit:cover !important;}
+  .wm-body{padding:1.5rem 1.2rem 2.5rem;}
+  .wm-specs{grid-template-columns:1fr 1fr;}
+  .nav-logo{font-size:1.1rem;}
+}
+
+.wk{overflow:hidden;cursor:pointer;position:relative;display:flex;flex-direction:column;}
+.wk-info{flex:1;}
+.wk-thumb{width:100%;aspect-ratio:4/3;overflow:hidden;position:relative;}
+.wk-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);}
+.wk:hover .wk-img{transform:scale(1.05);}
+.wk-img-placeholder{width:100%;height:100%;transition:transform 0.7s cubic-bezier(0.16,1,0.3,1);}
+.wk:hover .wk-img-placeholder{transform:scale(1.05);}
+.wk-info{padding:1.3rem 1.6rem 1.8rem;border:1px solid var(--line);border-top:none;background:var(--white);}
+.wk-num{font-family:'Cormorant Garamond',serif;font-size:0.62rem;letter-spacing:0.35em;color:var(--mocha);margin-bottom:0.4rem;}
+.wk-ttl{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--dark);letter-spacing:0.06em;margin-bottom:0.3rem;}
+.wk-sub{font-size:0.68rem;color:var(--mid);}
+.wk-open-btn{font-size:0.58rem;letter-spacing:0.15em;color:var(--mocha-d);margin-top:0.6rem;display:flex;align-items:center;gap:0.4rem;}
+.wk-open-btn::after{content:'→';}
+
+/* ====================================
+   WORKS DETAIL MODAL / DRAWER
+   ==================================== */
+.works-modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(20,14,10,0.7);opacity:0;pointer-events:none;transition:opacity 0.4s;backdrop-filter:blur(4px);}
+.works-modal-overlay.open{opacity:1;pointer-events:all;}
+
+.works-modal{position:fixed;top:0;right:0;bottom:0;width:min(680px,100vw);z-index:501;background:var(--bg);overflow-y:auto;transform:translateX(100%);transition:transform 0.45s cubic-bezier(0.16,1,0.3,1);}
+.works-modal.open{transform:none;}
+
+.wm-close{position:sticky;top:0;z-index:10;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:1.2rem 2rem;border-bottom:1px solid var(--line);}
+.wm-close-btn{font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);cursor:pointer;background:none;border:none;font-family:'Noto Sans JP',sans-serif;transition:color 0.3s;}
+.wm-close-btn:hover{color:var(--dark);}
+.wm-close-num{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.35em;color:var(--mocha);}
+
+/* SLIDER */
+.wm-slider{position:relative;width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--soft);}
+.wm-slides{display:flex;height:100%;transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);}
+.wm-slide{min-width:100%;height:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.wm-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.wm-slide-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.wm-slide-placeholder span{font-size:0.65rem;letter-spacing:0.2em;color:rgba(184,151,126,0.5);}
+
+/* slider controls */
+.wm-prev,.wm-next{position:absolute;top:50%;transform:translateY(-50%);z-index:5;background:rgba(20,14,10,0.45);border:none;color:#fff;width:40px;height:40px;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background 0.3s;backdrop-filter:blur(4px);}
+.wm-prev{left:1rem;}
+.wm-next{right:1rem;}
+.wm-prev:hover,.wm-next:hover{background:rgba(184,151,126,0.7);}
+.wm-dots{position:absolute;bottom:0.8rem;left:50%;transform:translateX(-50%);display:flex;gap:0.4rem;}
+.wm-dot{width:20px;height:2px;background:rgba(255,255,255,0.3);cursor:pointer;transition:background 0.3s;}
+.wm-dot.active{background:var(--mocha);}
+
+/* MODAL CONTENT */
+.wm-body{padding:2rem 2.5rem 3rem;}
+.wm-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+.wm-tag{font-size:0.55rem;letter-spacing:0.15em;padding:0.2rem 0.7rem;border:1px solid var(--mocha);color:var(--mocha);}
+.wm-location{font-size:0.68rem;letter-spacing:0.12em;color:var(--mid);}
+.wm-ttl{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--dark);letter-spacing:0.06em;margin-bottom:0.5rem;}
+.wm-sub{font-size:0.78rem;color:var(--mid);letter-spacing:0.1em;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--line);}
+.wm-desc{font-family:'Noto Serif JP',serif;font-size:0.85rem;font-weight:200;color:var(--dark);line-height:2.7;letter-spacing:0.06em;margin-bottom:2rem;}
+.wm-specs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-bottom:2rem;}
+.wm-spec{background:var(--white);padding:1.2rem 1rem;}
+.ws-label{font-size:0.55rem;letter-spacing:0.2em;color:var(--mocha-d);margin-bottom:0.4rem;}
+.ws-val{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--dark);}
+.ws-unit{font-size:0.65rem;color:var(--mid);}
+
+/* Upload hint for photos */
+.upload-notice{font-size:0.62rem;letter-spacing:0.15em;color:rgba(184,151,126,0.6);text-align:center;padding:0.5rem;background:rgba(184,151,126,0.06);margin:0.5rem 0;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 0.6s,transform 0.6s;}
+.reveal.on{opacity:1;transform:none;}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="index.html#works" class="nav-back">← TOPに戻る</a>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-ey">Works</p>
+  <h1 class="page-hero-ttl">施工事例</h1>
+</div>
+
+<div class="filter-wrap">
+  <div class="filter-tabs">
+    <button class="ftab active" data-filter="all">すべて</button>
+    <button class="ftab" data-filter="shinchiku">新築</button>
+    <button class="ftab" data-filter="reform">リフォーム</button>
+    <button class="ftab" data-filter="nini">ni-ni</button>
+  </div>
+</div>
+
+<div class="works-wrap">
+  <div class="works-grid" id="worksGrid">
+
+    <!-- WORK 001 -->
+    <div class="wk reveal" data-cat="shinchiku" data-id="0" onclick="openWork(0)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-001-01.jpg" alt="Light and Wind house"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#9B8472,#7A6352,#5A4A3A);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 001</p>
+        <h3 class="wk-ttl">Light &amp; Wind house</h3>
+        <p class="wk-sub">光と風の平屋 ― 那珂市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+    <!-- WORK 002 -->
+    <div class="wk reveal" data-cat="shinchiku" data-id="1" onclick="openWork(1)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-002-01.jpg" alt="Silent courtyard"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#7A8070,#5E6558,#44503F);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 002</p>
+        <h3 class="wk-ttl">Silent courtyard</h3>
+        <p class="wk-sub">静かな中庭の家 ― 水戸市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+    <!-- WORK 003 -->
+    <div class="wk reveal" data-cat="reform" data-id="2" onclick="openWork(2)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-003-01.jpg" alt="Doma living"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#6E7A88,#545F6B,#3C4855);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 003</p>
+        <h3 class="wk-ttl">Doma living</h3>
+        <p class="wk-sub">土間のある暮らし ― 日立市 ／ リフォーム</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+    <!-- WORK 004 -->
+    <div class="wk reveal" data-cat="nini" data-id="3" onclick="openWork(3)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-004-01.jpg" alt="ni-ni MOCHA"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#C4B09A,#A8957E,#8B7B68);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 004</p>
+        <h3 class="wk-ttl">ni-ni MOCHA</h3>
+        <p class="wk-sub">和モダンの22坪 ― ひたちなか市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+    <!-- WORK 005 -->
+    <div class="wk reveal" data-cat="shinchiku" data-id="4" onclick="openWork(4)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-005-01.jpg" alt="Engawa house"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#8A9070,#6A7060,#4A5040);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 005</p>
+        <h3 class="wk-ttl">Engawa house</h3>
+        <p class="wk-sub">縁側と庭の家 ― つくば市 ／ 新築</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+    <!-- WORK 006 -->
+    <div class="wk reveal" data-cat="reform" data-id="5" onclick="openWork(5)">
+      <div class="wk-thumb">
+        <!-- <img class="wk-img" src="works-006-01.jpg" alt="古民家再生"> -->
+        <div class="wk-img-placeholder" style="background:linear-gradient(145deg,#7A7068,#5A5050,#3A3840);"></div>
+      </div>
+      <div class="wk-info">
+        <p class="wk-num">WORKS 006</p>
+        <h3 class="wk-ttl">Old house rebirth</h3>
+        <p class="wk-sub">古民家リノベーション ― 常陸大宮市 ／ リノベーション</p>
+        <p class="wk-open-btn">詳細を見る</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL OVERLAY -->
+<div class="works-modal-overlay" id="modalOverlay" onclick="closeWork()"></div>
+
+<!-- MODAL DRAWER -->
+<div class="works-modal" id="worksModal">
+  <div class="wm-close">
+    <span class="wm-close-num" id="wm-num">WORKS 001</span>
+    <button class="wm-close-btn" onclick="closeWork()">✕ 閉じる</button>
+  </div>
+
+  <!-- SLIDER -->
+  <div class="wm-slider">
+    <div class="wm-slides" id="wmSlides">
+      <!-- slides inserted by JS -->
+    </div>
+    <button class="wm-prev" onclick="slideMove(-1)">‹</button>
+    <button class="wm-next" onclick="slideMove(1)">›</button>
+    <div class="wm-dots" id="wmDots"></div>
+  </div>
+
+  <!-- BODY -->
+  <div class="wm-body">
+    <div class="wm-meta">
+      <span class="wm-tag" id="wm-tag">新築</span>
+      <span class="wm-location" id="wm-location">那珂市</span>
+    </div>
+    <h2 class="wm-ttl" id="wm-ttl">Light &amp; Wind house</h2>
+    <p class="wm-sub" id="wm-sub">光と風の平屋 ― 那珂市 ／ 新築</p>
+    <p class="wm-desc" id="wm-desc">ここに施工事例の説明文が入ります。</p>
+    <div class="wm-specs" id="wm-specs"></div>
+  </div>
+</div>
+
+<script>
+// ===================== WORKS DATA =====================
+// 写真はsrc属性にファイルパスを入れてください
+// photos: [{src:'', alt:''}, ...] — 後でアップする場合は gradient を使用
+const works = [
+  {
+    num:'WORKS 001',
+    tag:'新築',
+    location:'那珂市',
+    ttl:'Light &amp; Wind house',
+    sub:'光と風の平屋 ― 那珂市 ／ 新築',
+    desc:'南北に風の通り道を作り、大開口から柔らかな光を取り込む設計。自然素材（無垢材・漆喰）を多用し、経年変化も楽しめる住まいに仕上げました。広い土間玄関から続くリビングは、外と内の境界を曖昧にするような空間体積を持っています。茨城建築賞2025 住宅部門 優秀賞受賞作品。',
+    specs:[
+      {label:'延床面積', val:'72.5', unit:'㎡（約22坪）'},
+      {label:'構造', val:'木造', unit:'在来工法'},
+      {label:'竣工', val:'2024', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#9B8472,#7A6352,#5A4A3A)'},
+      {src:'', alt:'リビング', gradient:'linear-gradient(145deg,#B09080,#907060)'},
+      {src:'', alt:'外観夜景', gradient:'linear-gradient(145deg,#4A3A2A,#3A2A1A)'},
+    ]
+  },
+  {
+    num:'WORKS 002',
+    tag:'新築',
+    location:'水戸市',
+    ttl:'Silent courtyard',
+    sub:'静かな中庭の家 ― 水戸市 ／ 新築',
+    desc:'コの字型のプランで中庭を囲む。室内のどこにいても緑が視界に入る設計です。プライバシーを確保しながら開放感あふれる暮らしを実現しました。',
+    specs:[
+      {label:'延床面積', val:'98.2', unit:'㎡（約29坪）'},
+      {label:'構造', val:'木造', unit:'在来工法'},
+      {label:'竣工', val:'2024', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#7A8070,#5E6558,#44503F)'},
+      {src:'', alt:'中庭', gradient:'linear-gradient(145deg,#6A7060,#4A5040)'},
+      {src:'', alt:'リビング', gradient:'linear-gradient(145deg,#8A9080,#6A7060)'},
+    ]
+  },
+  {
+    num:'WORKS 003',
+    tag:'リフォーム',
+    location:'日立市',
+    ttl:'Doma living',
+    sub:'土間のある暮らし ― 日立市 ／ リフォーム',
+    desc:'築35年の戸建てを全面リノベーション。玄関を取り払い土間リビングへと変える大胆な間取り変更。構造を補強しながら、使い勝手と開放感を両立しました。',
+    specs:[
+      {label:'延床面積', val:'85.4', unit:'㎡'},
+      {label:'種別', val:'全面', unit:'リノベーション'},
+      {label:'竣工', val:'2023', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'土間', gradient:'linear-gradient(145deg,#6E7A88,#545F6B,#3C4855)'},
+      {src:'', alt:'after', gradient:'linear-gradient(145deg,#5E6A78,#445060)'},
+    ]
+  },
+  {
+    num:'WORKS 004',
+    tag:'ni-ni',
+    location:'ひたちなか市',
+    ttl:'ni-ni MOCHA',
+    sub:'和モダンの22坪 ― ひたちなか市 ／ 新築',
+    desc:'ni-ni MOCHAプランを採用した規格住宅。自然素材と柔らかな光が調和し、22坪ながら豊かな空間を実現。夫婦+子ども2人にちょうどいい間取り。',
+    specs:[
+      {label:'延床面積', val:'72.5', unit:'㎡（約22坪）'},
+      {label:'プラン', val:'MOCHA', unit:'ni-ni series'},
+      {label:'竣工', val:'2025', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#C4B09A,#A8957E,#8B7B68)'},
+      {src:'', alt:'リビング', gradient:'linear-gradient(145deg,#D4C0AA,#B8A08E)'},
+    ]
+  },
+  {
+    num:'WORKS 005',
+    tag:'新築',
+    location:'つくば市',
+    ttl:'Engawa house',
+    sub:'縁側と庭の家 ― つくば市 ／ 新築',
+    desc:'縁側を介して庭と室内がゆるやかにつながる住まい。家族が自然と集まる「縁側」を現代の生活に溶け込む形でデザインしました。',
+    specs:[
+      {label:'延床面積', val:'104.3', unit:'㎡（約31坪）'},
+      {label:'構造', val:'木造', unit:'在来工法'},
+      {label:'竣工', val:'2025', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#8A9070,#6A7060,#4A5040)'},
+      {src:'', alt:'縁側', gradient:'linear-gradient(145deg,#9AA080,#7A8060)'},
+      {src:'', alt:'庭', gradient:'linear-gradient(145deg,#6A7858,#4A5840)'},
+    ]
+  },
+  {
+    num:'WORKS 006',
+    tag:'リノベーション',
+    location:'常陸大宮市',
+    ttl:'Old house rebirth',
+    sub:'古民家リノベーション ― 常陸大宮市',
+    desc:'築80年の古民家を現代の住まいに再生。既存の梁・柱・土壁を最大限に残しながら、断熱・設備を現代基準にアップデートしました。',
+    specs:[
+      {label:'築年数', val:'80', unit:'年以上'},
+      {label:'種別', val:'古民家', unit:'再生'},
+      {label:'竣工', val:'2023', unit:'年'},
+    ],
+    photos:[
+      {src:'', alt:'外観', gradient:'linear-gradient(145deg,#7A7068,#5A5050,#3A3840)'},
+      {src:'', alt:'梁', gradient:'linear-gradient(145deg,#6A6058,#4A4040)'},
+    ]
+  },
+];
+
+// ===================== MODAL LOGIC =====================
+let currentSlide = 0;
+let currentWork = null;
+
+function openWork(idx){
+  const w = works[idx];
+  currentWork = w;
+  currentSlide = 0;
+
+  document.getElementById('wm-num').textContent = w.num;
+  document.getElementById('wm-tag').textContent = w.tag;
+  document.getElementById('wm-location').textContent = w.location;
+  document.getElementById('wm-ttl').innerHTML = w.ttl;
+  document.getElementById('wm-sub').textContent = w.sub;
+  document.getElementById('wm-desc').textContent = w.desc.replace(/&amp;/g,'&');
+
+  // specs
+  const specsEl = document.getElementById('wm-specs');
+  specsEl.innerHTML = w.specs.map(s=>`
+    <div class="wm-spec">
+      <p class="ws-label">${s.label}</p>
+      <p class="ws-val">${s.val} <span class="ws-unit">${s.unit}</span></p>
+    </div>
+  `).join('');
+
+  // slides
+  const slidesEl = document.getElementById('wmSlides');
+  slidesEl.innerHTML = w.photos.map((p,i)=>`
+    <div class="wm-slide">
+      ${p.src
+        ? `<img src="${p.src}" alt="${p.alt}">`
+        : `<div class="wm-slide-placeholder" style="background:${p.gradient};width:100%;height:100%;"><span>${p.alt}（写真をアップ）</span></div>`
+      }
+    </div>
+  `).join('');
+
+  // dots
+  const dotsEl = document.getElementById('wmDots');
+  dotsEl.innerHTML = w.photos.map((_,i)=>`<div class="wm-dot${i===0?' active':''}" onclick="goSlide(${i})"></div>`).join('');
+
+  updateSlider();
+
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('worksModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeWork(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('worksModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function slideMove(dir){
+  if(!currentWork) return;
+  const n = currentWork.photos.length;
+  currentSlide = (currentSlide + dir + n) % n;
+  updateSlider();
+}
+function goSlide(i){
+  currentSlide = i;
+  updateSlider();
+}
+function updateSlider(){
+  document.getElementById('wmSlides').style.transform = `translateX(-${currentSlide*100}%)`;
+  document.querySelectorAll('.wm-dot').forEach((d,i)=>{
+    d.classList.toggle('active', i===currentSlide);
+  });
+}
+
+// ===================== FILTER =====================
+document.querySelectorAll('.ftab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const f = tab.dataset.filter;
+    document.querySelectorAll('.wk').forEach(wk=>{
+      if(f==='all' || wk.dataset.cat===f){
+        wk.style.display='';
+      } else {
+        wk.style.display='none';
+      }
+    });
+  });
+});
+
+// ===================== REVEAL =====================
+const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('on');io.unobserve(el.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Keyboard close
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeWork();});
+
+// ===================== CARD THUMBNAILS =====================
+// works配列にsrcがあればカードサムネイルを写真で表示
+works.forEach((w, idx) => {
+  if(w.photos && w.photos[0] && w.photos[0].src) {
+    const thumb = document.querySelector('.wk[data-id="' + idx + '"] .wk-thumb');
+    if(thumb) {
+      thumb.innerHTML = '<img class="wk-img" src="' + w.photos[0].src + '" alt="' + (w.photos[0].alt||'') + '">';
+    }
+  }
+});
+
+// ===================== URL PARAM AUTO-OPEN =====================
+(function(){
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if(id !== null && id !== '') {
+    const idx = parseInt(id, 10);
+    if(!isNaN(idx)) {
+      setTimeout(function(){ openWork(idx); }, 80);
+    }
+  }
+})();
+
+// ===================== MOBILE SLIDER FIX =====================
+(function(){
+  if(window.innerWidth > 768) return;
+  var _open = window.openWork;
+  window.openWork = function(idx){
+    _open(idx);
+    setTimeout(function(){
+      var h = Math.round(window.innerWidth * 0.56) + 'px';
+      var sl = document.querySelector('.wm-slider');
+      var ss = document.getElementById('wmSlides');
+      if(sl){ sl.style.height = h; sl.style.overflow = 'hidden'; }
+      if(ss){ ss.style.height = h; ss.style.maxHeight = h; }
+      document.querySelectorAll('.wm-slide, .wm-slide img').forEach(function(el){
+        el.style.height = h;
+      });
+    }, 20);
+  };
+})();
+</script>
+</body>
+</html>
