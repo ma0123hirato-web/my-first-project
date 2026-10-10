@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>イベント・見学会一覧 | 株式会社ma</title>
+<meta name="description" content="株式会社maのイベント・見学会情報。完成見学会・資金相談会など住まいづくりのイベントを随時開催。茨城県で家を建てたい方はお気軽にご参加ください。">
+<meta name="keywords" content="株式会社ma,イベント,見学会,資金相談,茨城,住宅">
+<link rel="canonical" href="https://leafy-klepon-2e7ba3.netlify.app/events.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="イベント・見学会一覧 | 株式会社ma">
+<meta property="og:description" content="完成見学会・資金相談会など住まいづくりのイベントを随時開催。ご参加お待ちしています。">
+<meta property="og:url" content="https://leafy-klepon-2e7ba3.netlify.app/events.html">
+<meta property="og:site_name" content="株式会社ma">
+<meta property="og:locale" content="ja_JP">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;display:flex;align-items:center;gap:0.5rem;}
+.nav-back::before{content:'←';}
+.nav-back:hover{color:#fff;}
+
+/* PAGE HEADER */
+.page-hero{margin-top:70px;background:var(--dark-nav);padding:4rem 2.5rem;text-align:center;}
+.page-hero-ey{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.45em;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;}
+.page-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:200;color:#fff;letter-spacing:0.15em;}
+
+/* FILTER TABS */
+.filter-wrap{max-width:1060px;margin:0 auto;padding:2rem 2.5rem 0;}
+.filter-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);}
+.ftab{font-size:0.62rem;letter-spacing:0.2em;color:var(--mid);padding:0.6rem 1.4rem;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.3s;}
+.ftab.active,.ftab:hover{color:var(--mocha-d);border-bottom-color:var(--mocha);}
+
+/* EVENT LIST */
+.events-wrap{max-width:1060px;margin:0 auto;padding:2.5rem 2.5rem 6rem;}
+.events-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+
+@media(max-width:768px){.events-grid{grid-template-columns:1fr;}.nav-logo{font-size:1.1rem;}}
+@media(min-width:769px) and (max-width:1024px){.events-grid{grid-template-columns:repeat(2,1fr);}}
+
+.event-card{background:var(--white);text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:transform 0.3s;position:relative;}
+.event-card:hover{transform:translateY(-4px);}
+.event-card.done{opacity:0.65;}
+.ec-img{width:100%;aspect-ratio:4/3;overflow:hidden;position:relative;}
+.ec-img-bg{width:100%;height:100%;transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);background-size:cover;background-position:center;}
+.event-card:hover .ec-img-bg{transform:scale(1.05);}
+.ec-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);}
+.event-card:hover .ec-img img{transform:scale(1.05);}
+.ev-status{position:absolute;top:0.8rem;left:0.8rem;font-size:0.56rem;letter-spacing:0.12em;padding:0.22rem 0.7rem;background:rgba(28,25,23,0.75);color:#fff;backdrop-filter:blur(4px);}
+.ev-status.done{background:rgba(100,100,100,0.7);}
+.ec-body{padding:1.2rem 1.4rem 1.6rem;flex:1;display:flex;flex-direction:column;gap:0.4rem;border-top:1px solid var(--line);}
+.ec-date{font-size:0.6rem;letter-spacing:0.18em;color:var(--mocha);}
+.ec-ttl{font-family:'Noto Serif JP',serif;font-size:0.86rem;font-weight:300;color:var(--dark);line-height:1.7;}
+.ec-ttl.done-txt{color:#aaa;}
+.ec-sub{font-size:0.7rem;color:var(--mid);margin-top:0.2rem;}
+.ec-badge{display:inline-block;margin-top:0.5rem;font-size:0.55rem;letter-spacing:0.1em;padding:0.15rem 0.6rem;background:rgba(184,151,126,0.15);color:var(--mocha-d);align-self:flex-start;}
+
+/* SECTION LABEL */
+.section-label{font-family:'Cormorant Garamond',serif;font-size:0.72rem;letter-spacing:0.4em;color:var(--mocha-d);margin-bottom:1.2rem;display:flex;align-items:center;gap:0.8rem;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+.events-section{margin-bottom:3rem;}
+
+
+/* Reserve button */
+.timerex-wrap{margin:2.5rem 0 3rem;text-align:center;}
+.btn-reserve{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.72rem;letter-spacing:0.22em;font-family:"Noto Sans JP",sans-serif;transition:background 0.3s;}
+.btn-reserve:hover{background:var(--mocha-l);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="index.html#event" class="nav-back">TOPに戻る</a>
+</nav>
+
+<div class="page-hero">
+  <p class="page-hero-ey">Event &amp; Exhibition</p>
+  <h1 class="page-hero-ttl">イベント ／ 見学会一覧</h1>
+</div>
+
+<div class="events-wrap">
+
+  <!-- 開催予定・受付中 -->
+  <div class="events-section">
+    <p class="section-label">開催予定・受付中</p>
+    <div class="events-grid">
+
+      <a href="event-detail-001.html" class="event-card">
+        <div class="ec-img">
+          <!-- <img src="event-001.jpg" alt="モデルハウス"> -->
+          <div class="ec-img-bg" style="background:linear-gradient(145deg,#B8977E,#8B7260);"></div>
+          <span class="ev-status">モデルハウス</span>
+        </div>
+        <div class="ec-body">
+          <span class="ec-date">2026年6月中旬 ― 詳細近日公開</span>
+          <p class="ec-ttl">株式会社ma モデルハウス オープン</p>
+          <p class="ec-sub">詳細はLINEでお知らせ</p>
+          <span class="ec-badge">予約受付予定</span>
+        </div>
+      </a>
+
+      <a href="event-detail-002.html" class="event-card">
+        <div class="ec-img">
+          <!-- <img src="event-002.jpg" alt="相談会"> -->
+          <div class="ec-img-bg" style="background:linear-gradient(145deg,#7A8070,#5E6558,#44503F);"></div>
+          <span class="ev-status">相談会</span>
+        </div>
+        <div class="ec-body">
+          <span class="ec-date">毎日開催　10:00〜17:00</span>
+          <p class="ec-ttl">はじめての家づくり相談会</p>
+          <p class="ec-sub">茨城県水戸市</p>
+          <span class="ec-badge">完全予約制</span>
+        </div>
+      </a>
+
+      <a href="event-detail-004.html" class="event-card">
+        <div class="ec-img">
+          <!-- <img src="event-004.jpg" alt="上棟式見学"> -->
+          <div class="ec-img-bg" style="background:linear-gradient(145deg,#8A9070,#6A7060,#4A5040);"></div>
+          <span class="ev-status">見学会</span>
+        </div>
+        <div class="ec-body">
+          <span class="ec-date">2026.06.07（日）10:00〜15:00</span>
+          <p class="ec-ttl">土間と縁側のある家 ― 構造見学会</p>
+          <p class="ec-sub">ひたちなか市</p>
+          <span class="ec-badge">要予約</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- 過去のイベント -->
+  <div class="events-section">
+    <p class="section-label">過去のイベント</p>
+    <div class="events-grid">
+
+      <a href="event-detail-003.html" class="event-card done">
+        <div class="ec-img">
+          <!-- <img src="event-003.jpg" alt="縁側の家"> -->
+          <div class="ec-img-bg" style="background:linear-gradient(145deg,#6E7A88,#545F6B,#3C4855);"></div>
+          <span class="ev-status done">終了</span>
+        </div>
+        <div class="ec-body">
+          <span class="ec-date">2026.04.15（火）10:00〜16:00</span>
+          <p class="ec-ttl done-txt">縁側のある家 ― 完成見学会</p>
+          <p class="ec-sub">つくば市</p>
+        </div>
+      </a>
+
+      <a href="event-detail-005.html" class="event-card done">
+        <div class="ec-img">
+          <!-- <img src="event-005.jpg" alt="春の相談会"> -->
+          <div class="ec-img-bg" style="background:linear-gradient(145deg,#9A8878,#7A6858,#5A4840);"></div>
+          <span class="ev-status done">終了</span>
+        </div>
+        <div class="ec-body">
+          <span class="ec-date">2026.03.20（金）10:00〜17:00</span>
+          <p class="ec-ttl done-txt">春の家づくり相談会</p>
+          <p class="ec-sub">水戸市ショールーム</p>
+        </div>
+      </a>
+
+      <a href="event-detail-006.html" class="event-card done">
+        <div class="ec-img">
+          <!-- <img src="event-006.jpg" alt="光と風の家"> -->
+          <div class="ec-img-bg" style="background:linear-gradient(145deg,#7A7068,#5A5050,#3A3840);"></div>
+          <span class="ev-status done">終了</span>
+        </div>
+        <div class="ec-body">
+          <span class="ec-date">2025.11.03（月）10:00〜16:00</span>
+          <p class="ec-ttl done-txt">光と風の平屋 ― 完成見学会</p>
+          <p class="ec-sub">那珂市 ／ 賞受賞作品</p>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</div>
+  <div class="timerex-wrap">
+    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →</a>
+  </div>
+</body>
+</html>
