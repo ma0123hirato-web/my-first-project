@@ -441,6 +441,8 @@ ev1: [
   {sec:'説明文'},
   {id:'ev1-desc-ttl',  lbl:'見出し', type:'input',    sel:'.ev-desc-ttl'},
   {id:'ev1-desc-body', lbl:'本文',   type:'textarea', sel:'.ev-desc-body'},
+  {sec:'予約ボタン'},
+  {id:'ev1-reserve-url', lbl:'予約URL', type:'url', sel:'.btn-reserve'},
   {sec:'写真（4枚）'},
   {id:'ev1-photo1', lbl:'写真①', type:'image', sel:'.ev-photos .ev-photo:nth-child(1) img'},
   {id:'ev1-photo2', lbl:'写真②', type:'image', sel:'.ev-photos .ev-photo:nth-child(2) img'},
@@ -479,6 +481,8 @@ function evDetailFields(key) {
     {sec:'説明文'},
     {id:`${key}-desc-ttl`,  lbl:'見出し', type:'input',    sel:'.ev-desc-ttl'},
     {id:`${key}-desc-body`,  lbl:'本文',  type:'textarea', sel:'.ev-desc-body'},
+    {sec:'予約ボタン'},
+    {id:`${key}-reserve-url`, lbl:'予約URL', type:'url', sel:'.btn-reserve'},
     {sec:'写真（2枚）'},
     {id:`${key}-photo1`, lbl:'写真①', type:'image', sel:'.ev-photos .ev-photo:nth-child(1)'},
     {id:`${key}-photo2`, lbl:'写真②', type:'image', sel:'.ev-photos .ev-photo:nth-child(2)'},
@@ -631,6 +635,7 @@ function renderFields(key) {
   for(const f of defs) {
     if(!f.id) continue;
     if(f.type === 'input' || f.type === 'textarea') attachTextHandler(f);
+    else if(f.type === 'url') attachUrlHandler(f);
     else if(f.type === 'image') attachImageHandler(f);
     else if(f.type === 'toggle') attachToggleHandler(f);
     else if(f.type === 'fs') attachFsHandler(f);
@@ -644,6 +649,11 @@ function renderField(f) {
   const val = getFieldValue(f);
   const selQ = f.sel ? f.sel.replace(/\\/g,'\\\\').replace(/'/g,"\\'") : '';
   const fsBtn = selQ ? `<span class="fs-mini"><button class="fs-mini-btn" onclick="adjFsDirect('${selQ}',-0.05)">A-</button><button class="fs-mini-btn" onclick="adjFsDirect('${selQ}',+0.05)">A+</button></span>` : '';
+  if(f.type === 'url') {
+    const hrefVal = (curDoc && curDoc.querySelector(f.sel)) ? (curDoc.querySelector(f.sel).getAttribute('href') || '') : '';
+    return `<div class="field"><div class="field-label">${f.lbl}</div>
+      <input type="text" id="${f.id}" value="${esc(hrefVal)}" placeholder="https://..."></div>`;
+  }
   if(f.type === 'input') {
     return `<div class="field"><div class="field-label">${f.lbl}${fsBtn}</div>
       <input type="text" id="${f.id}" value="${esc(val)}"></div>`;
@@ -756,6 +766,17 @@ function attachFsHandler(f) {
     if(!curDoc) return;
     const target = curDoc.querySelector(f.sel);
     if(target) target.style.fontSize = el.value;
+    schedulePreview();
+  });
+}
+
+function attachUrlHandler(f) {
+  const el = document.getElementById(f.id);
+  if(!el) return;
+  el.addEventListener('input', () => {
+    if(!curDoc) return;
+    const target = curDoc.querySelector(f.sel);
+    if(target) target.setAttribute('href', el.value);
     schedulePreview();
   });
 }
@@ -985,7 +1006,7 @@ function ensureMobileCss(html, fname) {
       var si001 = html.lastIndexOf('<\/style>');
       if(si001 !== -1) html = html.slice(0, si001) + css001 + '\n' + html.slice(si001);
     }
-    if(!html.includes('timerex.net')) {
+    if(!html.includes('btn-reserve')) {
       var timerexBtn = '<div class="timerex-wrap">\n    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →<\/a>\n  <\/div>';
       var insAt = -1;
       var blIdx2 = html.indexOf('class="back-link"');
