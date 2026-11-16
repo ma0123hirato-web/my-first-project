@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お知らせ作成ツール | 株式会社ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans JP',sans-serif;background:#1C1917;color:#FAF8F5;font-weight:300;min-height:100vh;}
+
+/* HEADER */
+.admin-header{background:rgba(20,14,10,0.95);border-bottom:1px solid rgba(184,151,126,0.15);padding:1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.admin-logo{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--mocha-l);letter-spacing:0.1em;}
+.admin-logo span{font-size:0.55rem;letter-spacing:0.25em;color:rgba(255,255,255,0.4);display:block;font-family:'Noto Sans JP',sans-serif;}
+.btn-back{font-size:0.6rem;letter-spacing:0.18em;color:rgba(255,255,255,0.5);text-decoration:none;border:1px solid rgba(255,255,255,0.15);padding:0.4rem 1rem;transition:all 0.3s;}
+.btn-back:hover{border-color:var(--mocha);color:var(--mocha);}
+
+/* MAIN LAYOUT */
+.admin-wrap{display:grid;grid-template-columns:1fr 1fr;gap:2px;min-height:calc(100vh - 60px);}
+@media(max-width:900px){.admin-wrap{grid-template-columns:1fr;}}
+
+/* FORM PANEL */
+.form-panel{background:#201A17;padding:2.5rem;overflow-y:auto;max-height:calc(100vh - 60px);}
+.form-ttl{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--mocha-l);letter-spacing:0.05em;margin-bottom:0.4rem;}
+.form-sub{font-size:0.62rem;letter-spacing:0.15em;color:rgba(255,255,255,0.3);margin-bottom:2rem;}
+
+.field{margin-bottom:1.6rem;}
+.field label{display:block;font-size:0.6rem;letter-spacing:0.22em;color:var(--mocha);margin-bottom:0.5rem;}
+.field input,.field select,.field textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.2);color:#FAF8F5;padding:0.7rem 1rem;font-size:0.82rem;font-family:'Noto Sans JP',sans-serif;font-weight:300;outline:none;transition:border-color 0.3s;resize:vertical;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--mocha);}
+.field textarea{min-height:120px;line-height:1.8;}
+.field select option{background:#201A17;}
+
+/* IMAGE UPLOAD */
+.img-upload-area{border:1px dashed rgba(184,151,126,0.3);padding:2rem;text-align:center;cursor:pointer;transition:border-color 0.3s;margin-bottom:1.6rem;position:relative;}
+.img-upload-area:hover{border-color:var(--mocha);}
+.img-upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:1.5rem;margin-bottom:0.5rem;color:rgba(184,151,126,0.4);}
+.upload-label{font-size:0.6rem;letter-spacing:0.2em;color:rgba(184,151,126,0.6);display:block;margin-bottom:0.3rem;}
+.upload-note{font-size:0.55rem;color:rgba(255,255,255,0.25);letter-spacing:0.1em;}
+
+/* Preview strip */
+.img-previews{display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:1.6rem;}
+.img-preview-slot{aspect-ratio:4/3;overflow:hidden;background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.15);position:relative;display:flex;align-items:center;justify-content:center;}
+.img-preview-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-preview-slot .remove-img{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);color:#fff;border:none;font-size:0.6rem;padding:2px 6px;cursor:pointer;display:none;}
+.img-preview-slot:hover .remove-img{display:block;}
+.img-empty{font-size:0.52rem;letter-spacing:0.12em;color:rgba(255,255,255,0.2);}
+
+/* SECTION DIVIDER */
+.sec-div{border-top:1px solid rgba(184,151,126,0.1);margin:2rem 0;padding-top:1.5rem;}
+.sec-div-ttl{font-size:0.6rem;letter-spacing:0.3em;color:rgba(184,151,126,0.6);margin-bottom:1.2rem;}
+
+/* BODY BLOCKS */
+.body-blocks{margin-bottom:1.6rem;}
+.body-block{background:rgba(255,255,255,0.03);border:1px solid rgba(184,151,126,0.1);padding:1rem;margin-bottom:0.8rem;position:relative;}
+.body-block-type{font-size:0.55rem;letter-spacing:0.2em;color:rgba(184,151,126,0.5);margin-bottom:0.6rem;}
+.body-block textarea,.body-block input{width:100%;background:transparent;border:none;border-bottom:1px solid rgba(184,151,126,0.15);color:#FAF8F5;padding:0.4rem 0;font-size:0.8rem;font-family:'Noto Serif JP',serif;font-weight:200;outline:none;}
+.body-block textarea{resize:vertical;min-height:80px;line-height:1.9;}
+.remove-block{position:absolute;top:0.6rem;right:0.6rem;background:none;border:none;color:rgba(255,255,255,0.25);font-size:0.7rem;cursor:pointer;}
+.remove-block:hover{color:#ff6b6b;}
+.add-block-btns{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.add-block-btn{font-size:0.58rem;letter-spacing:0.15em;padding:0.4rem 0.9rem;border:1px solid rgba(184,151,126,0.25);color:rgba(184,151,126,0.7);background:none;cursor:pointer;transition:all 0.3s;}
+.add-block-btn:hover{border-color:var(--mocha);color:var(--mocha);}
+
+/* INFO TABLE BUILDER */
+.info-rows{margin-bottom:1rem;}
+.info-row-input{display:grid;grid-template-columns:1fr 2fr auto;gap:0.5rem;margin-bottom:0.5rem;align-items:center;}
+.info-row-input input{background:rgba(255,255,255,0.04);border:1px solid rgba(184,151,126,0.15);color:#FAF8F5;padding:0.5rem 0.7rem;font-size:0.75rem;font-family:'Noto Sans JP',sans-serif;}
+.btn-remove-row{background:none;border:none;color:rgba(255,255,255,0.25);cursor:pointer;font-size:0.75rem;padding:0.3rem;}
+.btn-remove-row:hover{color:#ff6b6b;}
+.btn-add-row{font-size:0.58rem;letter-spacing:0.15em;padding:0.4rem 0.9rem;border:1px solid rgba(184,151,126,0.25);color:rgba(184,151,126,0.7);background:none;cursor:pointer;transition:all 0.3s;width:100%;margin-top:0.3rem;}
+.btn-add-row:hover{border-color:var(--mocha);color:var(--mocha);}
+
+/* ACTION BUTTONS */
+.action-row{display:flex;gap:1rem;margin-top:2rem;}
+.btn-preview{flex:1;padding:0.85rem;background:transparent;border:1px solid var(--mocha);color:var(--mocha);font-size:0.65rem;letter-spacing:0.2em;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all 0.3s;}
+.btn-preview:hover{background:rgba(184,151,126,0.1);}
+.btn-generate{flex:2;padding:0.85rem;background:var(--mocha);border:none;color:var(--dark);font-size:0.65rem;letter-spacing:0.22em;cursor:pointer;font-family:'Noto Sans JP',sans-serif;font-weight:400;transition:background 0.3s;}
+.btn-generate:hover{background:var(--mocha-l);}
+
+/* PREVIEW PANEL */
+.preview-panel{background:#F5F2EC;overflow-y:auto;max-height:calc(100vh - 60px);}
+.preview-header{background:#EDE6DC;border-bottom:1px solid rgba(184,151,126,0.2);padding:0.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;}
+.preview-label{font-size:0.58rem;letter-spacing:0.25em;color:var(--mid);}
+.preview-device-btns{display:flex;gap:0.3rem;}
+.dev-btn{font-size:0.55rem;letter-spacing:0.12em;padding:0.25rem 0.6rem;border:1px solid rgba(184,151,126,0.3);background:none;color:var(--mid);cursor:pointer;}
+.dev-btn.active{background:var(--mocha);color:#fff;border-color:var(--mocha);}
+.preview-frame{width:100%;height:calc(100vh - 108px);border:none;}
+.preview-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100vh - 108px);color:var(--mid);}
+.preview-placeholder p{font-size:0.72rem;letter-spacing:0.15em;margin-bottom:0.5rem;}
+.preview-placeholder span{font-size:0.6rem;color:rgba(107,91,78,0.5);letter-spacing:0.1em;}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:#FAF8F5;padding:0.8rem 1.5rem;font-size:0.68rem;letter-spacing:0.15em;z-index:9999;border-left:3px solid var(--mocha);transform:translateY(100px);opacity:0;transition:all 0.4s;pointer-events:none;}
+.toast.show{transform:none;opacity:1;}
+</style>
+</head>
+<body>
+
+<header class="admin-header">
+  <div class="admin-logo">
+    株式会社ma
+    <span>NEWS CREATOR — お知らせ作成ツール</span>
+  </div>
+  <a href="index.html" class="btn-back">← サイトに戻る</a>
+</header>
+
+<div class="admin-wrap">
+
+  <!-- ====== FORM PANEL ====== -->
+  <div class="form-panel">
+    <h1 class="form-ttl">お知らせを作成する</h1>
+    <p class="form-sub">入力後「HTMLを生成・ダウンロード」でファイルを保存してください</p>
+
+    <!-- 基本情報 -->
+    <div class="field">
+      <label>ファイル名 <span style="color:rgba(255,255,255,0.3)">（例: news-detail-004）</span></label>
+      <input type="text" id="fileName" placeholder="news-detail-004" value="news-detail-004">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div class="field">
+        <label>日付</label>
+        <input type="text" id="newsDate" placeholder="2026.06.01">
+      </div>
+      <div class="field">
+        <label>カテゴリ</label>
+        <select id="newsTag">
+          <option value="EVENT">EVENT</option>
+          <option value="INFO">INFO</option>
+          <option value="AWARD">AWARD</option>
+          <option value="NEWS">NEWS</option>
+          <option value="MEDIA">MEDIA</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>タイトル</label>
+      <input type="text" id="newsTitle" placeholder="お知らせのタイトルを入力">
+    </div>
+
+    <!-- メイン画像 -->
+    <div class="sec-div">
+      <p class="sec-div-ttl">メイン画像（ヒーロー）</p>
+    </div>
+
+    <div class="img-upload-area" id="heroUploadArea">
+      <input type="file" accept="image/*" id="heroInput" onchange="handleHeroImg(this)">
+      <div class="upload-icon">🖼</div>
+      <span class="upload-label">メイン画像をドラッグ or クリック</span>
+      <span class="upload-note">推奨: 1200×675px（16:9）</span>
+    </div>
+    <div id="heroPreview" style="display:none;margin-bottom:1.6rem;">
+      <div style="position:relative;aspect-ratio:16/9;overflow:hidden;border:1px solid rgba(184,151,126,0.2);">
+        <img id="heroPreviewImg" style="width:100%;height:100%;object-fit:cover;">
+        <button onclick="clearHero()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);color:#fff;border:none;padding:3px 8px;font-size:0.6rem;cursor:pointer;">✕ 削除</button>
+      </div>
+    </div>
+
+    <!-- 詳細情報テーブル（任意） -->
+    <div class="sec-div">
+      <p class="sec-div-ttl">詳細情報テーブル（任意）― 日時・場所など</p>
+    </div>
+    <div class="info-rows" id="infoRows">
+      <div class="info-row-input">
+        <input type="text" placeholder="日時" class="info-label">
+        <input type="text" placeholder="2026年○月○日 ..." class="info-value">
+        <button class="btn-remove-row" onclick="removeInfoRow(this)">✕</button>
+      </div>
+      <div class="info-row-input">
+        <input type="text" placeholder="場所" class="info-label">
+        <input type="text" placeholder="茨城県○○市..." class="info-value">
+        <button class="btn-remove-row" onclick="removeInfoRow(this)">✕</button>
+      </div>
+    </div>
+    <button class="btn-add-row" onclick="addInfoRow()">＋ 行を追加</button>
+
+    <!-- 本文ブロック -->
+    <div class="sec-div">
+      <p class="sec-div-ttl">本文ブロック</p>
+    </div>
+
+    <div class="body-blocks" id="bodyBlocks">
+      <div class="body-block" data-type="p">
+        <p class="body-block-type">● 段落テキスト</p>
+        <textarea placeholder="本文テキストを入力してください..."></textarea>
+        <button class="remove-block" onclick="this.parentElement.remove()">✕</button>
+      </div>
+    </div>
+
+    <div class="add-block-btns">
+      <button class="add-block-btn" onclick="addBlock('p')">＋ 段落</button>
+      <button class="add-block-btn" onclick="addBlock('h3')">＋ 見出し</button>
+      <button class="add-block-btn" onclick="addBlock('photos')">＋ 写真2枚</button>
+      <button class="add-block-btn" onclick="addBlock('list')">＋ リスト</button>
+    </div>
+
+    <!-- アクション -->
+    <div class="action-row">
+      <button class="btn-preview" onclick="previewPage()">プレビュー</button>
+      <button class="btn-generate" onclick="generateHTML()">HTMLを生成・ダウンロード</button>
+    </div>
+  </div>
+
+  <!-- ====== PREVIEW PANEL ====== -->
+  <div class="preview-panel">
+    <div class="preview-header">
+      <span class="preview-label">PREVIEW</span>
+      <div class="preview-device-btns">
+        <button class="dev-btn active" onclick="setDevice('desktop',this)">PC</button>
+        <button class="dev-btn" onclick="setDevice('mobile',this)">SP</button>
+      </div>
+    </div>
+    <div id="previewPlaceholder" class="preview-placeholder">
+      <p>プレビューがここに表示されます</p>
+      <span>「プレビュー」ボタンを押してください</span>
+    </div>
+    <iframe id="previewFrame" class="preview-frame" style="display:none;"></iframe>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ======================== IMAGE HERO ========================
+let heroDataUrl = '';
+
+function handleHeroImg(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    heroDataUrl = e.target.result;
+    document.getElementById('heroPreviewImg').src = heroDataUrl;
+    document.getElementById('heroPreview').style.display='block';
+    document.getElementById('heroUploadArea').style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+function clearHero(){
+  heroDataUrl='';
+  document.getElementById('heroPreview').style.display='none';
+  document.getElementById('heroUploadArea').style.display='block';
+  document.getElementById('heroInput').value='';
+}
+
+// ======================== INFO ROWS ========================
+function addInfoRow(){
+  const row = document.createElement('div');
+  row.className='info-row-input';
+  row.innerHTML=`
+    <input type="text" placeholder="項目名" class="info-label">
+    <input type="text" placeholder="内容" class="info-value">
+    <button class="btn-remove-row" onclick="removeInfoRow(this)">✕</button>
+  `;
+  document.getElementById('infoRows').appendChild(row);
+}
+function removeInfoRow(btn){ btn.parentElement.remove(); }
+
+// ======================== BODY BLOCKS ========================
+function addBlock(type){
+  const container = document.getElementById('bodyBlocks');
+  const block = document.createElement('div');
+  block.className='body-block';
+  block.dataset.type=type;
+
+  if(type==='p'){
+    block.innerHTML=`<p class="body-block-type">● 段落テキスト</p>
+      <textarea placeholder="本文テキスト..."></textarea>
+      <button class="remove-block" onclick="this.parentElement.remove()">✕</button>`;
+  } else if(type==='h3'){
+    block.innerHTML=`<p class="body-block-type">■ 見出し</p>
+      <input type="text" placeholder="見出しテキスト">
+      <button class="remove-block" onclick="this.parentElement.remove()">✕</button>`;
+  } else if(type==='photos'){
+    block.innerHTML=`<p class="body-block-type">📷 写真2枚（横並び）</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-top:0.5rem;">
+        <div>
+          <input type="text" placeholder="写真①ファイル名 (例: news-004-sub1.jpg)">
+          <input type="text" placeholder="写真①説明文" style="margin-top:0.3rem;font-size:0.72rem;">
+        </div>
+        <div>
+          <input type="text" placeholder="写真②ファイル名 (例: news-004-sub2.jpg)">
+          <input type="text" placeholder="写真②説明文" style="margin-top:0.3rem;font-size:0.72rem;">
+        </div>
+      </div>
+      <p style="font-size:0.52rem;color:rgba(255,255,255,0.25);margin-top:0.5rem;letter-spacing:0.1em;">※ 写真はHTMLと同じフォルダに置いてください</p>
+      <button class="remove-block" onclick="this.parentElement.remove()">✕</button>`;
+  } else if(type==='list'){
+    block.innerHTML=`<p class="body-block-type">• リスト</p>
+      <textarea placeholder="・項目1&#10;・項目2&#10;・項目3&#10;（各行が1項目になります）"></textarea>
+      <button class="remove-block" onclick="this.parentElement.remove()">✕</button>`;
+  }
+  container.appendChild(block);
+}
+
+// ======================== BUILD HTML ========================
+function buildHTMLContent(){
+  const fileName = document.getElementById('fileName').value.trim() || 'news-detail';
+  const date = document.getElementById('newsDate').value.trim() || '2026.00.00';
+  const tag = document.getElementById('newsTag').value;
+  const title = document.getElementById('newsTitle').value.trim() || 'お知らせ';
+
+  // Info table rows
+  const infoRowEls = document.querySelectorAll('.info-row-input');
+  let infoTableHTML = '';
+  infoRowEls.forEach(row=>{
+    const label = row.querySelector('.info-label').value.trim();
+    const value = row.querySelector('.info-value').value.trim();
+    if(label && value){
+      infoTableHTML += `
+      <div class="ev-info-row"><span class="ev-info-label">${label}</span><span class="ev-info-value">${value}</span></div>`;
+    }
+  });
+
+  // Body blocks
+  const blockEls = document.querySelectorAll('#bodyBlocks .body-block');
+  let bodyHTML = '';
+  blockEls.forEach(block=>{
+    const type = block.dataset.type;
+    if(type==='p'){
+      const text = block.querySelector('textarea').value.trim().replace(/\n/g,'<br>');
+      if(text) bodyHTML += `<p>${text}</p>\n`;
+    } else if(type==='h3'){
+      const text = block.querySelector('input').value.trim();
+      if(text) bodyHTML += `<h3>${text}</h3>\n`;
+    } else if(type==='photos'){
+      const inputs = block.querySelectorAll('input');
+      const src1 = inputs[0].value.trim();
+      const alt1 = inputs[1].value.trim() || '写真①';
+      const src2 = inputs[2].value.trim();
+      const alt2 = inputs[3].value.trim() || '写真②';
+      bodyHTML += `<div class="news-img-row">
+      <div class="news-img-slot">${src1 ? `<img src="${src1}" alt="${alt1}">` : `<span class="img-hint">${alt1}（写真をアップ）</span>`}</div>
+      <div class="news-img-slot">${src2 ? `<img src="${src2}" alt="${alt2}">` : `<span class="img-hint">${alt2}（写真をアップ）</span>`}</div>
+    </div>\n`;
+    } else if(type==='list'){
+      const lines = block.querySelector('textarea').value.split('\n').filter(l=>l.trim());
+      if(lines.length){
+        bodyHTML += `<ul>\n${lines.map(l=>`  <li>${l.replace(/^[・\-\*\•]\s*/,'')}</li>`).join('\n')}\n</ul>\n`;
+      }
+    }
+  });
+
+  // Hero image
+  const heroImgHTML = heroDataUrl
+    ? `<img src="${heroDataUrl}" alt="${title}">`
+    : `<div class="news-hero-placeholder"><span>メイン画像</span></div>`;
+
+  const html = `<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title} | 株式会社ma</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;}
+.nav-back:hover{color:#fff;}
+.page-wrap{max-width:760px;margin:0 auto;padding:120px 2.5rem 6rem;}
+.breadcrumb{font-size:0.6rem;letter-spacing:0.2em;color:var(--mocha-d);margin-bottom:2.5rem;display:flex;align-items:center;gap:0.6rem;}
+.breadcrumb a{color:var(--mocha-d);text-decoration:none;}
+.breadcrumb span{color:var(--mid);}
+.news-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;}
+.news-date{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--mid);}
+.news-tag{font-size:0.56rem;letter-spacing:0.13em;padding:0.18rem 0.7rem;border:1px solid var(--mocha);color:var(--mocha);}
+.news-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:300;color:var(--dark);letter-spacing:0.08em;line-height:1.7;margin-bottom:2.5rem;padding-bottom:2rem;border-bottom:1px solid var(--line);}
+.news-hero-img{width:100%;aspect-ratio:16/9;overflow:hidden;margin-bottom:3rem;background:linear-gradient(145deg,#9B8472,#7A6352);display:flex;align-items:center;justify-content:center;}
+.news-hero-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.news-hero-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+.news-hero-placeholder span{font-size:0.65rem;letter-spacing:0.2em;color:rgba(255,255,255,0.4);}
+.ev-info{background:var(--white);border:1px solid var(--line);margin-bottom:3rem;}
+.ev-info-row{display:grid;grid-template-columns:120px 1fr;border-bottom:1px solid var(--line);}
+.ev-info-row:last-child{border-bottom:none;}
+.ev-info-label{padding:1rem 1.2rem;font-size:0.65rem;letter-spacing:0.18em;color:var(--mocha-d);background:var(--soft);display:flex;align-items:center;}
+.ev-info-value{padding:1rem 1.5rem;font-size:0.78rem;color:var(--dark);line-height:1.8;display:flex;align-items:center;}
+.news-body{font-family:'Noto Serif JP',serif;font-size:0.88rem;font-weight:300;color:var(--dark);line-height:2.6;letter-spacing:0.06em;margin-bottom:3rem;}
+.news-body p{margin-bottom:1.4em;}
+.news-body h3{font-size:1rem;font-weight:400;margin:2em 0 0.8em;padding-left:1em;border-left:2px solid var(--mocha);}
+.news-body ul{padding-left:1.5em;margin-bottom:1.4em;}
+.news-body ul li{margin-bottom:0.4em;}
+.news-img-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2em 0;}
+.news-img-slot{aspect-ratio:4/3;overflow:hidden;background:var(--soft);border:1px dashed rgba(184,151,126,0.4);display:flex;align-items:center;justify-content:center;}
+.news-img-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.img-hint{font-size:0.58rem;letter-spacing:0.12em;color:rgba(184,151,126,0.5);}
+.back-link{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.65rem;letter-spacing:0.2em;color:var(--mocha-d);text-decoration:none;border-bottom:1px solid rgba(155,122,99,0.3);padding-bottom:2px;}
+.back-link::before{content:'←';}
+.back-link:hover{color:var(--mocha);}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="index.html#news" class="nav-back">← お知らせ一覧に戻る</a>
+</nav>
+<div class="page-wrap">
+  <nav class="breadcrumb">
+    <a href="index.html">TOP</a><span>/</span><span>お知らせ</span><span>/</span>
+    <span>${title}</span>
+  </nav>
+  <div class="news-meta">
+    <span class="news-date">${date}</span>
+    <span class="news-tag">${tag}</span>
+  </div>
+  <h1 class="news-ttl">${title}</h1>
+  <div class="news-hero-img">${heroImgHTML}</div>
+  ${infoTableHTML ? `<div class="ev-info">${infoTableHTML}\n  </div>` : ''}
+  <div class="news-body">
+    ${bodyHTML}
+  </div>
+  <a href="index.html#news" class="back-link">お知らせ一覧に戻る</a>
+</div>
+</body>
+</html>`;
+
+  return { html, fileName };
+}
+
+// ======================== PREVIEW ========================
+function previewPage(){
+  const { html } = buildHTMLContent();
+  const frame = document.getElementById('previewFrame');
+  document.getElementById('previewPlaceholder').style.display='none';
+  frame.style.display='block';
+  frame.srcdoc = html;
+  showToast('プレビューを更新しました');
+}
+
+function setDevice(dev, btn){
+  document.querySelectorAll('.dev-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const frame = document.getElementById('previewFrame');
+  if(dev==='mobile'){
+    frame.style.maxWidth='390px';
+    frame.style.margin='0 auto';
+  } else {
+    frame.style.maxWidth='';
+    frame.style.margin='';
+  }
+}
+
+// ======================== GENERATE & DOWNLOAD ========================
+function generateHTML(){
+  const { html, fileName } = buildHTMLContent();
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${fileName}.html`;
+  a.click();
+  showToast(`${fileName}.html をダウンロードしました`);
+}
+
+// ======================== TOAST ========================
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

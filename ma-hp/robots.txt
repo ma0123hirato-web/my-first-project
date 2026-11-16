@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://leafy-klepon-2e7ba3.netlify.app/sitemap.xml

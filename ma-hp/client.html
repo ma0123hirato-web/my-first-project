@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MA 施主管理</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#1a1714;--panel:#242120;--card:#2c2927;--border:#3a3733;
+  --mocha:#b8977e;--mocha-d:#8a6a52;--accent:#d4a574;
+  --text:#e8e0d8;--muted:#8a837c;--light:#f0ebe4;
+  --ok:#5a9e6a;--warn:#d4843a;--danger:#c0443a;--info:#4a7fb5;
+  --radius:6px;--shadow:0 4px 20px rgba(0,0,0,0.4);
+}
+body{font-family:'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:13px;}
+
+/* ── Header ── */
+.hdr{background:var(--panel);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;}
+.hdr-logo{font-family:'Georgia',serif;font-size:1.3rem;letter-spacing:.1em;color:var(--accent);}
+.hdr-logo span{font-size:.7rem;color:var(--muted);letter-spacing:.2em;margin-left:8px;}
+.hdr-search{flex:1;max-width:320px;position:relative;}
+.hdr-search input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px 6px 32px;color:var(--text);font-size:12px;outline:none;}
+.hdr-search input:focus{border-color:var(--mocha);}
+.hdr-search svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);opacity:.4;}
+.hdr-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:var(--radius);border:none;cursor:pointer;font-size:12px;font-family:inherit;transition:opacity .15s;}
+.btn:hover{opacity:.85;}
+.btn-primary{background:var(--mocha);color:#fff;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-ghost:hover{border-color:var(--mocha);color:var(--text);}
+.btn-sm{padding:4px 10px;font-size:11px;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-map{background:#1a73e8;color:#fff;}
+
+/* ── Tabs ── */
+.tabs{display:flex;gap:2px;padding:12px 20px 0;background:var(--panel);border-bottom:1px solid var(--border);}
+.tab{padding:8px 18px;border-radius:var(--radius) var(--radius) 0 0;cursor:pointer;color:var(--muted);font-size:12px;transition:all .15s;border:1px solid transparent;border-bottom:none;}
+.tab.active{background:var(--bg);color:var(--accent);border-color:var(--border);}
+.tab:hover:not(.active){color:var(--text);}
+
+/* ── Main layout ── */
+.main{display:flex;height:calc(100vh - 96px);}
+.sidebar{width:300px;min-width:220px;border-right:1px solid var(--border);overflow-y:auto;background:var(--panel);}
+.content{flex:1;overflow-y:auto;padding:20px;}
+
+/* ── Client list ── */
+.client-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;display:flex;align-items:center;gap:10px;}
+.client-item:hover{background:var(--card);}
+.client-item.active{background:var(--card);border-left:3px solid var(--mocha);}
+.ci-avatar{width:34px;height:34px;border-radius:50%;background:var(--mocha-d);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0;font-weight:bold;}
+.ci-info{flex:1;min-width:0;}
+.ci-name{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-sub{font-size:10px;color:var(--muted);margin-top:2px;}
+.ci-badge{font-size:9px;padding:2px 6px;border-radius:2px;white-space:nowrap;}
+.badge-ok{background:rgba(90,158,106,.2);color:#6dbb80;}
+.badge-warn{background:rgba(212,132,58,.2);color:#e0954a;}
+.badge-due{background:rgba(192,68,58,.2);color:#e06060;}
+.badge-type{background:var(--card);color:var(--muted);}
+
+/* ── Detail panel ── */
+.section-title{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.info-block{background:var(--card);border-radius:var(--radius);padding:12px;}
+.info-label{font-size:10px;color:var(--muted);margin-bottom:4px;letter-spacing:.1em;}
+.info-value{font-size:13px;color:var(--text);}
+.info-value.mono{font-family:monospace;font-size:12px;}
+.map-btn{margin-top:8px;}
+
+/* ── Inspection table ── */
+.insp-table{width:100%;border-collapse:collapse;margin-bottom:20px;}
+.insp-table th{text-align:left;font-size:10px;color:var(--muted);letter-spacing:.1em;padding:6px 10px;border-bottom:1px solid var(--border);}
+.insp-table td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.insp-table tr:last-child td{border-bottom:none;}
+.insp-status{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 8px;border-radius:2px;}
+.st-done{background:rgba(90,158,106,.15);color:#6dbb80;}
+.st-near{background:rgba(212,132,58,.15);color:#e0954a;}
+.st-due{background:rgba(192,68,58,.15);color:#e06060;}
+.st-future{background:var(--card);color:var(--muted);}
+.check-circle{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all .15s;}
+.check-circle.done{background:var(--ok);border-color:var(--ok);}
+.check-circle:hover{border-color:var(--mocha);}
+
+/* ── Dashboard ── */
+.dash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;}
+.dash-card{background:var(--card);border-radius:var(--radius);padding:16px;}
+.dash-num{font-size:2rem;font-weight:bold;color:var(--accent);line-height:1;}
+.dash-label{font-size:11px;color:var(--muted);margin-top:4px;}
+.insp-list-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border-radius:var(--radius);margin-bottom:6px;cursor:pointer;transition:background .1s;}
+.insp-list-item:hover{background:var(--border);}
+.insp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--panel);border:1px solid var(--border);border-radius:10px;width:600px;max-width:94vw;max-height:90vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow);}
+.modal-title{font-size:1rem;color:var(--accent);margin-bottom:20px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:5px;}
+.form-group.full{grid-column:1/-1;}
+.form-group label{font-size:11px;color:var(--muted);letter-spacing:.05em;}
+.form-group input,.form-group select,.form-group textarea{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none;transition:border .15s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--mocha);}
+.form-group textarea{resize:vertical;min-height:70px;}
+.form-group select option{background:var(--panel);}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+
+/* ── Empty state ── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty svg{opacity:.2;margin-bottom:12px;}
+
+/* ── Toast ── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ok);color:#fff;padding:10px 18px;border-radius:var(--radius);font-size:12px;z-index:999;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;}
+#toast.show{opacity:1;transform:none;}
+#toast.err{background:var(--danger);}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* ── Memo ── */
+.memo-box{background:var(--card);border-radius:var(--radius);padding:12px;white-space:pre-wrap;font-size:12px;color:var(--text);min-height:40px;line-height:1.7;}
+
+@media(max-width:640px){
+  .info-grid,.form-grid{grid-template-columns:1fr;}
+  .dash-grid{grid-template-columns:1fr 1fr;}
+  .sidebar{display:none;}
+  .main{display:block;}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-logo">ma <span>施主管理</span></div>
+  <div class="hdr-search">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="氏名・住所で検索…" oninput="filterClients()">
+  </div>
+  <div class="hdr-right">
+    <button class="btn btn-ghost btn-sm" onclick="exportCSV()">CSV出力</button>
+    <button class="btn btn-primary" onclick="openModal()">＋ お客様追加</button>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <div class="tab active" id="tab-dash" onclick="showTab('dash')">ダッシュボード</div>
+  <div class="tab" id="tab-list" onclick="showTab('list')">お客様一覧</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- Sidebar: client list -->
+  <div class="sidebar" id="sidebar">
+    <div id="clientList"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="contentArea">
+    <!-- Dashboard or Detail rendered here -->
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title" id="modalTitle">お客様追加</div>
+    <div class="form-grid">
+      <div class="form-group"><label>氏名 *</label><input id="f-name" placeholder="山田 太郎" required></div>
+      <div class="form-group"><label>フリガナ</label><input id="f-kana" placeholder="ヤマダ タロウ"></div>
+      <div class="form-group"><label>電話番号</label><input id="f-phone" type="tel" placeholder="029-000-0000"></div>
+      <div class="form-group"><label>メールアドレス</label><input id="f-email" type="email" placeholder="example@email.com"></div>
+      <div class="form-group full"><label>住所 *</label><input id="f-address" placeholder="〒310-0913 茨城県水戸市見川町2462-2"></div>
+      <div class="form-group full"><label>GoogleマップURL（住所が合わない場合に貼り付け）</label><input id="f-mapurl" placeholder="https://maps.google.com/..."></div>
+      <div class="form-group"><label>工事種別</label>
+        <select id="f-type">
+          <option value="新築">新築</option>
+          <option value="ni-ni">ni-ni（規格住宅）</option>
+          <option value="リフォーム">リフォーム</option>
+          <option value="リノベーション">リノベーション</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+      <div class="form-group"><label>引渡し日</label><input id="f-handover" type="date"></div>
+      <div class="form-group full"><label>担当者</label><input id="f-staff" placeholder="担当スタッフ名"></div>
+      <div class="form-group full"><label>メモ・備考</label><textarea id="f-memo" placeholder="特記事項など…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-danger btn-sm" id="deleteBtn" onclick="deleteClient()" style="margin-right:auto;display:none;">削除</button>
+      <button class="btn btn-primary" onclick="saveClient()">保存</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const STORE = 'ma-clients-v1';
+let clients = JSON.parse(localStorage.getItem(STORE) || '[]');
+let currentTab = 'dash';
+let selectedId = null;
+let editingId = null;
+let searchQ = '';
+
+function save() { localStorage.setItem(STORE, JSON.stringify(clients)); }
+
+// ── Inspection utils ──────────────────────────────────────────────────────────
+const INSP_OFFSETS = [
+  {label:'半年点検',  months:6},
+  {label:'1年点検',  months:12},
+  {label:'2年点検',  months:24},
+  {label:'5年点検',  months:60},
+  {label:'10年点検', months:120},
+];
+
+function addMonths(dateStr, m) {
+  const d = new Date(dateStr);
+  d.setMonth(d.getMonth() + m);
+  return d.toISOString().slice(0,10);
+}
+
+function makeInspections(handoverDate) {
+  if(!handoverDate) return INSP_OFFSETS.map(o=>({label:o.label,date:'',done:false,doneDate:'',memo:''}));
+  return INSP_OFFSETS.map(o=>({label:o.label,date:addMonths(handoverDate,o.months),done:false,doneDate:'',memo:''}));
+}
+
+function inspStatus(insp) {
+  if(insp.done) return 'done';
+  if(!insp.date) return 'future';
+  const diff = (new Date(insp.date) - new Date()) / 86400000;
+  if(diff < 0) return 'due';
+  if(diff <= 90) return 'near';
+  return 'future';
+}
+
+function inspLabel(status) {
+  return {done:'完了',due:'期限超過',near:'もうすぐ',future:'予定'}[status];
+}
+
+function gcalUrl(insp, c) {
+  if(!insp.date) return null;
+  const d = insp.date.replace(/-/g,'');
+  const next = new Date(insp.date); next.setDate(next.getDate()+1);
+  const d2 = next.toISOString().slice(0,10).replace(/-/g,'');
+  const text = encodeURIComponent('【MA】'+c.name+'様 '+insp.label);
+  const detail = encodeURIComponent('お客様: '+c.name+'\n電話: '+(c.phone||'—')+'\n住所: '+(c.address||'—')+'\n担当: '+(c.staff||'—')+(insp.memo?'\n\nメモ: '+insp.memo:''));
+  const loc = encodeURIComponent(c.address||'');
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text='+text+'&dates='+d+'/'+d2+'&details='+detail+'&location='+loc;
+}
+
+function nextInsp(client) {
+  if(!client.inspections) return null;
+  return client.inspections.find(i => !i.done && i.date);
+}
+
+function clientBadge(client) {
+  const ni = nextInsp(client);
+  if(!ni) return {text:'点検なし',cls:'badge-type'};
+  const st = inspStatus(ni);
+  if(st==='due')   return {text:'‼ '+ni.label,cls:'badge-due'};
+  if(st==='near')  return {text:'▲ '+ni.label,cls:'badge-warn'};
+  return {text:ni.label,cls:'badge-ok'};
+}
+
+function formatDate(str) {
+  if(!str) return '—';
+  const d = new Date(str);
+  return d.toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
+}
+
+function daysUntil(str) {
+  if(!str) return null;
+  return Math.round((new Date(str)-new Date())/86400000);
+}
+
+// ── Render client list ────────────────────────────────────────────────────────
+function renderList() {
+  const q = searchQ.toLowerCase();
+  const filtered = clients.filter(c =>
+    c.name.toLowerCase().includes(q) ||
+    (c.kana||'').toLowerCase().includes(q) ||
+    (c.address||'').toLowerCase().includes(q)
+  );
+  const el = document.getElementById('clientList');
+  if(!filtered.length) {
+    el.innerHTML = '<div class="empty" style="padding:40px 16px;font-size:12px;">お客様がいません</div>';
+    return;
+  }
+  el.innerHTML = filtered.map(c => {
+    const av = (c.name||'?')[0];
+    const badge = clientBadge(c);
+    const active = c.id === selectedId ? ' active' : '';
+    return `<div class="client-item${active}" onclick="selectClient('${c.id}')">
+      <div class="ci-avatar">${av}</div>
+      <div class="ci-info">
+        <div class="ci-name">${esc(c.name)}</div>
+        <div class="ci-sub">${esc(c.type||'')} ${c.handoverDate?'・'+formatDate(c.handoverDate).slice(0,10):''}</div>
+      </div>
+      <span class="ci-badge ${badge.cls}">${badge.text}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Select client ─────────────────────────────────────────────────────────────
+function selectClient(id) {
+  selectedId = id;
+  showTab('list');
+  renderList();
+  renderDetail();
+}
+
+function renderDetail() {
+  const area = document.getElementById('contentArea');
+  if(!selectedId) { renderDash(); return; }
+  const c = clients.find(x=>x.id===selectedId);
+  if(!c) { renderDash(); return; }
+
+  const mapUrl = c.mapUrl || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.address||''));
+  const routeUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(c.address||'');
+
+  const insps = (c.inspections||[]).map((insp,i) => {
+    const st = inspStatus(insp);
+    const stClass = {done:'st-done',near:'st-near',due:'st-due',future:'st-future'}[st];
+    const days = daysUntil(insp.date);
+    const daysStr = insp.done ? '' : (days===null?'' : days<0?`${-days}日超過`:`あと${days}日`);
+    return `<tr>
+      <td>
+        <span class="check-circle ${insp.done?'done':''}" onclick="toggleInsp('${c.id}',${i})" title="${insp.done?'未完了に戻す':'完了にする'}">
+          ${insp.done?'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>':''}
+        </span>
+      </td>
+      <td style="font-size:13px;">${insp.label}</td>
+      <td style="color:var(--muted);font-size:12px;">${formatDate(insp.date)}</td>
+      <td><span class="insp-status ${stClass}">${inspLabel(st)}</span>${daysStr?` <span style="font-size:10px;color:var(--muted);">${daysStr}</span>`:''}</td>
+      <td>${insp.done&&insp.doneDate?'<span style="font-size:11px;color:var(--muted);">'+formatDate(insp.doneDate)+'</span>':''}</td>
+      <td>
+        <input style="background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:3px 6px;color:var(--text);font-size:11px;width:120px;"
+          value="${esc(insp.memo||'')}" placeholder="メモ"
+          onchange="updInspMemo('${c.id}',${i},this.value)">
+      </td>
+      <td>${!insp.done && insp.date ? `<a href="${gcalUrl(insp,c)}" target="_blank" title="Googleカレンダーに追加" style="display:inline-flex;align-items:center;gap:3px;background:#4285f4;color:#fff;border-radius:3px;padding:3px 8px;font-size:10px;text-decoration:none;white-space:nowrap;">📅 追加</a>` : ''}</td>
+    </tr>`;
+  }).join('');
+
+  area.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h2 style="font-size:1.1rem;color:var(--accent);">${esc(c.name)} 様</h2>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="openModal('${c.id}')">編集</button>
+      </div>
+    </div>
+
+    <p class="section-title">基本情報</p>
+    <div class="info-grid">
+      <div class="info-block">
+        <div class="info-label">氏名（フリガナ）</div>
+        <div class="info-value">${esc(c.name)}${c.kana?` <span style="font-size:11px;color:var(--muted);">（${esc(c.kana)}）</span>`:''}</div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">工事種別 / 担当</div>
+        <div class="info-value">${esc(c.type||'—')}${c.staff?' / '+esc(c.staff):''}</div>
+      </div>
+      <div class="info-block" style="grid-column:1/-1;">
+        <div class="info-label">住所</div>
+        <div class="info-value mono">${esc(c.address||'—')}</div>
+        <div class="map-btn" style="display:flex;gap:8px;margin-top:10px;">
+          <a href="${mapUrl}" target="_blank" class="btn btn-map btn-sm">📍 地図を見る</a>
+          <a href="${routeUrl}" target="_blank" class="btn btn-sm" style="background:#34a853;color:#fff;">🚗 ルート案内</a>
+        </div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">電話番号</div>
+        <div class="info-value"><a href="tel:${c.phone||''}" style="color:var(--accent);text-decoration:none;">${esc(c.phone||'—')}</a></div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">メールアドレス</div>
+        <div class="info-value"><a href="mailto:${c.email||''}" style="color:var(--accent);text-decoration:none;font-size:12px;">${esc(c.email||'—')}</a></div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">引渡し日</div>
+        <div class="info-value">${formatDate(c.handoverDate)}</div>
+      </div>
+      <div class="info-block">
+        <div class="info-label">登録日</div>
+        <div class="info-value" style="font-size:11px;color:var(--muted);">${formatDate(c.createdAt?c.createdAt.slice(0,10):'')}</div>
+      </div>
+    </div>
+
+    <p class="section-title">点検スケジュール</p>
+    <div style="overflow-x:auto;margin-bottom:20px;">
+      <table class="insp-table">
+        <thead><tr>
+          <th></th><th>点検</th><th>予定日</th><th>ステータス</th><th>実施日</th><th>メモ</th><th></th>
+        </tr></thead>
+        <tbody>${insps}</tbody>
+      </table>
+    </div>
+
+    ${c.memo?`<p class="section-title">メモ・備考</p><div class="memo-box">${esc(c.memo)}</div>`:''}
+  `;
+}
+
+// ── Toggle inspection done ─────────────────────────────────────────────────────
+function toggleInsp(id, idx) {
+  const c = clients.find(x=>x.id===id);
+  if(!c||!c.inspections[idx]) return;
+  const insp = c.inspections[idx];
+  insp.done = !insp.done;
+  if(insp.done) insp.doneDate = new Date().toISOString().slice(0,10);
+  else insp.doneDate = '';
+  save(); renderList(); renderDetail();
+  showToast(insp.done ? '点検を完了にしました ✓' : '未完了に戻しました');
+}
+
+function updInspMemo(id, idx, val) {
+  const c = clients.find(x=>x.id===id);
+  if(!c||!c.inspections[idx]) return;
+  c.inspections[idx].memo = val;
+  save();
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+function renderDash() {
+  const area = document.getElementById('contentArea');
+  const total = clients.length;
+  const dueItems = [], nearItems = [];
+
+  clients.forEach(c => {
+    (c.inspections||[]).forEach(insp => {
+      if(insp.done || !insp.date) return;
+      const st = inspStatus(insp);
+      if(st==='due')  dueItems.push({c, insp});
+      if(st==='near') nearItems.push({c, insp});
+    });
+  });
+
+  const allDone = clients.filter(c=>(c.inspections||[]).every(i=>i.done||!i.date)).length;
+
+  function inspRow(item, dotColor) {
+    const days = daysUntil(item.insp.date);
+    const dStr = days < 0 ? `${-days}日超過` : `あと${days}日`;
+    return `<div class="insp-list-item" onclick="selectClient('${item.c.id}')">
+      <div class="insp-dot" style="background:${dotColor};"></div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;">${esc(item.c.name)} 様 — ${item.insp.label}</div>
+        <div style="font-size:10px;color:var(--muted);">${formatDate(item.insp.date)}</div>
+      </div>
+      <span style="font-size:11px;color:${dotColor};">${dStr}</span>
+    </div>`;
+  }
+
+  area.innerHTML = `
+    <p class="section-title">サマリー</p>
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-num">${total}</div>
+        <div class="dash-label">登録お客様数</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-num" style="color:var(--danger);">${dueItems.length}</div>
+        <div class="dash-label">期限超過の点検</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-num" style="color:var(--warn);">${nearItems.length}</div>
+        <div class="dash-label">3ヶ月以内の点検</div>
+      </div>
+    </div>
+
+    ${dueItems.length ? `
+      <p class="section-title" style="color:var(--danger);">⚠ 期限超過</p>
+      ${dueItems.map(i=>inspRow(i,'var(--danger)')).join('')}
+      <div style="margin-bottom:20px;"></div>
+    ` : ''}
+
+    ${nearItems.length ? `
+      <p class="section-title" style="color:var(--warn);">▲ 3ヶ月以内に予定</p>
+      ${nearItems.map(i=>inspRow(i,'var(--warn)')).join('')}
+      <div style="margin-bottom:20px;"></div>
+    ` : ''}
+
+    ${!dueItems.length && !nearItems.length ? `
+      <div class="empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p>直近の点検はありません</p>
+      </div>
+    ` : ''}
+
+    ${total===0?`<div class="empty"><p>「＋ お客様追加」からお客様を登録してください</p></div>`:''}
+  `;
+}
+
+// ── Tab ───────────────────────────────────────────────────────────────────────
+function showTab(tab) {
+  currentTab = tab;
+  document.getElementById('tab-dash').classList.toggle('active', tab==='dash');
+  document.getElementById('tab-list').classList.toggle('active', tab==='list');
+  document.getElementById('sidebar').style.display = tab==='list' ? '' : 'none';
+  if(tab==='dash') { selectedId=null; renderList(); renderDash(); }
+  else { renderList(); renderDetail(); }
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────────
+function openModal(id) {
+  editingId = id || null;
+  const c = id ? clients.find(x=>x.id===id) : null;
+  document.getElementById('modalTitle').textContent = c ? 'お客様編集' : 'お客様追加';
+  document.getElementById('f-name').value    = c ? c.name    : '';
+  document.getElementById('f-kana').value    = c ? c.kana||'' : '';
+  document.getElementById('f-phone').value   = c ? c.phone||'' : '';
+  document.getElementById('f-email').value   = c ? c.email||'' : '';
+  document.getElementById('f-address').value = c ? c.address||'' : '';
+  document.getElementById('f-mapurl').value  = c ? c.mapUrl||'' : '';
+  document.getElementById('f-type').value    = c ? c.type||'新築' : '新築';
+  document.getElementById('f-handover').value= c ? c.handoverDate||'' : '';
+  document.getElementById('f-staff').value   = c ? c.staff||'' : '';
+  document.getElementById('f-memo').value    = c ? c.memo||'' : '';
+  document.getElementById('deleteBtn').style.display = c ? '' : 'none';
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function closeModalOnBg(e) {
+  if(e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+function saveClient() {
+  const name = document.getElementById('f-name').value.trim();
+  if(!name) { alert('氏名は必須です'); return; }
+  const handoverDate = document.getElementById('f-handover').value;
+
+  if(editingId) {
+    const c = clients.find(x=>x.id===editingId);
+    const oldHandover = c.handoverDate;
+    c.name    = name;
+    c.kana    = document.getElementById('f-kana').value.trim();
+    c.phone   = document.getElementById('f-phone').value.trim();
+    c.email   = document.getElementById('f-email').value.trim();
+    c.address = document.getElementById('f-address').value.trim();
+    c.mapUrl  = document.getElementById('f-mapurl').value.trim();
+    c.type    = document.getElementById('f-type').value;
+    c.handoverDate = handoverDate;
+    c.staff   = document.getElementById('f-staff').value.trim();
+    c.memo    = document.getElementById('f-memo').value.trim();
+    // Recalculate inspections if handover date changed
+    if(handoverDate && handoverDate !== oldHandover) {
+      c.inspections = makeInspections(handoverDate);
+    }
+    showToast('保存しました ✓');
+  } else {
+    const id = Date.now().toString();
+    clients.push({
+      id, name,
+      kana:    document.getElementById('f-kana').value.trim(),
+      phone:   document.getElementById('f-phone').value.trim(),
+      email:   document.getElementById('f-email').value.trim(),
+      address: document.getElementById('f-address').value.trim(),
+      mapUrl:  document.getElementById('f-mapurl').value.trim(),
+      type:    document.getElementById('f-type').value,
+      handoverDate,
+      staff:   document.getElementById('f-staff').value.trim(),
+      memo:    document.getElementById('f-memo').value.trim(),
+      createdAt: new Date().toISOString(),
+      inspections: makeInspections(handoverDate),
+    });
+    selectedId = id;
+    showToast('お客様を追加しました ✓');
+  }
+  save();
+  closeModal();
+  showTab('list');
+}
+
+function deleteClient() {
+  if(!editingId) return;
+  const c = clients.find(x=>x.id===editingId);
+  if(!confirm(`「${c.name}」を削除しますか？`)) return;
+  clients = clients.filter(x=>x.id!==editingId);
+  if(selectedId===editingId) selectedId=null;
+  save(); closeModal();
+  showTab(currentTab);
+  showToast('削除しました');
+}
+
+// ── Search ────────────────────────────────────────────────────────────────────
+function filterClients() {
+  searchQ = document.getElementById('searchInput').value;
+  renderList();
+}
+
+// ── CSV Export ────────────────────────────────────────────────────────────────
+function exportCSV() {
+  const rows = [['氏名','フリガナ','電話','メール','住所','工事種別','担当','引渡し日','1年点検','2年点検','5年点検','10年点検','メモ']];
+  clients.forEach(c => {
+    const ins = (c.inspections||[]);
+    rows.push([
+      c.name, c.kana||'', c.phone||'', c.email||'', c.address||'',
+      c.type||'', c.staff||'', c.handoverDate||'',
+      ins[0]?`${ins[0].date}(${ins[0].done?'完了':'未'})`:'-',
+      ins[1]?`${ins[1].date}(${ins[1].done?'完了':'未'})`:'-',
+      ins[2]?`${ins[2].date}(${ins[2].done?'完了':'未'})`:'-',
+      ins[3]?`${ins[3].date}(${ins[3].done?'完了':'未'})`:'-',
+      c.memo||''
+    ]);
+  });
+  const csv = rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob = new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '施主管理_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+let _tt;
+function showToast(msg,err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show'+(err?' err':'');
+  clearTimeout(_tt); _tt = setTimeout(()=>t.className='',2500);
+}
+
+// ── Escape ────────────────────────────────────────────────────────────────────
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── Migration: add 半年点検 to existing clients ──────────────────────────────
+(function migrate() {
+  let changed = false;
+  clients.forEach(c => {
+    if(!c.inspections || c.inspections[0]?.label === '半年点検') return;
+    const halfYear = {label:'半年点検', date: c.handoverDate ? addMonths(c.handoverDate, 6) : '', done:false, doneDate:'', memo:''};
+    c.inspections.unshift(halfYear);
+    changed = true;
+  });
+  if(changed) save();
+})();
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+showTab('dash');
+</script>
+</body>
+</html>

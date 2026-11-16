@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サービス詳細 | 株式会社ma</title>
+<meta name="description" content="株式会社maのサービス詳細。新築・リフォーム・アフターサービスまで、一貫したサポートで理想の住まいを実現します。茨城県対応。">
+<meta name="keywords" content="株式会社ma,サービス,新築,リフォーム,アフターサービス,茨城">
+<link rel="canonical" href="https://leafy-klepon-2e7ba3.netlify.app/service.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="サービス詳細 | 株式会社ma">
+<meta property="og:description" content="新築・リフォーム・アフターサービスまで、一貫したサポートで理想の住まいを実現。茨城県対応。">
+<meta property="og:url" content="https://leafy-klepon-2e7ba3.netlify.app/service.html">
+<meta property="og:site_name" content="株式会社ma">
+<meta property="og:locale" content="ja_JP">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&family=Noto+Serif+JP:wght@200;300;400&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--mocha:#B8977E;--mocha-d:#9A7A63;--mocha-l:#D4B99E;--bg:#FAF8F5;--dark:#2E2A27;--dark-nav:#1C1917;--mid:#6B5B4E;--soft:#EDE6DC;--white:#fff;--line:rgba(184,151,126,0.2);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--dark);font-weight:300;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(28,25,23,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;color:#fff;letter-spacing:0.1em;text-decoration:none;}
+.nav-back{font-size:0.65rem;letter-spacing:0.18em;color:rgba(255,255,255,0.7);text-decoration:none;transition:color 0.3s;}
+.nav-back:hover{color:#fff;}
+
+/* PAGE HERO */
+.page-hero{margin-top:70px;background:var(--dark-nav);padding:5rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+.page-hero::before{content:'SERVICE';position:absolute;font-family:'Cormorant Garamond',serif;font-size:12rem;color:rgba(255,255,255,0.02);letter-spacing:0.1em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:none;}
+.page-hero-ey{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.45em;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;}
+.page-hero-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:200;color:#fff;letter-spacing:0.15em;margin-bottom:1rem;}
+.page-hero-sub{font-size:0.78rem;color:rgba(255,255,255,0.45);letter-spacing:0.1em;line-height:2;}
+
+/* SERVICE SECTIONS */
+.svc-section{padding:6rem 2.5rem;border-bottom:1px solid var(--line);}
+.svc-section:nth-child(even){background:var(--soft);}
+.svc-inner{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+.svc-section:nth-child(even) .svc-inner{direction:rtl;}
+.svc-section:nth-child(even) .svc-inner > *{direction:ltr;}
+
+@media(max-width:768px){
+  .svc-inner{grid-template-columns:1fr;gap:2.5rem;}
+  .svc-section:nth-child(even) .svc-inner{direction:ltr;}
+  .nav-logo{font-size:1.1rem;}
+}
+
+.svc-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:rgba(184,151,126,0.2);line-height:1;margin-bottom:-0.5rem;}
+.svc-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.3rem,2.5vw,1.8rem);font-weight:300;color:var(--dark);letter-spacing:0.08em;line-height:1.5;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--line);}
+.svc-lead{font-family:'Noto Serif JP',serif;font-size:0.9rem;font-weight:200;color:var(--mid);line-height:2.6;letter-spacing:0.06em;margin-bottom:2rem;}
+.svc-points{margin-bottom:2rem;}
+.svc-point{display:flex;gap:1rem;align-items:flex-start;margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--line);}
+.svc-point:last-child{border-bottom:none;margin-bottom:0;}
+.sp-icon{width:36px;height:36px;background:var(--mocha);flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.sp-icon span{font-family:'Cormorant Garamond',serif;font-size:0.7rem;color:#fff;letter-spacing:0.1em;}
+.sp-body{}
+.sp-ttl{font-size:0.78rem;font-weight:400;color:var(--dark);letter-spacing:0.1em;margin-bottom:0.3rem;}
+.sp-desc{font-size:0.72rem;color:var(--mid);line-height:1.8;}
+.svc-img{width:100%;aspect-ratio:4/3;overflow:hidden;background:var(--soft);border:1px dashed rgba(184,151,126,0.3);display:flex;align-items:center;justify-content:center;position:relative;}
+.svc-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.svc-img-hint{font-size:0.6rem;letter-spacing:0.15em;color:rgba(184,151,126,0.5);text-align:center;}
+.svc-img-stack{display:flex;flex-direction:column;gap:0.8rem;}
+.svc-img-small{width:100%;aspect-ratio:3/2;overflow:hidden;background:var(--soft);border:1px dashed rgba(184,151,126,0.3);display:flex;align-items:center;justify-content:center;}
+.svc-img-small img{width:100%;height:100%;object-fit:cover;display:block;}
+.svc-img-small span{font-size:0.58rem;letter-spacing:0.12em;color:rgba(184,151,126,0.5);}
+
+/* FLOW */
+.flow-section{padding:6rem 2.5rem;background:var(--white);}
+.flow-inner{max-width:860px;margin:0 auto;}
+.flow-head{text-align:center;margin-bottom:4rem;}
+.flow-head .sec-ey{font-family:'Cormorant Garamond',serif;font-size:0.65rem;letter-spacing:0.45em;color:var(--mocha);display:flex;align-items:center;justify-content:center;gap:0.8rem;margin-bottom:0.6rem;}
+.flow-head .sec-ey::before,.flow-head .sec-ey::after{content:'';display:block;width:22px;height:1px;background:var(--mocha);}
+.flow-head h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:300;color:var(--dark);letter-spacing:0.05em;}
+.flow-steps{display:flex;flex-direction:column;gap:0;}
+.flow-step{display:grid;grid-template-columns:80px 1fr;gap:2rem;padding:2rem 0;border-bottom:1px solid var(--line);align-items:start;}
+.flow-step:last-child{border-bottom:none;}
+.fs-num{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--mocha);line-height:1;text-align:center;}
+.fs-step{font-family:'Noto Sans JP',sans-serif;font-size:0.5rem;letter-spacing:0.2em;color:var(--mocha-d);display:block;text-align:center;}
+.fs-ttl{font-family:'Noto Serif JP',serif;font-size:0.95rem;font-weight:300;color:var(--dark);letter-spacing:0.1em;margin-bottom:0.5rem;}
+.fs-desc{font-size:0.78rem;color:var(--mid);line-height:2.1;letter-spacing:0.05em;}
+
+/* CTA */
+.svc-cta{background:var(--dark-nav);padding:5rem 2.5rem;text-align:center;}
+.svc-cta-ttl{font-family:'Noto Serif JP',serif;font-size:clamp(1.1rem,2vw,1.4rem);font-weight:200;color:#fff;letter-spacing:0.15em;margin-bottom:0.8rem;}
+.svc-cta-sub{font-size:0.75rem;color:rgba(255,255,255,0.45);letter-spacing:0.1em;margin-bottom:2rem;}
+.btn-cta{display:inline-flex;align-items:center;gap:0.8rem;padding:0.9rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.68rem;letter-spacing:0.2em;transition:background 0.3s;}
+.btn-cta:hover{background:var(--mocha-l);}
+.back-link{display:inline-flex;align-items:center;gap:0.6rem;font-size:0.65rem;letter-spacing:0.2em;color:rgba(255,255,255,0.5);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:2px;margin-top:1.5rem;}
+.back-link::before{content:'←';}
+.back-link:hover{color:#fff;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 0.7s,transform 0.7s;}
+.reveal.on{opacity:1;transform:none;}
+
+
+/* Reserve button */
+.timerex-wrap{margin:2.5rem 0 3rem;text-align:center;}
+.btn-reserve{display:inline-flex;align-items:center;gap:0.6rem;padding:1rem 2.5rem;background:var(--mocha);color:var(--dark);text-decoration:none;font-size:0.72rem;letter-spacing:0.22em;font-family:"Noto Sans JP",sans-serif;transition:background 0.3s;}
+.btn-reserve:hover{background:var(--mocha-l);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">株式会社ma</a>
+  <a href="index.html#service" class="nav-back">← TOPに戻る</a>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <p class="page-hero-ey">Service</p>
+  <h1 class="page-hero-ttl">私たちがお手伝いできること</h1>
+  <p class="page-hero-sub">土地選びから設計・施工・アフターまで。<br>「間」を大切にした家づくりを、ワンストップでサポートします。</p>
+</div>
+
+<!-- 01 新築住宅 -->
+<section class="svc-section" id="shinchiku">
+  <div class="svc-inner reveal">
+    <div class="svc-text">
+      <p class="svc-num">01</p>
+      <h2 class="svc-ttl">新築住宅</h2>
+      <p class="svc-lead">「間」の哲学を宿した注文住宅。お客様の暮らし方・価値観から丁寧に設計し、土地選びから施工・引き渡しまでワンストップでサポートします。</p>
+      <div class="svc-points">
+        <div class="svc-point">
+          <div class="sp-icon"><span>01</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">設計ヒアリング</p>
+            <p class="sp-desc">ライフスタイル・家族構成・好みのテイストを丁寧にお伺いします。</p>
+          </div>
+        </div>
+        <div class="svc-point">
+          <div class="sp-icon"><span>02</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">土地探し〜プランニング</p>
+            <p class="sp-desc">土地の特性を読み、光・風・景色を最大限に活かした間取りをご提案します。</p>
+          </div>
+        </div>
+        <div class="svc-point">
+          <div class="sp-icon"><span>03</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">自然素材・無垢材の活用</p>
+            <p class="sp-desc">長く付き合える素材を厳選。経年変化も楽しめる住まいをつくります。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="svc-img-stack">
+      <div class="svc-img">
+        <!-- <img src="service-01a.jpg" alt="新築住宅"> -->
+        <p class="svc-img-hint">写真をアップ</p>
+      </div>
+      <div class="svc-img-small">
+        <!-- <img src="service-01b.jpg" alt="内観"> -->
+        <span>写真②</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 リフォーム・リノベーション -->
+<section class="svc-section" id="reform">
+  <div class="svc-inner reveal">
+    <div class="svc-text">
+      <p class="svc-num">02</p>
+      <h2 class="svc-ttl">リフォーム・リノベーション</h2>
+      <p class="svc-lead">今ある家に新しい「間」を生み出す。一部屋のリフォームから全面リノベーションまで、お住まいの可能性を最大限に引き出します。</p>
+      <div class="svc-points">
+        <div class="svc-point">
+          <div class="sp-icon"><span>01</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">現地調査・診断</p>
+            <p class="sp-desc">既存の構造・断熱・設備を丁寧に調査し、最適な改修プランをご提案します。</p>
+          </div>
+        </div>
+        <div class="svc-point">
+          <div class="sp-icon"><span>02</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">部分〜全面リノベーション</p>
+            <p class="sp-desc">キッチン・水回りだけ、または間取りから一新する全面改修まで対応可能です。</p>
+          </div>
+        </div>
+        <div class="svc-point">
+          <div class="sp-icon"><span>03</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">断熱・耐震改修</p>
+            <p class="sp-desc">住みながら工事できるケースも多数。快適性・安全性を大幅に向上させます。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="svc-img-stack">
+      <div class="svc-img">
+        <!-- <img src="service-02a.jpg" alt="リフォーム"> -->
+        <p class="svc-img-hint">写真をアップ</p>
+      </div>
+      <div class="svc-img-small">
+        <!-- <img src="service-02b.jpg" alt="after"> -->
+        <span>AFTER写真</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 アフターサポート -->
+<section class="svc-section" id="after">
+  <div class="svc-inner reveal">
+    <div class="svc-text">
+      <p class="svc-num">03</p>
+      <h2 class="svc-ttl">アフターサポート</h2>
+      <p class="svc-lead">引き渡しがゴールではなく、スタートです。地域に根ざした工務店として、長くお付き合いできる体制をご用意しています。</p>
+      <div class="svc-points">
+        <div class="svc-point">
+          <div class="sp-icon"><span>01</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">定期点検（1年・2年・5年・10年）</p>
+            <p class="sp-desc">節目ごとにお伺いし、建物の状態を確認。小さな変化も見逃しません。</p>
+          </div>
+        </div>
+        <div class="svc-point">
+          <div class="sp-icon"><span>02</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">LINEでの気軽な相談</p>
+            <p class="sp-desc">「ちょっとした気になること」もLINEで気軽にご相談ください。</p>
+          </div>
+        </div>
+        <div class="svc-point">
+          <div class="sp-icon"><span>03</span></div>
+          <div class="sp-body">
+            <p class="sp-ttl">メンテナンス・修繕</p>
+            <p class="sp-desc">外壁塗装・屋根点検・設備交換など、経年劣化への対応もお任せください。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="svc-img-stack">
+      <div class="svc-img">
+        <!-- <img src="service-03a.jpg" alt="アフター"> -->
+        <p class="svc-img-hint">写真をアップ</p>
+      </div>
+      <div class="svc-img-small">
+        <!-- <img src="service-03b.jpg"> -->
+        <span>点検風景など</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW -->
+<section class="flow-section">
+  <div class="flow-inner">
+    <div class="flow-head reveal">
+      <p class="sec-ey">Process</p>
+      <h2>家づくりの流れ</h2>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step reveal">
+        <div class="fs-left"><p class="fs-num">01</p><span class="fs-step">STEP</span></div>
+        <div><p class="fs-ttl">ご相談・ヒアリング</p><p class="fs-desc">LINEまたはショールームにてご相談。ライフスタイルやご要望をじっくりお伺いします。（無料）</p></div>
+      </div>
+      <div class="flow-step reveal">
+        <div class="fs-left"><p class="fs-num">02</p><span class="fs-step">STEP</span></div>
+        <div><p class="fs-ttl">土地探し・現地調査</p><p class="fs-desc">ご希望のエリアで土地をご提案。お持ちの土地がある場合は現地を調査します。</p></div>
+      </div>
+      <div class="flow-step reveal">
+        <div class="fs-left"><p class="fs-num">03</p><span class="fs-step">STEP</span></div>
+        <div><p class="fs-ttl">プランニング・お見積もり</p><p class="fs-desc">基本プランと概算お見積もりをご提示。ご予算・ご要望に合わせて調整します。</p></div>
+      </div>
+      <div class="flow-step reveal">
+        <div class="fs-left"><p class="fs-num">04</p><span class="fs-step">STEP</span></div>
+        <div><p class="fs-ttl">設計・詳細打ち合わせ</p><p class="fs-desc">詳細設計・素材・設備の選定。完成イメージをしっかりすり合わせます。</p></div>
+      </div>
+      <div class="flow-step reveal">
+        <div class="fs-left"><p class="fs-num">05</p><span class="fs-step">STEP</span></div>
+        <div><p class="fs-ttl">着工・工事管理</p><p class="fs-desc">現場の進捗をこまめにご報告。要所での確認もお任せください。</p></div>
+      </div>
+      <div class="flow-step reveal">
+        <div class="fs-left"><p class="fs-num">06</p><span class="fs-step">STEP</span></div>
+        <div><p class="fs-ttl">お引き渡し・アフターサポート</p><p class="fs-desc">丁寧な引き渡し後も、長く寄り添います。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="svc-cta">
+  <p class="svc-cta-ttl">まずは、ご相談ください。</p>
+  <p class="svc-cta-sub">漠然としたイメージでも大歓迎です。</p>
+  
+  <br>
+  <div class="timerex-wrap">
+    <a href="https://timerex.net/s/ma0123.hirato_1e01/62c0510e" target="_blank" class="btn-reserve">ご予約はこちら →</a>
+  </div>
+<a href="index.html" class="back-link">TOPに戻る</a>
+</div>
+
+<script>
+const io=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('on');io.unobserve(el.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
